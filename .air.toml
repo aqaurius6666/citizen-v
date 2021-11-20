@@ -21,7 +21,7 @@ exclude_dir = ["deploy", "vendor", "dist"]
 exclude_regex = ["([a-zA-Z]+(/[a-zA-Z]+)+)_test.go"]
 # It's not necessary to trigger build each time file changes if it's too frequent.
 delay = 1000 # ms
-send_interrupt = true
+# send_interrupt = true
 kill_delay = 1000
 [log]
 # Show log time

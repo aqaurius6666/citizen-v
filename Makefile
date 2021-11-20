@@ -46,7 +46,7 @@ kill:
 	@(echo '{}' | grpc-client-cli -service Common -method Kill localhost:${GRPC_PORT}) > /nil 2> /nil || return 0
 
 logs:
-	@docker-compose -f deploy/dev/docker-compose.yaml logs mainservice 
+	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml logs -f mainservice
 
 proto:
 	@./genproto.sh
@@ -59,3 +59,6 @@ rebase:
 
 push:
 	@git push origin HEAD:automatic-branch -f
+
+prom:
+	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate

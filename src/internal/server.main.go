@@ -89,23 +89,28 @@ func runMain(appCtx *cli.Context) error {
 		_ = sSrv.Serve(pprofListener)
 	}()
 
-	// Start Prometheus Server
-	promListener, err := net.Listen("tcp", fmt.Sprintf(":%d", appCtx.Int("prometheus-port")))
-	if err != nil {
-		return err
-	}
-	defer func() {
-		_ = promListener.Close()
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		promServer := http.NewServeMux()
-		promServer.Handle("/metrics", promhttp.Handler())
-		if err := http.Serve(promListener, promServer); err != nil {
-			errChan <- err
+	if !appCtx.Bool("disable-prometheus") {
+		// Start Prometheus Server
+		promListener, err := net.Listen("tcp", fmt.Sprintf(":%d", appCtx.Int("prometheus-port")))
+		if err != nil {
+			return err
 		}
-	}()
+		defer func() {
+			_ = promListener.Close()
+		}()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			promServer := http.NewServeMux()
+			promServer.Handle("/metrics", promhttp.Handler())
+			logger.WithField("port", appCtx.Int("prometheus-port")).Info("listening for metrics requests")
+			if err := http.Serve(promListener, promServer); err != nil {
+				errChan <- err
+			}
+		}()
+	} else {
+		logger.Info("Prometheus disabled.")
+	}
 
 	// Watch kill signal
 	go func() {
@@ -115,17 +120,13 @@ func runMain(appCtx *cli.Context) error {
 		case s := <-sigCh:
 			cancelFn()
 			logger.WithField("signal", s.String()).Infof("shutting down due to signal")
-			_ = promListener.Close()
-			_ = grpcListener.Close()
-			_ = pprofListener.Close()
-			logger.Info("see ya")
 		case <-ctx.Done():
 
 		case err := <-errChan:
 			cancelFn()
 			logger.WithField("error", err.Error()).Errorf("shutting down due to error")
 		}
-		// Handle grateful shutdown here
+		// Handle graceful shutdown here
 	}()
 	wg.Wait()
 	return nil
