@@ -68,7 +68,7 @@ func makeApp() *cli.App {
 			&cli.StringFlag{
 				Name:     "db-uri",
 				Required: true,
-				EnvVars:  []string{"DB_URI"},
+				EnvVars:  []string{"DB_URI", "DATABASE_URL"},
 				Usage:    "The URI for connecting to database (supported URIs: in-memory://, postgresql://auth@host:26257/linkgraph?sslmode=disable)",
 			},
 		},
