@@ -61,4 +61,4 @@ push:
 	@git push origin HEAD:automatic-branch -f
 
 prom:
-	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate
+	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreatem

@@ -119,6 +119,8 @@ func runMain(appCtx *cli.Context) error {
 		select {
 		case s := <-sigCh:
 			cancelFn()
+			// Handle graceful shutdown here
+			
 			logger.WithField("signal", s.String()).Infof("shutting down due to signal")
 		case <-ctx.Done():
 
@@ -126,7 +128,6 @@ func runMain(appCtx *cli.Context) error {
 			cancelFn()
 			logger.WithField("error", err.Error()).Errorf("shutting down due to error")
 		}
-		// Handle graceful shutdown here
 	}()
 	wg.Wait()
 	return nil
