@@ -1,5 +1,5 @@
 build:
   docker:
-    web: Dockerfile
+    web: release.Dockerfile
 run:
   web: server serve

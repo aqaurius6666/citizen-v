@@ -15,4 +15,5 @@ type ServerOptions struct {
 	apiOptions api.ApiServerOptions
 }
 
-func InitMainServer(ctx context.Context, logger *logrus.Logger, opts ServerOptions)
+func InitMainServer(ctx context.Context, logger *logrus.Logger, opts ServerOptions) {
+}
