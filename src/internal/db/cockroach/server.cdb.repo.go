@@ -1,15 +1,14 @@
 package cockroach
 
 import (
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db"
 	usercdb "github.com/aqaurius6666/boilerplate-server-go/src/internal/db/cockroach/user"
 	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database/cockroach"
 )
 
-var (
-	_ db.ServerRepo = (*ServerCDBRepo)(nil)
-)
+// var (
+// 	_ db.ServerRepo = (*ServerCDBRepo)(nil)
+// )
 
 type ServerCDBRepo struct {
 	cockroach.CDBRepository

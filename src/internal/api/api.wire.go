@@ -12,13 +12,14 @@ import (
 )
 
 type ApiServerOptions struct {
-	mainRepo db.ServerRepo
+	MainRepo db.ServerRepo
 }
 
 func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOptions) (*ApiServer, error) {
 	wire.Build(
-		wire.FieldsOf(&opts, "mainRepo"),
+		wire.FieldsOf(&opts, "MainRepo"),
 		gin.New,
+		wire.Struct(new(IndexController), "*"),
 		wire.Struct(new(ApiServer), "*"),
 	)
 	return &ApiServer{}, nil

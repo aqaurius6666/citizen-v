@@ -18,8 +18,8 @@ import (
 // Injectors from server.cdb.wire.go:
 
 func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCDBOptions) (*ServerCDBRepo, error) {
-	string2 := opts.dsn
-	config := opts.cfg
+	string2 := opts.Dsn
+	config := opts.Cfg
 	db, err := cockroach.NewCDBConnection(string2, config)
 	if err != nil {
 		return nil, err
@@ -39,8 +39,8 @@ func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 // server.cdb.wire.go:
 
 type ServerCDBOptions struct {
-	cfg *gorm.Config
-	dsn string
+	Cfg *gorm.Config
+	Dsn string
 }
 
 func InitServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCDBOptions) (*ServerCDBRepo, error) {

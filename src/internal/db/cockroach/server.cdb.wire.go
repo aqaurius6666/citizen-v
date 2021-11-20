@@ -15,13 +15,13 @@ import (
 )
 
 type ServerCDBOptions struct {
-	cfg *gorm.Config
-	dsn string
+	Cfg *gorm.Config
+	Dsn string
 }
 
 func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCDBOptions) (*ServerCDBRepo, error) {
 	wire.Build(
-		wire.FieldsOf(&opts, "cfg", "dsn"),
+		wire.FieldsOf(&opts, "Cfg", "Dsn"),
 		cockroach.NewCDBConnection,
 		cockroach.InitCDBRepository,
 		usercdb.InitUserCDBRepo,

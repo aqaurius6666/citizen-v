@@ -13,6 +13,7 @@ import (
 
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
+	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db"
 	commongrpc "github.com/aquarius6666/go-utils/common_grpc"
 	commonpb "github.com/aquarius6666/go-utils/common_grpc/pb"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -42,6 +43,33 @@ func runMain(appCtx *cli.Context) error {
 		logger.Info("Profiling enabled.")
 		go initProfiling(serviceName, appCtx.String("runtime-version"))
 	}
+
+	// Start HTTP Server
+	httpListner, err := net.Listen("tcp", fmt.Sprintf(":%d", appCtx.Int("http-port")))
+	if err != nil {
+		logger.Fatal(err)
+		return err
+	}
+	mainServer, err := InitMainServer(ctx, logger, ServerOptions{
+		DBDsn: db.DBDsn(appCtx.String("db-uri")),
+	})
+	if err != nil {
+		logger.Fatal(err)
+		return err
+	}
+	defer func() {
+		_ = httpListner.Close()
+		_ = mainServer.MainRepo.Close()
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		mainServer.ApiServer.RegisterEndpoint()
+		logger.WithField("port", appCtx.Int("http-port")).Info("listening for HTTP connections")
+		if err := http.Serve(httpListner, mainServer.ApiServer.G); err != nil {
+			logger.Fatalf("failed to serve: %v", err)
+		}
+	}()
 
 	// Start GRPC Server
 	grpcListener, err := net.Listen("tcp", fmt.Sprintf(":%d", appCtx.Int("grpc-port")))
@@ -120,7 +148,7 @@ func runMain(appCtx *cli.Context) error {
 		case s := <-sigCh:
 			cancelFn()
 			// Handle graceful shutdown here
-			
+
 			logger.WithField("signal", s.String()).Infof("shutting down due to signal")
 		case <-ctx.Done():
 

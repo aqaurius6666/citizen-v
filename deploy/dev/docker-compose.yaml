@@ -21,7 +21,7 @@ services:
       - "../../:/app"
       - "/home/aqaurius6666/go:/go"
     ports:
-      - "9091:80"
+      - "9091:8080"
       - "2345:2345"
     depends_on:
       - cdb
@@ -34,12 +34,12 @@ services:
       - DISABLE_TRACING=true
       - DISABLE_PROFILER=true
       - VERSION=0.0.1
-      - HTTP_PORT=80
+      - PORT=8080
       - GRPC_PORT=50051
       - PROMETHEUS=7070
       - PPROF_PORT=6000
       - DISABLE_STATS=true
-      - DB_URI=postgresql://root:root@main-cdb:26257/defaultdb?sslmode=disable
+      - DB_URI=postgresql://root:root@cdb:26257/defaultdb?sslmode=disable
       - LOG_LEVEL=debug
       - LOG_FORMAT=plain
       - GCFLAGS

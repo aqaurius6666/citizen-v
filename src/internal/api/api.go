@@ -11,6 +11,7 @@ type ApiServer struct {
 	G          *gin.Engine
 	logger     *logrus.Logger
 	serverRepo db.ServerRepo
+	Index      *IndexController
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -21,4 +22,6 @@ func (s *ApiServer) RegisterEndpoint() {
 	}))
 	s.G.Use(gin.Recovery())
 	s.G.Use(gin.Logger())
+
+	s.G.GET("/", s.Index.HandleIndexGet)
 }

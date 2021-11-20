@@ -17,11 +17,15 @@ import (
 
 func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOptions) (*ApiServer, error) {
 	engine := gin.New()
-	serverRepo := opts.mainRepo
+	serverRepo := opts.MainRepo
+	indexController := &IndexController{
+		Repo: serverRepo,
+	}
 	apiServer := &ApiServer{
 		G:          engine,
 		logger:     logger,
 		serverRepo: serverRepo,
+		Index:      indexController,
 	}
 	return apiServer, nil
 }
@@ -29,5 +33,5 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 // api.wire.go:
 
 type ApiServerOptions struct {
-	mainRepo db.ServerRepo
+	MainRepo db.ServerRepo
 }
