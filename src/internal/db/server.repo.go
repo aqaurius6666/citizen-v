@@ -33,6 +33,11 @@ func InitServerRepo(ctx context.Context, logger *logrus.Logger, dsn DBDsn) (Serv
 			Cfg: &gorm.Config{},
 			Dsn: string(dsn),
 		})
+	case "postgres":
+		return cockroach.InitServerCDBRepo(ctx, logger, cockroach.ServerCDBOptions{
+			Cfg: &gorm.Config{},
+			Dsn: string(dsn),
+		})
 	default:
 		return nil, xerrors.Errorf("unsupported DB URI scheme: %q", uri.Scheme)
 	}
