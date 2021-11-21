@@ -62,3 +62,6 @@ push:
 
 prom:
 	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate
+
+lint:
+	@golangci-lint run

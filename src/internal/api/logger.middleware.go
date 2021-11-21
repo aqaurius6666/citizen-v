@@ -14,7 +14,7 @@ type LoggerMiddleware struct {
 
 func (l *LoggerMiddleware) Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lib.SetBody(c)
+		_ = lib.SetBody(c)
 		startTime := time.Now()
 		c.Next()
 		latencyTime := time.Since(startTime)

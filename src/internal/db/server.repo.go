@@ -28,8 +28,10 @@ func InitServerRepo(ctx context.Context, logger *logrus.Logger, dsn DBDsn) (Serv
 
 	switch uri.Scheme {
 	case "in-memory":
+
 		logger.Info("using in-memory graph")
-		return nil, xerrors.Errorf("Not implemented!", err)
+
+		return nil, xerrors.Errorf("Not implemented!")
 	case "postgresql":
 		return cockroach.InitServerCDBRepo(ctx, logger, cockroach.ServerCDBOptions{
 			Cfg: &gorm.Config{

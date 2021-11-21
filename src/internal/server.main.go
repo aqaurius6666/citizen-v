@@ -61,7 +61,11 @@ func runMain(appCtx *cli.Context) error {
 		_ = httpListner.Close()
 		_ = mainServer.MainRepo.Close()
 	}()
-	mainServer.MainRepo.Migrate()
+	err = mainServer.MainRepo.Migrate()
+	if err != nil {
+		logger.Fatal(err)
+		return err
+	}
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -144,7 +148,7 @@ func runMain(appCtx *cli.Context) error {
 	// Watch kill signal
 	go func() {
 		sigCh := make(chan os.Signal, 1)
-		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGHUP, syscall.SIGTERM, syscall.SIGKILL)
+		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGHUP, syscall.SIGTERM)
 		select {
 		case s := <-sigCh:
 			cancelFn()
@@ -175,10 +179,6 @@ func initStats(exporter *stackdriver.Exporter) {
 	} else {
 		logger.Info("Registered default server views")
 	}
-}
-
-func initPrometheus(ctx context.Context, serviceName string, port int) {
-
 }
 
 func initStackdriverTracing() {
