@@ -18,7 +18,7 @@ include_ext = ["go", "yaml"]
 # Ignore these filename extensions or directories.
 exclude_dir = ["deploy", "vendor", "dist", "proto"]
 # Exclude go test file
-exclude_regex = ["([a-zA-Z]+(/[a-zA-Z]+)+)_test.go"]
+exclude_regex = ["([a-zA-Z]+(/[a-zA-Z]+)+)_test.go", "([a-zA-Z]+(/[a-zA-Z]+)+).test.go"]
 # It's not necessary to trigger build each time file changes if it's too frequent.
 delay = 1000 # ms
 # send_interrupt = true
