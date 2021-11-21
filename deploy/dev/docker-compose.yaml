@@ -6,10 +6,10 @@ services:
   cdb:
     image: cockroachdb/cockroach:v21.1.6
     ports:
-      - "26257:26257"
+      - "20000:26257"
     command: start-single-node --insecure
-    # volumes:
-    #   - "../../.db:/cockroach/cockroach-data"
+    volumes:
+      - "../../.db:/cockroach/cockroach-data"
     networks:
       - main
   mainservice:

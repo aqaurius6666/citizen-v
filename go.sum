@@ -64,8 +64,6 @@ github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRF
 github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d/go.mod h1:rBZYJk541a8SKzHPHnH3zbiI+7dagKZ0cgpgrD7Fyho=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
-github.com/aquarius6666/go-utils v1.0.2 h1:RWaxJV+zkKL8b0xq6RXOhxEA0VT670nCqtwXSj4RiPM=
-github.com/aquarius6666/go-utils v1.0.2/go.mod h1:jmwpyFdUZuvk3+RtSzrMfmcKe8vi1kQu8ZMNDM+v3A4=
 github.com/aquarius6666/go-utils v1.0.3 h1:ddXpeYnA/WtfDfQ3wEBjWx6Qw0jo1RbUksWtKGmjVpg=
 github.com/aquarius6666/go-utils v1.0.3/go.mod h1:jmwpyFdUZuvk3+RtSzrMfmcKe8vi1kQu8ZMNDM+v3A4=
 github.com/aws/aws-sdk-go v1.37.0 h1:GzFnhOIsrGyQ69s7VgqtrG2BG8v7X7vwB3Xpbd/DBBk=

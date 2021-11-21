@@ -8,20 +8,23 @@ import (
 )
 
 type ApiServer struct {
-	G          *gin.Engine
-	logger     *logrus.Logger
-	serverRepo db.ServerRepo
-	Index      *IndexController
+	G                *gin.Engine
+	logger           *logrus.Logger
+	serverRepo       db.ServerRepo
+	Index            *IndexController
+	LoggerMiddleware LoggerMiddleware
 }
 
 func (s *ApiServer) RegisterEndpoint() {
+	gin.SetMode("debug")
 	s.G.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "PUT", "POST", "DELETE"},
 		AllowHeaders: []string{"Authorization", "Content-Type", "User-Agent"},
 	}))
 	s.G.Use(gin.Recovery())
-	s.G.Use(gin.Logger())
+	s.G.Use(s.LoggerMiddleware.Logger())
 
 	s.G.GET("/", s.Index.HandleIndexGet)
+	s.G.GET("/random", s.Index.HandleRandomGet)
 }

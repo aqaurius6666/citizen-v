@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"net/url"
+	"time"
 
 	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/cockroach"
 	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/user"
@@ -10,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/xerrors"
 	"gorm.io/gorm"
+	logger2 "gorm.io/gorm/logger"
 )
 
 type ServerRepo interface {
@@ -30,7 +32,18 @@ func InitServerRepo(ctx context.Context, logger *logrus.Logger, dsn DBDsn) (Serv
 		return nil, xerrors.Errorf("Not implemented!", err)
 	case "postgresql":
 		return cockroach.InitServerCDBRepo(ctx, logger, cockroach.ServerCDBOptions{
-			Cfg: &gorm.Config{},
+			Cfg: &gorm.Config{
+				Logger: logger2.New(logger, logger2.Config{
+					SlowThreshold:             200 * time.Microsecond,
+					IgnoreRecordNotFoundError: true,
+					LogLevel:                  logger2.Error,
+					Colorful:                  true,
+				}),
+				SkipDefaultTransaction:                   true,
+				PrepareStmt:                              false,
+				DisableAutomaticPing:                     true,
+				DisableForeignKeyConstraintWhenMigrating: true,
+			},
 			Dsn: string(dsn),
 		})
 	case "postgres":

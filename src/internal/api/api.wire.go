@@ -20,6 +20,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		wire.FieldsOf(&opts, "MainRepo"),
 		gin.New,
 		wire.Struct(new(IndexController), "*"),
+		wire.Struct(new(LoggerMiddleware), "*"),
 		wire.Struct(new(ApiServer), "*"),
 	)
 	return &ApiServer{}, nil

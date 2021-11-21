@@ -4,7 +4,7 @@ dev-recreate:
 build-and-push-image: build-image push-image
 
 build-image:
-	@docker build . --target=release -t supermedicalchain/main-service:pre-release
+	@docker build -f release.Dockerfile . -t aqaurius6666/mainserver:pre-release
 
 push-image:
 	@docker tag supermedicalchain/main-service:pre-release supermedicalchain/main-service${TAG}
@@ -61,4 +61,4 @@ push:
 	@git push origin HEAD:automatic-branch -f
 
 prom:
-	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreatem
+	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate

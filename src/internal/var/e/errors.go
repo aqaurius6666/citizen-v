@@ -1,0 +1,10 @@
+package e
+
+import (
+	"golang.org/x/xerrors"
+)
+
+var (
+	ErrBodyInvalid = xerrors.New("body invalid")
+	ErrMissingBody = xerrors.New("missing body")
+)

@@ -1,5 +1,6 @@
 package user
 
 type UserRepo interface {
-	SelectOne(*Search) (*User, error)
+	SelectUser(*Search) (*User, error)
+	InsertUser(*User) (*User, error)
 }

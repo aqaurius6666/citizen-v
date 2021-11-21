@@ -61,6 +61,7 @@ func runMain(appCtx *cli.Context) error {
 		_ = httpListner.Close()
 		_ = mainServer.MainRepo.Close()
 	}()
+	mainServer.MainRepo.Migrate()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()

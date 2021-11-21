@@ -21,11 +21,15 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	indexController := &IndexController{
 		Repo: serverRepo,
 	}
+	loggerMiddleware := LoggerMiddleware{
+		logger: logger,
+	}
 	apiServer := &ApiServer{
-		G:          engine,
-		logger:     logger,
-		serverRepo: serverRepo,
-		Index:      indexController,
+		G:                engine,
+		logger:           logger,
+		serverRepo:       serverRepo,
+		Index:            indexController,
+		LoggerMiddleware: loggerMiddleware,
 	}
 	return apiServer, nil
 }

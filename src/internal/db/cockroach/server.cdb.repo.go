@@ -15,6 +15,10 @@ type ServerCDBRepo struct {
 	UserRepo *usercdb.UserCDBRepo
 }
 
-func (s *ServerCDBRepo) SelectOne(search *user.Search) (*user.User, error) {
-	return s.UserRepo.SelectOne(search)
+func (s *ServerCDBRepo) SelectUser(search *user.Search) (*user.User, error) {
+	return s.UserRepo.SelectUser(search)
+}
+
+func (s *ServerCDBRepo) InsertUser(u *user.User) (*user.User, error) {
+	return s.UserRepo.InsertUser(u)
 }

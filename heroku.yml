@@ -1,8 +1,6 @@
 build:
   docker:
     web: release.Dockerfile
-  config:
-    HTTP_PORT: ${PORT}
 run:
   web: server serve
   
