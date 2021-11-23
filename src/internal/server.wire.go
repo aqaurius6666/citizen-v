@@ -8,6 +8,7 @@ import (
 
 	"github.com/aquarius6666/citizen-v/src/internal/api"
 	"github.com/aquarius6666/citizen-v/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
 )
@@ -19,12 +20,13 @@ type Server struct {
 
 type ServerOptions struct {
 	DBDsn db.DBDsn
+	Sec   jwt.SecretKey
 }
 
 func InitMainServer(ctx context.Context, logger *logrus.Logger, opts ServerOptions) (*Server, error) {
 
 	wire.Build(
-		wire.FieldsOf(&opts, "DBDsn"),
+		wire.FieldsOf(&opts, "DBDsn", "Sec"),
 		db.InitServerRepo,
 		wire.Struct(new(api.ApiServerOptions), "*"),
 		api.InitApiServer,

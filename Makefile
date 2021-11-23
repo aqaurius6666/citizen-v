@@ -48,8 +48,8 @@ kill:
 logs:
 	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml logs -f mainservice
 
-proto:
-	@./genproto.sh
+proto3:
+	@/bin/sh -c ./scripts/gen-proto.sh
 
 swagger: proto
 	@go generate ./src/swagger github.com/sotanext-team/medical-chain/src/mainservice/src/swagger 

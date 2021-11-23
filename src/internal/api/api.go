@@ -13,6 +13,8 @@ type ApiServer struct {
 	serverRepo       db.ServerRepo
 	Index            *IndexController
 	LoggerMiddleware LoggerMiddleware
+	Auth             *AuthController
+	AuthMiddleware   *AuthMiddleware
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -27,4 +29,12 @@ func (s *ApiServer) RegisterEndpoint() {
 
 	s.G.GET("/", s.Index.HandleIndexGet)
 	s.G.GET("/random", s.Index.HandleRandomGet)
+
+	api := s.G.Group("/api")
+
+	// Auth group
+	auth := api.Group("/auth")
+	auth.POST("/register", s.Auth.HandlePostRegister)
+	auth.POST("/login", s.Auth.HandlePostLogin)
+	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
 }

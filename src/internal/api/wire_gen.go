@@ -9,6 +9,7 @@ package api
 import (
 	"context"
 	"github.com/aquarius6666/citizen-v/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -24,12 +25,26 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	loggerMiddleware := LoggerMiddleware{
 		logger: logger,
 	}
+	secretKey := opts.Sec
+	jwtService := jwt.NewJWTService(secretKey)
+	authService := &AuthService{
+		Repo:       serverRepo,
+		JWTService: jwtService,
+	}
+	authController := &AuthController{
+		Service: authService,
+	}
+	authMiddleware := &AuthMiddleware{
+		JWTService: jwtService,
+	}
 	apiServer := &ApiServer{
 		G:                engine,
 		logger:           logger,
 		serverRepo:       serverRepo,
 		Index:            indexController,
 		LoggerMiddleware: loggerMiddleware,
+		Auth:             authController,
+		AuthMiddleware:   authMiddleware,
 	}
 	return apiServer, nil
 }
@@ -38,4 +53,5 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 
 type ApiServerOptions struct {
 	MainRepo db.ServerRepo
+	Sec      jwt.SecretKey
 }

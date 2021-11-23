@@ -20,6 +20,11 @@ func applySearch(db *gorm.DB, search *user.Search) *gorm.DB {
 			},
 		})
 	}
+	if search.Username != nil {
+		db = db.Where(&user.User{
+			Username: search.Username,
+		})
+	}
 
 	return db
 }

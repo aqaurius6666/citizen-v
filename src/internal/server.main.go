@@ -14,6 +14,7 @@ import (
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"github.com/aquarius6666/citizen-v/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
 	commongrpc "github.com/aquarius6666/go-utils/common_grpc"
 	commonpb "github.com/aquarius6666/go-utils/common_grpc/pb"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -52,6 +53,7 @@ func runMain(appCtx *cli.Context) error {
 	}
 	mainServer, err := InitMainServer(ctx, logger, ServerOptions{
 		DBDsn: db.DBDsn(appCtx.String("db-uri")),
+		Sec:   jwt.SecretKey(appCtx.String("jwt-secret-key")),
 	})
 	if err != nil {
 		logger.Fatal(err)
