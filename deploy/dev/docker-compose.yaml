@@ -42,6 +42,7 @@ services:
       - DB_URI=postgresql://root:root@cdb:26257/defaultdb?sslmode=disable
       - LOG_LEVEL=debug
       - LOG_FORMAT=plain
+      - JWT_SECRET_KEY=hangngungok-_-
       - GCFLAGS
     networks:
       - main

@@ -65,6 +65,13 @@ func makeApp() *cli.App {
 			// },
 		},
 		Flags: append([]cli.Flag{
+
+			&cli.StringFlag{
+				Name:     "jwt-secret-key",
+				Required: true,
+				EnvVars:  []string{"JWT_SECRET_KEY"},
+				Usage:    "Secret key for jwt authenticate",
+			},
 			&cli.StringFlag{
 				Name:     "db-uri",
 				Required: true,

@@ -10,6 +10,7 @@ import (
 	"context"
 	"github.com/aquarius6666/citizen-v/src/internal/api"
 	"github.com/aquarius6666/citizen-v/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,8 +22,10 @@ func InitMainServer(ctx context.Context, logger2 *logrus.Logger, opts ServerOpti
 	if err != nil {
 		return nil, err
 	}
+	secretKey := opts.Sec
 	apiServerOptions := api.ApiServerOptions{
 		MainRepo: serverRepo,
+		Sec:      secretKey,
 	}
 	apiServer, err := api.InitApiServer(ctx, logger2, apiServerOptions)
 	if err != nil {
@@ -44,4 +47,5 @@ type Server struct {
 
 type ServerOptions struct {
 	DBDsn db.DBDsn
+	Sec   jwt.SecretKey
 }
