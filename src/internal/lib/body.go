@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/var/e"
+	"github.com/aquarius6666/citizen-v/src/internal/var/e"
 	"github.com/gin-gonic/gin"
 )
 

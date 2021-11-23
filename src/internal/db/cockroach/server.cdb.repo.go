@@ -1,8 +1,8 @@
 package cockroach
 
 import (
-	usercdb "github.com/aqaurius6666/boilerplate-server-go/src/internal/db/cockroach/user"
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/user"
+	usercdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
+	"github.com/aquarius6666/citizen-v/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database/cockroach"
 )
 

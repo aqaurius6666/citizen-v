@@ -8,8 +8,8 @@ package cockroach
 
 import (
 	"context"
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/cockroach/user"
-	user2 "github.com/aqaurius6666/boilerplate-server-go/src/internal/db/user"
+	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
+	user2 "github.com/aquarius6666/citizen-v/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database/cockroach"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"

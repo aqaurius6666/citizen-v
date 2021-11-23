@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db/user"
+	"github.com/aquarius6666/citizen-v/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database"
 	"github.com/aquarius6666/go-utils/database/cockroach"
 	"github.com/google/uuid"

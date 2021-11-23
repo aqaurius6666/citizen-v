@@ -13,7 +13,7 @@ import (
 
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/db"
 	commongrpc "github.com/aquarius6666/go-utils/common_grpc"
 	commonpb "github.com/aquarius6666/go-utils/common_grpc/pb"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

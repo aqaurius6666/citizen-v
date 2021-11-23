@@ -1,4 +1,4 @@
-module github.com/aqaurius6666/boilerplate-server-go
+module github.com/aquarius6666/citizen-v
 
 go 1.16
 

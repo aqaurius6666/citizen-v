@@ -5,7 +5,7 @@ package api
 
 import (
 	"context"
-	"github.com/aqaurius6666/boilerplate-server-go/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/db"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
