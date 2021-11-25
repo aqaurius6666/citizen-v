@@ -44,25 +44,25 @@ func makeApp() *cli.App {
 				Usage:   "run server",
 				Action:  runMain,
 			},
-			// {
-			// 	Name:    "seed-data",
-			// 	Aliases: []string{"sd"},
-			// 	Usage:   "seed data",
-			// 	Action:  seedData,
-			// 	Flags: []cli.Flag{
-			// 		&cli.BoolFlag{
-			// 			Name:    "clean",
-			// 			EnvVars: []string{"CLEAN_DB"},
-			// 			Usage:   "Clean DB before seeding",
-			// 		},
-			// 	},
-			// },
-			// {
-			// 	Name:    "clean",
-			// 	Aliases: []string{"c"},
-			// 	Usage:   "clean DB",
-			// 	Action:  clean,
-			// },
+			{
+				Name:    "seed-data",
+				Aliases: []string{"sd"},
+				Usage:   "seed data",
+				Action:  seedData,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "clean",
+						EnvVars: []string{"CLEAN_DB"},
+						Usage:   "Clean DB before seeding",
+					},
+				},
+			},
+			{
+				Name:    "clean",
+				Aliases: []string{"c"},
+				Usage:   "clean DB",
+				Action:  clean,
+			},
 		},
 		Flags: append([]cli.Flag{
 
