@@ -36,7 +36,7 @@ kill:
 	@(echo '{}' | grpc-client-cli -service Common -method Kill localhost:${GRPC_PORT}) > /nil 2> /nil || return 0
 
 logs:
-	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml logs -f mainservice
+	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml logs -f  mainservice
 
 proto3:
 	@/bin/sh -c ./scripts/gen-proto.sh

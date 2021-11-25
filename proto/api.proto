@@ -1,11 +1,83 @@
 syntax = "proto3";
 package citizenv;
-
+import "google/api/annotations.proto";
 option go_package = "./pb";
 
 service Api {
-    rpc PostRegister(PostRegisterRequest) returns (PostRegisterResponse) {}
-    rpc PostLogin(PostLoginRequest) returns (PostLoginResponse) {}
+    rpc PostRegister(PostRegisterRequest) returns (PostRegisterResponse) {
+        option (google.api.http) = {
+            post: "/api/auth/register"
+            body: "*"
+        };
+    }
+    rpc PostLogin(PostLoginRequest) returns (PostLoginResponse) {
+        option (google.api.http) = {
+            post: "/api/auth/login"
+            body: "*"
+        };
+    }
+    rpc PostAdminDiv(PostAdminDivRequest) returns (PostAdminDivResponse) {
+        option (google.api.http) = {
+            post: "/api/administrative-division"
+            body: "*"
+        };
+    }
+    rpc GetAdminDiv(GetAdminDivRequest) returns (GetAdminDivResponse) {
+        option (google.api.http) = {
+            get: "/api/administrative-division"
+        };
+    }
+}
+
+message GetAdminDivRequest {
+    string code = 1;
+    string name = 2;
+    string superiorId = 3;
+    string type = 4;
+    string id = 5;
+}
+
+message GetAdminDivResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated Results results = 1;
+        Pagination pagination = 2;
+        
+        message Results {
+            string code = 1;
+            string name = 2;
+            string superiorId = 3;
+            string type = 4;
+            string id = 5;
+        }
+    }
+}
+
+message PostAdminDivRequest {
+    string code = 1;
+    string name = 2;
+    string superiorId = 3;
+    string type = 4;
+}
+
+message PostAdminDivResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        string code = 1;
+        string name = 2;
+        string superiorId = 3;
+        string type = 4;
+        string id = 5;
+    }
+}
+message Pagination {
+    int32 total = 1;
+    int32 limit = 2;
+    int32 offset = 3;
 }
 
 message PostLoginRequest {

@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type ApiClient interface {
 	PostRegister(ctx context.Context, in *PostRegisterRequest, opts ...grpc.CallOption) (*PostRegisterResponse, error)
 	PostLogin(ctx context.Context, in *PostLoginRequest, opts ...grpc.CallOption) (*PostLoginResponse, error)
+	PostAdminDiv(ctx context.Context, in *PostAdminDivRequest, opts ...grpc.CallOption) (*PostAdminDivResponse, error)
+	GetAdminDiv(ctx context.Context, in *GetAdminDivRequest, opts ...grpc.CallOption) (*GetAdminDivResponse, error)
 }
 
 type apiClient struct {
@@ -48,12 +50,32 @@ func (c *apiClient) PostLogin(ctx context.Context, in *PostLoginRequest, opts ..
 	return out, nil
 }
 
+func (c *apiClient) PostAdminDiv(ctx context.Context, in *PostAdminDivRequest, opts ...grpc.CallOption) (*PostAdminDivResponse, error) {
+	out := new(PostAdminDivResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostAdminDiv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) GetAdminDiv(ctx context.Context, in *GetAdminDivRequest, opts ...grpc.CallOption) (*GetAdminDivResponse, error) {
+	out := new(GetAdminDivResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetAdminDiv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
 type ApiServer interface {
 	PostRegister(context.Context, *PostRegisterRequest) (*PostRegisterResponse, error)
 	PostLogin(context.Context, *PostLoginRequest) (*PostLoginResponse, error)
+	PostAdminDiv(context.Context, *PostAdminDivRequest) (*PostAdminDivResponse, error)
+	GetAdminDiv(context.Context, *GetAdminDivRequest) (*GetAdminDivResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -66,6 +88,12 @@ func (UnimplementedApiServer) PostRegister(context.Context, *PostRegisterRequest
 }
 func (UnimplementedApiServer) PostLogin(context.Context, *PostLoginRequest) (*PostLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostLogin not implemented")
+}
+func (UnimplementedApiServer) PostAdminDiv(context.Context, *PostAdminDivRequest) (*PostAdminDivResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostAdminDiv not implemented")
+}
+func (UnimplementedApiServer) GetAdminDiv(context.Context, *GetAdminDivRequest) (*GetAdminDivResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdminDiv not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -116,6 +144,42 @@ func _Api_PostLogin_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_PostAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAdminDivRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostAdminDiv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostAdminDiv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostAdminDiv(ctx, req.(*PostAdminDivRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_GetAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdminDivRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetAdminDiv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetAdminDiv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetAdminDiv(ctx, req.(*GetAdminDivRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +194,14 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostLogin",
 			Handler:    _Api_PostLogin_Handler,
+		},
+		{
+			MethodName: "PostAdminDiv",
+			Handler:    _Api_PostAdminDiv_Handler,
+		},
+		{
+			MethodName: "GetAdminDiv",
+			Handler:    _Api_GetAdminDiv_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

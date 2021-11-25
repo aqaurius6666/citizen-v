@@ -26,6 +26,8 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		wire.Struct(new(IndexController), "*"),
 		wire.Struct(new(AuthMiddleware), "*"),
 		wire.Struct(new(AuthController), "*"),
+		wire.Struct(new(AdminDivController), "*"),
+		wire.Struct(new(AdminDivService), "*"),
 		wire.Struct(new(AuthService), "*"),
 		wire.Struct(new(LoggerMiddleware), "*"),
 		wire.Struct(new(ApiServer), "*"),

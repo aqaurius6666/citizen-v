@@ -37,6 +37,12 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	authMiddleware := &AuthMiddleware{
 		JWTService: jwtJWT,
 	}
+	adminDivService := &AdminDivService{
+		Repo: serverRepo,
+	}
+	adminDivController := &AdminDivController{
+		Service: adminDivService,
+	}
 	apiServer := &ApiServer{
 		G:                engine,
 		logger:           logger,
@@ -45,6 +51,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		LoggerMiddleware: loggerMiddleware,
 		Auth:             authController,
 		AuthMiddleware:   authMiddleware,
+		AdminDiv:         adminDivController,
 	}
 	return apiServer, nil
 }

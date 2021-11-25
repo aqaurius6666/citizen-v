@@ -1,3 +1,7 @@
 package admindiv
 
-var ()
+var (
+	CITY     = "CITY"
+	DISTRICT = "DISTRICT"
+	TOWN     = "TOWN"
+)
