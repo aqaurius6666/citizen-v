@@ -15,6 +15,7 @@ type ApiServer struct {
 	LoggerMiddleware LoggerMiddleware
 	Auth             *AuthController
 	AuthMiddleware   *AuthMiddleware
+	AdminDiv         *AdminDivController
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -37,4 +38,8 @@ func (s *ApiServer) RegisterEndpoint() {
 	auth.POST("/register", s.Auth.HandlePostRegister)
 	auth.POST("/login", s.Auth.HandlePostLogin)
 	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
+
+	admindiv := api.Group("/administrative-division")
+	admindiv.GET("", s.AdminDiv.HandleGet)
+	admindiv.POST("", s.AdminDiv.HandlePost)
 }

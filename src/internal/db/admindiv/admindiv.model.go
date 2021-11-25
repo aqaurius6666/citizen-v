@@ -7,11 +7,11 @@ import (
 
 type AdminDiv struct {
 	database.BaseModel
-	Name       *string   `gorm:"column:name;index:idx_name,unique;not null"`
-	Code       *string   `gorm:"column:code;index:idx_code,unique;not null"`
-	Type       *string   `gorm:"column:type;not null"`
-	SuperiorID uuid.UUID `gorm:"column:superior_id;type:uuid;not null"`
-	Superior   *AdminDiv `gorm:"foreignKey:SuperiorID"`
+	Name             *string   `gorm:"column:name;index:idx_name,unique;not null"`
+	Code             *string   `gorm:"column:code;index:idx_code,unique;not null"`
+	Type             *string   `gorm:"column:type;not null"`
+	SuperiorID       uuid.UUID `gorm:"column:superior_id;type:uuid;not null"`
+	SuperiorAdminDiv *AdminDiv `gorm:"foreignKey:SuperiorID;reference:code"`
 }
 
 type Search struct {

@@ -15,8 +15,286 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/api/administrative-division": {
+      "get": {
+        "operationId": "Api_GetAdminDiv",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetAdminDivResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "superiorId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
+      "post": {
+        "operationId": "Api_PostAdminDiv",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAdminDivResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAdminDivRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "Api_PostLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "operationId": "Api_PostRegister",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostRegisterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostRegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    }
+  },
   "definitions": {
+    "DataResults": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "superiorId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvGetAdminDivResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetAdminDivResponseData"
+        }
+      }
+    },
+    "citizenvGetAdminDivResponseData": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataResults"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
+    "citizenvPagination": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "citizenvPostAdminDivRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "superiorId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostAdminDivResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostAdminDivResponseData"
+        }
+      }
+    },
+    "citizenvPostAdminDivResponseData": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "superiorId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostLoginRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
     "citizenvPostLoginResponse": {
       "type": "object",
       "properties": {
@@ -36,6 +314,17 @@
       "type": "object",
       "properties": {
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostRegisterRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
           "type": "string"
         }
       }
