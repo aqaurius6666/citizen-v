@@ -3,7 +3,8 @@ package user
 import "golang.org/x/xerrors"
 
 var (
-	ErrNotFound        = xerrors.New("record not found")
-	ErrInsertFail      = xerrors.New("insert failed")
-	ErrUsernameExisted = xerrors.New("username has already existed")
+	PREFIX             = "user"
+	ErrNotFound        = xerrors.Errorf("%s: record not found", PREFIX)
+	ErrInsertFail      = xerrors.Errorf("%s: insert failed", PREFIX)
+	ErrUsernameExisted = xerrors.Errorf("%s: username has already existed", PREFIX)
 )

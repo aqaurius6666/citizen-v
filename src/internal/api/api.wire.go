@@ -22,7 +22,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	wire.Build(
 		wire.FieldsOf(&opts, "MainRepo", "Sec"),
 		gin.New,
-		jwt.NewJWTService,
+		jwt.NewJWT,
 		wire.Struct(new(IndexController), "*"),
 		wire.Struct(new(AuthMiddleware), "*"),
 		wire.Struct(new(AuthController), "*"),

@@ -26,16 +26,16 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		logger: logger,
 	}
 	secretKey := opts.Sec
-	jwtService := jwt.NewJWTService(secretKey)
+	jwtJWT := jwt.NewJWT(secretKey)
 	authService := &AuthService{
 		Repo:       serverRepo,
-		JWTService: jwtService,
+		JWTService: jwtJWT,
 	}
 	authController := &AuthController{
 		Service: authService,
 	}
 	authMiddleware := &AuthMiddleware{
-		JWTService: jwtService,
+		JWTService: jwtJWT,
 	}
 	apiServer := &ApiServer{
 		G:                engine,

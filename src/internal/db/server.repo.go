@@ -5,7 +5,9 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach"
+	"github.com/aquarius6666/citizen-v/src/internal/db/role"
 	"github.com/aquarius6666/citizen-v/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database"
 	"github.com/sirupsen/logrus"
@@ -16,7 +18,9 @@ import (
 
 type ServerRepo interface {
 	database.CommonRepository
-	user.UserRepo
+	user.RoleRepo
+	role.RoleRepo
+	admindiv.AdminDivRepo
 }
 type DBDsn string
 

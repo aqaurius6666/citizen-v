@@ -27,20 +27,10 @@ cleanDB:
 
 seed:
 	@./dist/server seed-data --clean
-	@echo Hello
 
 test:
 	#go test ./src/cockroach/... -v -check.f "CockroachDbGraphTestSuite.*"
 	@go test ./... -v
-
-test-prepare-up:
-	@docker exec  up -f deploy/dev/docker-compose.yaml main-cdb -d
-
-test-prepare-down:
-	@docker-compose down -f deploy/dev/docker-compose.yaml main-cdb
-
-grpc-client:
-	@grpc-client-cli localhost:${GRPC_PORT}
 
 kill:
 	@(echo '{}' | grpc-client-cli -service Common -method Kill localhost:${GRPC_PORT}) > /nil 2> /nil || return 0
@@ -53,12 +43,6 @@ proto3:
 
 swagger: proto
 	@go generate ./src/swagger github.com/sotanext-team/medical-chain/src/mainservice/src/swagger 
-
-rebase: 
-	@git pull --rebase origin dev
-
-push:
-	@git push origin HEAD:automatic-branch -f
 
 prom:
 	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate

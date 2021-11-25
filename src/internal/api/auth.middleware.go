@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strings"
+
 	"github.com/aquarius6666/citizen-v/src/internal/lib"
 	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
 	"github.com/aquarius6666/citizen-v/src/internal/var/e"
@@ -8,17 +10,30 @@ import (
 )
 
 type AuthMiddleware struct {
-	JWTService jwt.JWTService
+	JWTService jwt.JWT
 }
 
 func (s *AuthMiddleware) CheckAuth(g *gin.Context) {
-	ok, err := s.JWTService.Verify()
+	var authString string
+	if authString = g.GetHeader("Authorization"); authString == "" {
+		lib.Unauthorized(g, e.ErrAuthMissingAuthorization)
+		return
+	}
+	if !strings.HasPrefix(authString, "Bearer ") {
+		lib.Unauthorized(g, e.ErrAuthTokenInvalid)
+		return
+	}
+	token := authString[7:]
+	ok, data, err := s.JWTService.Verify(token)
 	if err != nil {
 		lib.Unauthorized(g, err)
 		return
 	}
 	if !ok {
 		lib.Unauthorized(g, e.ErrAuthTokenFail)
+		return
 	}
+	g.Set("uid", data["uid"])
+	g.Set("role", data["role"])
 	g.Next()
 }

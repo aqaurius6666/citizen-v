@@ -8,7 +8,7 @@ import (
 
 type UserSuite struct {
 	suite.Suite
-	Repository UserRepo
+	Repository RoleRepo
 	Mock       sqlmock.Sqlmock
 }
 
