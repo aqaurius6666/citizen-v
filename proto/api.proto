@@ -29,6 +29,15 @@ service Api {
     }
 }
 
+message AdminDiv {
+    string code = 1;
+    string name = 2;
+    string superiorId = 3;
+    string type = 4;
+    string id = 5;
+    repeated AdminDiv subdiv = 6;
+}
+
 message GetAdminDivRequest {
     string code = 1;
     string name = 2;
@@ -42,16 +51,16 @@ message GetAdminDivResponse {
     int32 status = 2;
     Data data = 3;
     message Data {
-        repeated Results results = 1;
+        repeated AdminDiv results = 1;
         Pagination pagination = 2;
         
-        message Results {
-            string code = 1;
-            string name = 2;
-            string superiorId = 3;
-            string type = 4;
-            string id = 5;
-        }
+        // message Results {
+        //     string code = 1;
+        //     string name = 2;
+        //     string superiorId = 3;
+        //     string type = 4;
+        //     string id = 5;
+        // }
     }
 }
 
@@ -67,11 +76,7 @@ message PostAdminDivResponse {
     int32 status = 2;
     Data data = 3;
     message Data {
-        string code = 1;
-        string name = 2;
-        string superiorId = 3;
-        string type = 4;
-        string id = 5;
+        AdminDiv admindiv = 1;
     }
 }
 message Pagination {

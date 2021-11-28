@@ -9,7 +9,9 @@ package cockroach
 import (
 	"context"
 	admindiv2 "github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
+	citizen2 "github.com/aquarius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/citizen"
 	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/role"
 	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
 	role2 "github.com/aquarius6666/citizen-v/src/internal/db/role"
@@ -41,11 +43,16 @@ func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 	if err != nil {
 		return nil, err
 	}
+	citizenCDBRepo, err := citizen.InitCitizenCDBRepo(ctx, logger, db)
+	if err != nil {
+		return nil, err
+	}
 	serverCDBRepo := &ServerCDBRepo{
 		CDBRepository: cdbRepository,
 		UserRepo:      userCDBRepo,
 		RoleRepo:      roleCDBRepo,
 		AdminDivRepo:  adminDivCDBRepo,
+		CitizenRepo:   citizenCDBRepo,
 	}
 	return serverCDBRepo, nil
 }
@@ -62,6 +69,6 @@ func InitServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 	if err != nil {
 		return nil, err
 	}
-	s.SetInterfaces(&user2.User{}, &role2.Role{}, &admindiv2.AdminDiv{})
+	s.SetInterfaces(&user2.User{}, &role2.Role{}, &admindiv2.AdminDiv{}, &citizen2.Citizen{})
 	return s, nil
 }
