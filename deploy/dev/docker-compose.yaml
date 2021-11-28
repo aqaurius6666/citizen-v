@@ -40,6 +40,7 @@ services:
       - PPROF_PORT=6000
       - DISABLE_STATS=true
       - DB_URI=postgresql://root:root@cdb:26257/defaultdb?sslmode=disable
+      # - DB_URI=postgres://tlaawkagdaojbb:764a29a44844722107d7408ca01c583fdbf1c49c0f19ab2aecac1a374bd72d81@ec2-54-161-164-220.compute-1.amazonaws.com:5432/d8i5f537dtn5bd
       - LOG_LEVEL=debug
       - LOG_FORMAT=plain
       - JWT_SECRET_KEY=hangngungok-_-

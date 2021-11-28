@@ -7,8 +7,8 @@ import (
 
 type AdminDiv struct {
 	database.BaseModel
-	Name             *string     `gorm:"column:name;index:idx_name,unique;not null"`
-	Code             *string     `gorm:"column:code;index:idx_code,unique;not null"`
+	Name             *string     `gorm:"column:name;index:idx_admin_div_name,unique;not null"`
+	Code             *string     `gorm:"column:code;index:idx_admin_div_code,unique;not null"`
 	Type             *string     `gorm:"column:type;not null"`
 	SuperiorID       uuid.UUID   `gorm:"column:superior_id;type:uuid;not null"`
 	SuperiorAdminDiv *AdminDiv   `gorm:"foreignKey:SuperiorID"`
