@@ -25,6 +25,27 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 			Name: search.Name,
 		})
 	}
+	if search.Code != nil {
+		db = db.Where(&admindiv.AdminDiv{
+			Code: search.Code,
+		})
+	}
+	if search.Type != nil {
+		db = db.Where(&admindiv.AdminDiv{
+			Type: search.Type,
+		})
+	}
+	if search.SuperiorID != uuid.Nil {
+		db = db.Where(&admindiv.AdminDiv{
+			SuperiorID: search.SuperiorID,
+		})
+	}
+	if skip := search.DefaultSearchModel.Skip; skip != 0 {
+		db = db.Offset(skip)
+	}
+	if limit := search.DefaultSearchModel.Skip; limit != 0 {
+		db = db.Limit(limit)
+	}
 
 	return db
 }
@@ -49,4 +70,12 @@ func (u *AdminDivCDBRepo) InsertAdminDiv(value *admindiv.AdminDiv) (*admindiv.Ad
 		return nil, admindiv.ErrInsertFail
 	}
 	return value, nil
+}
+
+func (u *AdminDivCDBRepo) ListAdminDiv(search *admindiv.Search) ([]*admindiv.AdminDiv, error) {
+	r := make([]*admindiv.AdminDiv, 0)
+	if err := applySearch(u.Db, search).Debug().Find(&r).Error; err != nil {
+		return nil, err
+	}
+	return r, nil
 }

@@ -2,7 +2,9 @@ package cockroach
 
 import (
 	"github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aquarius6666/citizen-v/src/internal/db/citizen"
 	admindivcdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	citizencdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/citizen"
 	rolecdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/role"
 	usercdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
 	"github.com/aquarius6666/citizen-v/src/internal/db/role"
@@ -19,6 +21,15 @@ type ServerCDBRepo struct {
 	UserRepo     *usercdb.UserCDBRepo
 	RoleRepo     *rolecdb.RoleCDBRepo
 	AdminDivRepo *admindivcdb.AdminDivCDBRepo
+	CitizenRepo  *citizencdb.CitizenCDBRepo
+}
+
+func (s *ServerCDBRepo) SelectCitizen(search *citizen.Search) (*citizen.Citizen, error) {
+	return s.CitizenRepo.SelectCitizen(search)
+}
+
+func (s *ServerCDBRepo) InsertCitizen(u *citizen.Citizen) (*citizen.Citizen, error) {
+	return s.CitizenRepo.InsertCitizen(u)
 }
 
 func (s *ServerCDBRepo) SelectUser(search *user.Search) (*user.User, error) {
@@ -43,4 +54,8 @@ func (s *ServerCDBRepo) SelectAdminDiv(search *admindiv.Search) (*admindiv.Admin
 
 func (s *ServerCDBRepo) InsertAdminDiv(u *admindiv.AdminDiv) (*admindiv.AdminDiv, error) {
 	return s.AdminDivRepo.InsertAdminDiv(u)
+}
+
+func (s *ServerCDBRepo) ListAdminDiv(u *admindiv.Search) ([]*admindiv.AdminDiv, error) {
+	return s.AdminDivRepo.ListAdminDiv(u)
 }

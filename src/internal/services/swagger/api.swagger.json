@@ -166,7 +166,7 @@
     }
   },
   "definitions": {
-    "DataResults": {
+    "citizenvAdminDiv": {
       "type": "object",
       "properties": {
         "code": {
@@ -183,6 +183,12 @@
         },
         "id": {
           "type": "string"
+        },
+        "subdiv": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvAdminDiv"
+          }
         }
       }
     },
@@ -207,7 +213,7 @@
         "results": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DataResults"
+            "$ref": "#/definitions/citizenvAdminDiv"
           }
         },
         "pagination": {
@@ -267,20 +273,8 @@
     "citizenvPostAdminDivResponseData": {
       "type": "object",
       "properties": {
-        "code": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "superiorId": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
+        "admindiv": {
+          "$ref": "#/definitions/citizenvAdminDiv"
         }
       }
     },

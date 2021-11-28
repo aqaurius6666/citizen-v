@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/aquarius6666/citizen-v/src/internal/db"
 	"github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aquarius6666/citizen-v/src/internal/lib"
 	"github.com/aquarius6666/citizen-v/src/internal/var/e"
 	"github.com/aquarius6666/citizen-v/src/pb"
 	"github.com/google/uuid"
@@ -33,11 +34,13 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 	}
 
 	return &pb.PostAdminDivResponse_Data{
-		Code:       *addiv.Code,
-		Name:       *addiv.Name,
-		SuperiorId: addiv.SuperiorID.String(),
-		Id:         addiv.ID.String(),
-		Type:       *addiv.Type,
+		Admindiv: &pb.AdminDiv{
+			Code:       *addiv.Code,
+			Name:       *addiv.Name,
+			SuperiorId: addiv.SuperiorID.String(),
+			Id:         addiv.ID.String(),
+			Type:       *addiv.Type,
+		},
 	}, nil
 }
 func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdminDivResponse_Data, error) {
@@ -62,9 +65,13 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 			search.ID = sid
 		}
 	}
-
+	list, err := s.Repo.ListAdminDiv(&search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	result := lib.ConvertAdminDiv(list)
 	return &pb.GetAdminDivResponse_Data{
-		Results:    nil,
+		Results:    result,
 		Pagination: nil,
-	}, nil
+	}, err
 }

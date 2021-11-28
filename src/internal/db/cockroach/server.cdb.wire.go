@@ -10,7 +10,9 @@ import (
 	admindivcdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/admindiv"
 	rolecdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/role"
 	usercdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
+	citizencdb "github.com/aquarius6666/citizen-v/src/internal/db/cockroach/citizen"
 	"github.com/aquarius6666/citizen-v/src/internal/db/role"
+	"github.com/aquarius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aquarius6666/citizen-v/src/internal/db/user"
 	"github.com/aquarius6666/go-utils/database/cockroach"
 	"github.com/google/wire"
@@ -31,6 +33,7 @@ func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 		usercdb.InitUserCDBRepo,
 		rolecdb.InitRoleCDBRepo,
 		admindivcdb.InitAdminDivCDBRepo,
+		citizencdb.InitCitizenCDBRepo,
 		wire.Struct(new(ServerCDBRepo), "*"),
 	)
 	return &ServerCDBRepo{}, nil
@@ -41,6 +44,6 @@ func InitServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 	if err != nil {
 		return nil, err
 	}
-	s.SetInterfaces(&user.User{}, &role.Role{}, &admindiv.AdminDiv{})
+	s.SetInterfaces(&user.User{}, &role.Role{}, &admindiv.AdminDiv{}, &citizen.Citizen{})
 	return s, nil
 }
