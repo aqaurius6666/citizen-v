@@ -6,7 +6,7 @@ import (
 
 type Citizen struct {
 	database.BaseModel
-	Name         *string `gorm:"column:name;index:idx_name,unique;not null"`
+	Name         *string `gorm:"column:name;index:idx_citizen_name;not null"`
 	Birthday     *uint64 `gorm:"column:birthday;not null"`
 	PID          *string `gorm:"column:pid;not null"`
 	Gender       *string `gorm:"column:gender;not null"`
