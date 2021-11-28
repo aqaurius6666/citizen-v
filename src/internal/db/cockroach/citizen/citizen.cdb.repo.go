@@ -6,6 +6,7 @@ import (
 	"github.com/aquarius6666/go-utils/database/cockroach"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -25,7 +26,33 @@ func applySearch(db *gorm.DB, search *citizen.Search) *gorm.DB {
 			Name: search.Name,
 		})
 	}
+	if search.Birthday != nil {
+		db = db.Where(&citizen.Citizen{
+			Birthday: search.Birthday,
+		})
+	}
+	if search.PID != nil {
+		db = db.Where(&citizen.Citizen{
+			PID: search.PID,
+		})
+	}
+	if skip := search.DefaultSearchModel.Skip; skip != 0 {
+		db = db.Offset(skip)
+	}
+	if limit := search.DefaultSearchModel.Skip; limit != 0 {
+		db = db.Limit(limit)
+	}
 
+	orderBy := "name"
+	isDesc := true
+	if a := search.OrderBy; a != "" {
+		orderBy = a
+
+	}
+	if orderType := search.OrderType; orderType != "DESC" {
+		isDesc = false
+	}
+	db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: orderBy}, Desc: isDesc})
 	return db
 }
 
@@ -49,4 +76,12 @@ func (u *CitizenCDBRepo) InsertCitizen(value *citizen.Citizen) (*citizen.Citizen
 		return nil, citizen.ErrInsertFail
 	}
 	return value, nil
+}
+
+func (u *CitizenCDBRepo) ListCitizen(search *citizen.Search) ([]*citizen.Citizen, error) {
+	r := make([]*citizen.Citizen, 0)
+	if err := applySearch(u.Db, search).Debug().Find(&r).Error; err != nil {
+		return nil, err
+	}
+	return r, nil
 }

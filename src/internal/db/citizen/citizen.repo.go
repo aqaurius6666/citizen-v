@@ -3,7 +3,7 @@ package citizen
 type CitizenRepo interface {
 	SelectCitizen(*Search) (*Citizen, error)
 	InsertCitizen(*Citizen) (*Citizen, error)
-	// 	ListCitizen(*Search) ([]*Citizen, error)
+	ListCitizen(*Search) ([]*Citizen, error)
 }
 
 // func (u *Citizen) AfterFind(db *gorm.DB) error {

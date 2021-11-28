@@ -6,8 +6,16 @@ import (
 
 type Citizen struct {
 	database.BaseModel
-	Name     *string `gorm:"column:name;index:idx_name,unique;not null"`
-	Birthday uint64
+	Name         *string `gorm:"column:name;index:idx_name,unique;not null"`
+	Birthday     *uint64 `gorm:"column:birthday;not null"`
+	PID          *string `gorm:"column:pid;not null"`
+	Gender       *string `gorm:"column:gender;not null"`
+	Nationality  *string `gorm:"column:nationality;not null"`
+	FatherName   *string `gorm:"column:father_name"`
+	FatherPID    *string `gorm:"column:father_pid"`
+	MotherName   *string `gorm:"column:mother_name"`
+	MotherPID    *string `gorm:"column:mother_pid"`
+	CurrentPlace *string `gorm:"column:current_place"`
 }
 
 type Search struct {

@@ -6,6 +6,7 @@ import (
 	"github.com/aquarius6666/go-utils/database/cockroach"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -46,6 +47,17 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 	if limit := search.DefaultSearchModel.Skip; limit != 0 {
 		db = db.Limit(limit)
 	}
+
+	orderBy := "name"
+	isDesc := true
+	if a := search.OrderBy; a != "" {
+		orderBy = a
+
+	}
+	if orderType := search.OrderType; orderType != "DESC" {
+		isDesc = false
+	}
+	db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: orderBy}, Desc: isDesc})
 
 	return db
 }
