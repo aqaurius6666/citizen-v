@@ -4,7 +4,10 @@ import (
 	"context"
 
 	"github.com/aquarius6666/citizen-v/src/internal/db"
+	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/citizen"
 	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/role"
+	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
 	"github.com/urfave/cli/v2"
 )
 
@@ -59,6 +62,18 @@ func seedData(appCtx *cli.Context) error {
 	if err != nil {
 		logger.Error("seed seedRole fail, err:", err)
 	}
+	err = seedAdminDiv(service)
+	if err != nil {
+		logger.Error("seed admin div fail, err:", err)
+	}
+	err = seedCitizen(service)
+	if err != nil {
+		logger.Error("seed citizen fail, err:", err)
+	}
+	err = seedUser(service)
+	if err != nil {
+		logger.Error("seed user fail, err:", err)
+	}
 
 	return nil
 }
@@ -69,5 +84,32 @@ func seedRole(dbase db.ServerRepo) error {
 		return err
 	}
 	logger.Info("seed role successfully")
+	return nil
+}
+
+func seedAdminDiv(dbase db.ServerRepo) error {
+	err := dbase.RawSQL(admindiv.SQL)
+	if err != nil {
+		return err
+	}
+	logger.Info("seed admin div successfully")
+	return nil
+}
+
+func seedCitizen(dbase db.ServerRepo) error {
+	err := dbase.RawSQL(citizen.SQL)
+	if err != nil {
+		return err
+	}
+	logger.Info("seed citizen successfully")
+	return nil
+}
+
+func seedUser(dbase db.ServerRepo) error {
+	err := dbase.RawSQL(user.SQL)
+	if err != nil {
+		return err
+	}
+	logger.Info("seed user successfully")
 	return nil
 }

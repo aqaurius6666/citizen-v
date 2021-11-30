@@ -18,6 +18,8 @@ func (s *AdminDivController) HandleGet(g *gin.Context) {
 		SuperiorId: g.Query("superiorId"),
 		Type:       g.Query("type"),
 		Id:         g.Query("id"),
+		Limit:      g.Query("limit"),
+		Offset:     g.Query("offset"),
 	}
 	res, err := s.Service.ListAdminDiv(req)
 	if err != nil {

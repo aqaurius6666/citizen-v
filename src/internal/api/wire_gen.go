@@ -43,6 +43,12 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	adminDivController := &AdminDivController{
 		Service: adminDivService,
 	}
+	citizenService := &CitizenService{
+		Repo: serverRepo,
+	}
+	citizenController := &CitizenController{
+		Service: citizenService,
+	}
 	apiServer := &ApiServer{
 		G:                engine,
 		logger:           logger,
@@ -52,6 +58,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		Auth:             authController,
 		AuthMiddleware:   authMiddleware,
 		AdminDiv:         adminDivController,
+		Citizen:          citizenController,
 	}
 	return apiServer, nil
 }

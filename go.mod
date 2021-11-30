@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/profiler v0.1.1
 	contrib.go.opencensus.io/exporter/stackdriver v0.13.10
 	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/aquarius6666/go-utils v1.0.5
+	github.com/aquarius6666/go-utils v1.0.6
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/golang-jwt/jwt/v4 v4.1.0

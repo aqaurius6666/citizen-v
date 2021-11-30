@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/administrative-division": {
+    "/api/administrative-divisions": {
       "get": {
         "operationId": "Api_GetAdminDiv",
         "responses": {
@@ -60,6 +60,18 @@
           },
           {
             "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
             "in": "query",
             "required": false,
             "type": "string"
@@ -163,6 +175,126 @@
           "Api"
         ]
       }
+    },
+    "/api/citizens": {
+      "get": {
+        "operationId": "Api_GetCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "birthday",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
+      "post": {
+        "operationId": "Api_PostCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCitizenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/citizens/{id}": {
+      "get": {
+        "operationId": "Api_GetOneCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetOneCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
     }
   },
   "definitions": {
@@ -192,6 +324,48 @@
         }
       }
     },
+    "citizenvCitizen": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "nationality": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "fatherPid": {
+          "type": "string"
+        },
+        "motherName": {
+          "type": "string"
+        },
+        "motherPid": {
+          "type": "string"
+        },
+        "currentPlace": {
+          "type": "string"
+        },
+        "jobName": {
+          "type": "string"
+        },
+        "pid": {
+          "type": "string"
+        }
+      }
+    },
     "citizenvGetAdminDivResponse": {
       "type": "object",
       "properties": {
@@ -218,6 +392,58 @@
         },
         "pagination": {
           "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
+    "citizenvGetCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetCitizenResponseData"
+        }
+      }
+    },
+    "citizenvGetCitizenResponseData": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvCitizen"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
+    "citizenvGetOneCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetOneCitizenResponseData"
+        }
+      }
+    },
+    "citizenvGetOneCitizenResponseData": {
+      "type": "object",
+      "properties": {
+        "citizen": {
+          "$ref": "#/definitions/citizenvCitizen"
         }
       }
     },
@@ -275,6 +501,68 @@
       "properties": {
         "admindiv": {
           "$ref": "#/definitions/citizenvAdminDiv"
+        }
+      }
+    },
+    "citizenvPostCitizenRequest": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "birthday": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "nationality": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "fatherPid": {
+          "type": "string"
+        },
+        "motherName": {
+          "type": "string"
+        },
+        "motherPid": {
+          "type": "string"
+        },
+        "currentPlace": {
+          "type": "string"
+        },
+        "jobName": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostCitizenResponseData"
+        }
+      }
+    },
+    "citizenvPostCitizenResponseData": {
+      "type": "object",
+      "properties": {
+        "citizen": {
+          "$ref": "#/definitions/citizenvCitizen"
         }
       }
     },

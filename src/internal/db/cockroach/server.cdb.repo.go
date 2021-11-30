@@ -24,6 +24,14 @@ type ServerCDBRepo struct {
 	CitizenRepo  *citizencdb.CitizenCDBRepo
 }
 
+func (s *ServerCDBRepo) CountCitizen(search *citizen.Search) (*int64, error) {
+	return s.CitizenRepo.CountCitizen(search)
+}
+
+func (s *ServerCDBRepo) ListCitizen(search *citizen.Search) ([]*citizen.Citizen, error) {
+	return s.CitizenRepo.ListCitizen(search)
+}
+
 func (s *ServerCDBRepo) SelectCitizen(search *citizen.Search) (*citizen.Citizen, error) {
 	return s.CitizenRepo.SelectCitizen(search)
 }
@@ -58,4 +66,8 @@ func (s *ServerCDBRepo) InsertAdminDiv(u *admindiv.AdminDiv) (*admindiv.AdminDiv
 
 func (s *ServerCDBRepo) ListAdminDiv(u *admindiv.Search) ([]*admindiv.AdminDiv, error) {
 	return s.AdminDivRepo.ListAdminDiv(u)
+}
+
+func (s *ServerCDBRepo) CountAdminDiv(u *admindiv.Search) (*int64, error) {
+	return s.AdminDivRepo.CountAdminDiv(u)
 }

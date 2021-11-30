@@ -6,9 +6,9 @@ import (
 
 type Citizen struct {
 	database.BaseModel
-	Name         *string `gorm:"column:name;index:idx_citizen_name;not null"`
+	Name         *string `gorm:"column:name;not null"`
 	Birthday     *uint64 `gorm:"column:birthday;not null"`
-	PID          *string `gorm:"column:pid;not null"`
+	PID          *string `gorm:"column:pid;index:idx_citizen_pid,unique;not null"`
 	Gender       *string `gorm:"column:gender;not null"`
 	Nationality  *string `gorm:"column:nationality;not null"`
 	FatherName   *string `gorm:"column:father_name"`
@@ -16,6 +16,7 @@ type Citizen struct {
 	MotherName   *string `gorm:"column:mother_name"`
 	MotherPID    *string `gorm:"column:mother_pid"`
 	CurrentPlace *string `gorm:"column:current_place"`
+	JobName      *string `gorm:"column:job_name"`
 }
 
 type Search struct {

@@ -18,13 +18,30 @@ service Api {
     }
     rpc PostAdminDiv(PostAdminDivRequest) returns (PostAdminDivResponse) {
         option (google.api.http) = {
-            post: "/api/administrative-division"
+            post: "/api/administrative-divisions"
             body: "*"
         };
     }
     rpc GetAdminDiv(GetAdminDivRequest) returns (GetAdminDivResponse) {
         option (google.api.http) = {
-            get: "/api/administrative-division"
+            get: "/api/administrative-divisions"
+        };
+    }
+
+    rpc PostCitizen(PostCitizenRequest) returns (PostCitizenResponse) {
+        option (google.api.http) = {
+            post: "/api/citizens"
+            body: "*"
+        };
+    }
+    rpc GetCitizen(GetCitizenRequest) returns (GetCitizenResponse) {
+        option (google.api.http) = {
+            get: "/api/citizens"
+        };
+    }
+    rpc GetOneCitizen(GetOneCitizenRequest) returns (GetOneCitizenResponse) {
+        option (google.api.http) = {
+            get: "/api/citizens/{id=message}"
         };
     }
 }
@@ -38,12 +55,87 @@ message AdminDiv {
     repeated AdminDiv subdiv = 6;
 }
 
+message Citizen {
+    string id = 1;
+    string name = 2;
+    int32 birthday = 3;
+    string gender = 4;
+    string nationality = 5;
+    string fatherName = 6;
+    string fatherPid = 7;
+    string motherName = 8;
+    string motherPid = 9;
+    string currentPlace = 10;
+    string jobName = 11;
+    string pid = 12;
+}
+
+message GetOneCitizenRequest {
+    string id = 1;
+}
+
+message GetOneCitizenResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        Citizen citizen = 1;
+    }
+}
+
+
+message PostCitizenRequest {
+    string pid = 1;
+    string name = 2;
+    int32 birthday = 3;
+    string gender = 4;
+    string nationality = 5;
+    string fatherName = 6;
+    string fatherPid = 7;
+    string motherName = 8;
+    string motherPid = 9;
+    string currentPlace = 10;
+    string jobName = 11; 
+
+}
+
+message PostCitizenResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        Citizen citizen = 1;
+    }
+}
+
+
+message GetCitizenRequest {
+    string pid = 1;
+    string name = 2;
+    string birthday = 3;
+    string id = 4;
+    string limit = 5;
+    string offset = 6;
+}
+
+message GetCitizenResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated Citizen results = 1;
+        Pagination pagination = 2;
+    }
+}
+
 message GetAdminDivRequest {
     string code = 1;
     string name = 2;
     string superiorId = 3;
     string type = 4;
     string id = 5;
+    string limit = 6;
+    string offset = 7;
 }
 
 message GetAdminDivResponse {
@@ -53,14 +145,6 @@ message GetAdminDivResponse {
     message Data {
         repeated AdminDiv results = 1;
         Pagination pagination = 2;
-        
-        // message Results {
-        //     string code = 1;
-        //     string name = 2;
-        //     string superiorId = 3;
-        //     string type = 4;
-        //     string id = 5;
-        // }
     }
 }
 

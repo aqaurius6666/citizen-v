@@ -1,11 +1,14 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/aquarius6666/citizen-v/src/internal/db"
 	"github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aquarius6666/citizen-v/src/internal/lib"
 	"github.com/aquarius6666/citizen-v/src/internal/var/e"
 	"github.com/aquarius6666/citizen-v/src/pb"
+	"github.com/aquarius6666/go-utils/utils"
 	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
@@ -45,6 +48,7 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 }
 func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdminDivResponse_Data, error) {
 	var err error
+	var limit, skip int
 	var search admindiv.Search
 	if req.Code != "" {
 		search.Code = &req.Code
@@ -65,13 +69,37 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 			search.ID = sid
 		}
 	}
+
+	limit = 10
+	if req.Limit != "" {
+		if o, err := strconv.Atoi(req.Limit); err == nil {
+			limit = o
+		}
+	}
+	search.Limit = limit
+
+	skip = 0
+	if req.Offset != "" {
+		if o, err := strconv.Atoi(req.Offset); err == nil {
+			skip = o
+		}
+	}
+	search.Skip = skip
+	total, err := s.Repo.CountAdminDiv(&search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
 	list, err := s.Repo.ListAdminDiv(&search)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
 	result := lib.ConvertAdminDiv(list)
 	return &pb.GetAdminDivResponse_Data{
-		Results:    result,
-		Pagination: nil,
+		Results: result,
+		Pagination: &pb.Pagination{
+			Limit:  int32(limit),
+			Offset: int32(skip),
+			Total:  int32(int(utils.Int64Val(total))),
+		},
 	}, err
 }

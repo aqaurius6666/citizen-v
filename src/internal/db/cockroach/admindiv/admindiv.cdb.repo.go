@@ -41,12 +41,6 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 			SuperiorID: search.SuperiorID,
 		})
 	}
-	if skip := search.DefaultSearchModel.Skip; skip != 0 {
-		db = db.Offset(skip)
-	}
-	if limit := search.DefaultSearchModel.Skip; limit != 0 {
-		db = db.Limit(limit)
-	}
 
 	orderBy := "name"
 	isDesc := true
@@ -58,7 +52,8 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 		isDesc = false
 	}
 	db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: orderBy}, Desc: isDesc})
-
+	db = db.Offset(search.Skip)
+	db = db.Limit(search.Limit)
 	return db
 }
 
@@ -86,8 +81,16 @@ func (u *AdminDivCDBRepo) InsertAdminDiv(value *admindiv.AdminDiv) (*admindiv.Ad
 
 func (u *AdminDivCDBRepo) ListAdminDiv(search *admindiv.Search) ([]*admindiv.AdminDiv, error) {
 	r := make([]*admindiv.AdminDiv, 0)
-	if err := applySearch(u.Db, search).Debug().Find(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Find(&r).Error; err != nil {
 		return nil, err
 	}
 	return r, nil
+}
+
+func (u *AdminDivCDBRepo) CountAdminDiv(search *admindiv.Search) (*int64, error) {
+	var r int64
+	if err := applySearch(u.Db, search).Model(&admindiv.AdminDiv{}).Count(&r).Error; err != nil {
+		return nil, err
+	}
+	return &r, nil
 }
