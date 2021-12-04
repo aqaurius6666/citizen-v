@@ -3,7 +3,7 @@ package lib
 import (
 	"net/http"
 
-	"github.com/aquarius6666/go-utils/utils"
+	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/gin-gonic/gin"
 )
 

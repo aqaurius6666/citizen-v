@@ -3,8 +3,8 @@ package api
 import (
 	"math/rand"
 
-	"github.com/aquarius6666/citizen-v/src/internal/db"
-	"github.com/aquarius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/gin-gonic/gin"
 )
 

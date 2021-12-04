@@ -3,13 +3,13 @@ package api
 import (
 	"time"
 
-	"github.com/aquarius6666/citizen-v/src/internal/db"
-	"github.com/aquarius6666/citizen-v/src/internal/db/role"
-	"github.com/aquarius6666/citizen-v/src/internal/db/user"
-	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
-	"github.com/aquarius6666/citizen-v/src/internal/var/c"
-	"github.com/aquarius6666/citizen-v/src/internal/var/e"
-	"github.com/aquarius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
+	"github.com/aqaurius6666/citizen-v/src/internal/var/c"
+	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
+	"github.com/aqaurius6666/citizen-v/src/pb"
 	"golang.org/x/xerrors"
 )
 

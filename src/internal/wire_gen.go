@@ -8,9 +8,9 @@ package main
 
 import (
 	"context"
-	"github.com/aquarius6666/citizen-v/src/internal/api"
-	"github.com/aquarius6666/citizen-v/src/internal/db"
-	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
+	"github.com/aqaurius6666/citizen-v/src/internal/api"
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/sirupsen/logrus"
 )
 

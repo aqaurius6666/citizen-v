@@ -1,6 +1,6 @@
 package role
 
-import "github.com/aquarius6666/go-utils/database"
+import "github.com/aqaurius6666/go-utils/database"
 
 type Role struct {
 	database.BaseModel

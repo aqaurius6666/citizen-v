@@ -1,7 +1,7 @@
 package citizen
 
 import (
-	"github.com/aquarius6666/go-utils/database"
+	"github.com/aqaurius6666/go-utils/database"
 )
 
 type Citizen struct {

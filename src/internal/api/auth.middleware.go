@@ -3,9 +3,9 @@ package api
 import (
 	"strings"
 
-	"github.com/aquarius6666/citizen-v/src/internal/lib"
-	"github.com/aquarius6666/citizen-v/src/internal/services/jwt"
-	"github.com/aquarius6666/citizen-v/src/internal/var/e"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
+	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/gin-gonic/gin"
 )
 

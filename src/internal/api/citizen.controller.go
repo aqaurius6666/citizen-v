@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/aquarius6666/citizen-v/src/internal/lib"
-	"github.com/aquarius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/gin-gonic/gin"
 )
 

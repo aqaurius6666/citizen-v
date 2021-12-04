@@ -3,7 +3,7 @@ package jwt
 import (
 	"fmt"
 
-	"github.com/aquarius6666/citizen-v/src/internal/var/e"
+	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/xerrors"
 )

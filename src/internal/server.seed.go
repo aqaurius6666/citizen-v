@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 
-	"github.com/aquarius6666/citizen-v/src/internal/db"
-	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/admindiv"
-	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/citizen"
-	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/role"
-	"github.com/aquarius6666/citizen-v/src/internal/db/cockroach/user"
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/citizen"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/role"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/user"
 	"github.com/urfave/cli/v2"
 )
 

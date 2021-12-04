@@ -8,8 +8,8 @@ package role
 
 import (
 	"context"
-	"github.com/aquarius6666/go-utils/database/cockroach"
-	"github.com/aquarius6666/go-utils/logger"
+	"github.com/aqaurius6666/go-utils/database/cockroach"
+	"github.com/aqaurius6666/go-utils/logger"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

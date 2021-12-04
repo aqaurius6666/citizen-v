@@ -3,7 +3,7 @@ package api
 import (
 	"time"
 
-	"github.com/aquarius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )

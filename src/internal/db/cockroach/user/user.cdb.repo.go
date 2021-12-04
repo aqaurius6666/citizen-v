@@ -1,9 +1,9 @@
 package user
 
 import (
-	"github.com/aquarius6666/citizen-v/src/internal/db/user"
-	"github.com/aquarius6666/go-utils/database"
-	"github.com/aquarius6666/go-utils/database/cockroach"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
+	"github.com/aqaurius6666/go-utils/database"
+	"github.com/aqaurius6666/go-utils/database/cockroach"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

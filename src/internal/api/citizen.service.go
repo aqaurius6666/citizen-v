@@ -3,12 +3,12 @@ package api
 import (
 	"strconv"
 
-	"github.com/aquarius6666/citizen-v/src/internal/db"
-	"github.com/aquarius6666/citizen-v/src/internal/db/citizen"
-	"github.com/aquarius6666/citizen-v/src/internal/lib"
-	"github.com/aquarius6666/citizen-v/src/internal/var/e"
-	"github.com/aquarius6666/citizen-v/src/pb"
-	"github.com/aquarius6666/go-utils/utils"
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
+	"github.com/aqaurius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )

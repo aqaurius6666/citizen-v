@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/aquarius6666/citizen-v/src/internal/db/role"
-	"github.com/aquarius6666/go-utils/database"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
+	"github.com/aqaurius6666/go-utils/database"
 	"github.com/google/uuid"
 )
 

@@ -1,10 +1,10 @@
 package lib
 
 import (
-	"github.com/aquarius6666/citizen-v/src/internal/db/admindiv"
-	"github.com/aquarius6666/citizen-v/src/internal/db/citizen"
-	"github.com/aquarius6666/citizen-v/src/pb"
-	"github.com/aquarius6666/go-utils/utils"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
+	"github.com/aqaurius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/go-utils/utils"
 )
 
 func ConvertAdminDiv(db []*admindiv.AdminDiv) []*pb.AdminDiv {

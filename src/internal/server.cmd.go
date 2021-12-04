@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	cli2 "github.com/aquarius6666/go-utils/cli"
+	cli2 "github.com/aqaurius6666/go-utils/cli"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
