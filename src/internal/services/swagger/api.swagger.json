@@ -112,6 +112,77 @@
         ]
       }
     },
+    "/api/administrative-divisions/{id}": {
+      "get": {
+        "operationId": "Api_GetOneAdminDiv",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetOneAdminDivResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
+      "put": {
+        "operationId": "Api_PutOneAdminDiv",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPutOneAdminDivResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/auth/login": {
       "post": {
         "operationId": "Api_PostLogin",
@@ -294,6 +365,47 @@
         "tags": [
           "Api"
         ]
+      },
+      "put": {
+        "operationId": "Api_PutOneCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPutOneCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "citizen": {
+                  "$ref": "#/definitions/citizenvCitizen"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
       }
     }
   },
@@ -421,6 +533,29 @@
         },
         "pagination": {
           "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
+    "citizenvGetOneAdminDivResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetOneAdminDivResponseData"
+        }
+      }
+    },
+    "citizenvGetOneAdminDivResponseData": {
+      "type": "object",
+      "properties": {
+        "adminDiv": {
+          "$ref": "#/definitions/citizenvAdminDiv"
         }
       }
     },
@@ -637,6 +772,52 @@
         },
         "id": {
           "type": "string"
+        }
+      }
+    },
+    "citizenvPutOneAdminDivResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPutOneAdminDivResponseData"
+        }
+      }
+    },
+    "citizenvPutOneAdminDivResponseData": {
+      "type": "object",
+      "properties": {
+        "adminDiv": {
+          "$ref": "#/definitions/citizenvAdminDiv"
+        }
+      }
+    },
+    "citizenvPutOneCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPutOneCitizenResponseData"
+        }
+      }
+    },
+    "citizenvPutOneCitizenResponseData": {
+      "type": "object",
+      "properties": {
+        "citizen": {
+          "$ref": "#/definitions/citizenvCitizen"
         }
       }
     },

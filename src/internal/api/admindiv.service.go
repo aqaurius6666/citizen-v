@@ -6,6 +6,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/aqaurius6666/go-utils/utils"
@@ -17,25 +18,57 @@ type AdminDivService struct {
 	Repo db.ServerRepo
 }
 
+func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAdminDivResponse_Data, error) {
+	var err error
+	var sid uuid.UUID
+	var search admindiv.Search
+	if ok := validate.RequiredFields(req, "Id", "Name"); !ok {
+		return nil, e.ErrMissingBody
+	}
+	if sid, err = uuid.Parse(req.Id); err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	search.ID = sid
+
+	tempAdminDiv := admindiv.AdminDiv{
+		Name: &req.Name,
+	}
+	if err := validate.Validate(tempAdminDiv); err != nil {
+		return nil, admindiv.ErrInvalid
+	}
+
+	add, err := s.Repo.UpdateAdminDiv(&search, &tempAdminDiv)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	return &pb.PutOneAdminDivResponse_Data{
+		AdminDiv: lib.ConvertOneAdminDiv(add),
+	}, nil
+}
+
 func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostAdminDivResponse_Data, error) {
 	var err error
-	if req.Code == "" || req.Name == "" || req.SuperiorId == "" || req.Type == "" {
+	if ok := validate.RequiredFields(req, "Code", "Name", "SuperiorId", "Type"); !ok {
 		return nil, e.ErrMissingBody
 	}
 	var sid uuid.UUID
 	if sid, err = uuid.Parse(req.SuperiorId); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	addiv, err := s.Repo.InsertAdminDiv(&admindiv.AdminDiv{
+	tempAdminDiv := admindiv.AdminDiv{
 		Name:       &req.Name,
 		Code:       &req.Code,
 		Type:       &req.Type,
 		SuperiorID: sid,
-	})
+	}
+	if err := validate.Validate(tempAdminDiv); err != nil {
+		return nil, admindiv.ErrInvalid
+	}
+
+	addiv, err := s.Repo.InsertAdminDiv(&tempAdminDiv)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-
 	return &pb.PostAdminDivResponse_Data{
 		Admindiv: &pb.AdminDiv{
 			Code:       *addiv.Code,
@@ -46,6 +79,25 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 		},
 	}, nil
 }
+
+func (s *AdminDivService) GetAdminDivById(req *pb.GetOneAdminDivRequest) (*pb.GetOneAdminDivResponse_Data, error) {
+	var err error
+	var search admindiv.Search
+	if ok := validate.RequiredFields(req, "Id"); !ok {
+		return nil, e.ErrMissingBody
+	}
+	if search.ID, err = uuid.Parse(req.Id); err != nil {
+		return nil, e.ErrIdInvalid
+	}
+	add, err := s.Repo.SelectAdminDiv(&search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	return &pb.GetOneAdminDivResponse_Data{
+		AdminDiv: lib.ConvertOneAdminDiv(add),
+	}, nil
+}
+
 func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdminDivResponse_Data, error) {
 	var err error
 	var limit, skip int
@@ -93,9 +145,8 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	result := lib.ConvertAdminDiv(list)
 	return &pb.GetAdminDivResponse_Data{
-		Results: result,
+		Results: lib.ConvertAdminDivs(list),
 		Pagination: &pb.Pagination{
 			Limit:  int32(limit),
 			Offset: int32(skip),

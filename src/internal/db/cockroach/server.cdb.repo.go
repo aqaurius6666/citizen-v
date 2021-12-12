@@ -71,3 +71,7 @@ func (s *ServerCDBRepo) ListAdminDiv(u *admindiv.Search) ([]*admindiv.AdminDiv, 
 func (s *ServerCDBRepo) CountAdminDiv(u *admindiv.Search) (*int64, error) {
 	return s.AdminDivRepo.CountAdminDiv(u)
 }
+
+func (s *ServerCDBRepo) UpdateAdminDiv(u *admindiv.Search, v *admindiv.AdminDiv) (*admindiv.AdminDiv, error) {
+	return s.AdminDivRepo.UpdateAdminDiv(u, v)
+}

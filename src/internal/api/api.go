@@ -43,7 +43,9 @@ func (s *ApiServer) RegisterEndpoint() {
 	// Administrative division group
 	admindiv := api.Group("/administrative-divisions")
 	admindiv.GET("", s.AdminDiv.HandleGet)
+	admindiv.GET("/:id", s.AdminDiv.HandleGetOne)
 	admindiv.POST("", s.AdminDiv.HandlePost)
+	admindiv.PUT("/:id", s.AdminDiv.HandlePutOne)
 
 	// Citizen group
 	citizen := api.Group("/citizens")

@@ -14,6 +14,7 @@ import (
 	"cloud.google.com/go/profiler"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	commongrpc "github.com/aqaurius6666/go-utils/common_grpc"
 	commonpb "github.com/aqaurius6666/go-utils/common_grpc/pb"
@@ -28,9 +29,13 @@ import (
 )
 
 func runMain(appCtx *cli.Context) error {
+
 	var wg sync.WaitGroup
 	ctx, cancelFn := context.WithCancel(context.Background())
 	defer cancelFn()
+
+	validate.RegisterValidator()
+
 	errChan := make(chan error, 1)
 	if appCtx.Bool("disable-tracing") {
 		logger.Info("Tracing disabled.")

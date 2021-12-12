@@ -44,6 +44,24 @@ service Api {
             get: "/api/citizens/{id=message}"
         };
     }
+    rpc GetOneAdminDiv(GetOneAdminDivRequest) returns (GetOneAdminDivResponse) {
+        option (google.api.http) = {
+            get: "/api/administrative-divisions/{id=message}"
+        };
+    }
+    rpc PutOneCitizen(PutOneCitizenRequest) returns (PutOneCitizenResponse) {
+        option (google.api.http) = {
+            put: "/api/citizens/{id=message}"
+            body: "*"
+        };
+    }
+
+    rpc PutOneAdminDiv(PutOneAdminDivRequest) returns (PutOneAdminDivResponse) {
+        option (google.api.http) = {
+            put: "/api/administrative-divisions/{id=message}"
+            body: "*"
+        };
+    }
 }
 
 message AdminDiv {
@@ -68,6 +86,47 @@ message Citizen {
     string currentPlace = 10;
     string jobName = 11;
     string pid = 12;
+}
+
+message GetOneAdminDivRequest {
+    string id = 1;
+}
+
+message GetOneAdminDivResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        AdminDiv adminDiv = 1;
+    }
+}
+
+message PutOneAdminDivRequest {
+    string name = 1;
+    string id = 2;
+}
+
+message PutOneAdminDivResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        AdminDiv adminDiv = 1;
+    }
+}
+
+message PutOneCitizenRequest {
+    Citizen citizen = 1;
+    string id = 2;
+}
+
+message PutOneCitizenResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        Citizen citizen = 1;
+    }
 }
 
 message GetOneCitizenRequest {

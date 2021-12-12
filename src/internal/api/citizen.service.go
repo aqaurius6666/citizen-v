@@ -142,7 +142,7 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	result := lib.ConvertCitizen(list)
+	result := lib.ConvertCitizens(list)
 	return &pb.GetCitizenResponse_Data{
 		Results: result,
 		Pagination: &pb.Pagination{

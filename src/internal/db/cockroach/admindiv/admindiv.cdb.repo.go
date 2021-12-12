@@ -94,3 +94,10 @@ func (u *AdminDivCDBRepo) CountAdminDiv(search *admindiv.Search) (*int64, error)
 	}
 	return &r, nil
 }
+
+func (u *AdminDivCDBRepo) UpdateAdminDiv(search *admindiv.Search, value *admindiv.AdminDiv) (*admindiv.AdminDiv, error) {
+	if err := applySearch(u.Db, search).Model(&admindiv.AdminDiv{}).Updates(value).Error; err != nil {
+		return nil, err
+	}
+	return value, nil
+}

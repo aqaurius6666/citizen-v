@@ -10,6 +10,19 @@ type AdminDivController struct {
 	Service *AdminDivService
 }
 
+func (s *AdminDivController) HandleGetOne(g *gin.Context) {
+	var err error
+	req := &pb.GetOneAdminDivRequest{
+		Id: g.Param("id"),
+	}
+	res, err := s.Service.GetAdminDivById(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *AdminDivController) HandleGet(g *gin.Context) {
 	var err error
 	req := &pb.GetAdminDivRequest{
@@ -38,6 +51,23 @@ func (s *AdminDivController) HandlePost(g *gin.Context) {
 		return
 	}
 	res, err := s.Service.CreateAdminDiv(&req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
+func (s *AdminDivController) HandlePutOne(g *gin.Context) {
+	var req pb.PutOneAdminDivRequest
+	var err error
+	err = lib.GetBody(g, &req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	req.Id = g.Param("id")
+	res, err := s.Service.UpdateOne(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
 		return

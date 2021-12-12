@@ -25,6 +25,9 @@ type ApiClient interface {
 	PostCitizen(ctx context.Context, in *PostCitizenRequest, opts ...grpc.CallOption) (*PostCitizenResponse, error)
 	GetCitizen(ctx context.Context, in *GetCitizenRequest, opts ...grpc.CallOption) (*GetCitizenResponse, error)
 	GetOneCitizen(ctx context.Context, in *GetOneCitizenRequest, opts ...grpc.CallOption) (*GetOneCitizenResponse, error)
+	GetOneAdminDiv(ctx context.Context, in *GetOneAdminDivRequest, opts ...grpc.CallOption) (*GetOneAdminDivResponse, error)
+	PutOneCitizen(ctx context.Context, in *PutOneCitizenRequest, opts ...grpc.CallOption) (*PutOneCitizenResponse, error)
+	PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivRequest, opts ...grpc.CallOption) (*PutOneAdminDivResponse, error)
 }
 
 type apiClient struct {
@@ -98,6 +101,33 @@ func (c *apiClient) GetOneCitizen(ctx context.Context, in *GetOneCitizenRequest,
 	return out, nil
 }
 
+func (c *apiClient) GetOneAdminDiv(ctx context.Context, in *GetOneAdminDivRequest, opts ...grpc.CallOption) (*GetOneAdminDivResponse, error) {
+	out := new(GetOneAdminDivResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetOneAdminDiv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PutOneCitizen(ctx context.Context, in *PutOneCitizenRequest, opts ...grpc.CallOption) (*PutOneCitizenResponse, error) {
+	out := new(PutOneCitizenResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PutOneCitizen", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivRequest, opts ...grpc.CallOption) (*PutOneAdminDivResponse, error) {
+	out := new(PutOneAdminDivResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PutOneAdminDiv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -109,6 +139,9 @@ type ApiServer interface {
 	PostCitizen(context.Context, *PostCitizenRequest) (*PostCitizenResponse, error)
 	GetCitizen(context.Context, *GetCitizenRequest) (*GetCitizenResponse, error)
 	GetOneCitizen(context.Context, *GetOneCitizenRequest) (*GetOneCitizenResponse, error)
+	GetOneAdminDiv(context.Context, *GetOneAdminDivRequest) (*GetOneAdminDivResponse, error)
+	PutOneCitizen(context.Context, *PutOneCitizenRequest) (*PutOneCitizenResponse, error)
+	PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -136,6 +169,15 @@ func (UnimplementedApiServer) GetCitizen(context.Context, *GetCitizenRequest) (*
 }
 func (UnimplementedApiServer) GetOneCitizen(context.Context, *GetOneCitizenRequest) (*GetOneCitizenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOneCitizen not implemented")
+}
+func (UnimplementedApiServer) GetOneAdminDiv(context.Context, *GetOneAdminDivRequest) (*GetOneAdminDivResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOneAdminDiv not implemented")
+}
+func (UnimplementedApiServer) PutOneCitizen(context.Context, *PutOneCitizenRequest) (*PutOneCitizenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutOneCitizen not implemented")
+}
+func (UnimplementedApiServer) PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutOneAdminDiv not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -276,6 +318,60 @@ func _Api_GetOneCitizen_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetOneAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOneAdminDivRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetOneAdminDiv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetOneAdminDiv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetOneAdminDiv(ctx, req.(*GetOneAdminDivRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PutOneCitizen_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutOneCitizenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PutOneCitizen(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PutOneCitizen",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PutOneCitizen(ctx, req.(*PutOneCitizenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PutOneAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutOneAdminDivRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PutOneAdminDiv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PutOneAdminDiv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PutOneAdminDiv(ctx, req.(*PutOneAdminDivRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -310,6 +406,18 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOneCitizen",
 			Handler:    _Api_GetOneCitizen_Handler,
+		},
+		{
+			MethodName: "GetOneAdminDiv",
+			Handler:    _Api_GetOneAdminDiv_Handler,
+		},
+		{
+			MethodName: "PutOneCitizen",
+			Handler:    _Api_PutOneCitizen_Handler,
+		},
+		{
+			MethodName: "PutOneAdminDiv",
+			Handler:    _Api_PutOneAdminDiv_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
