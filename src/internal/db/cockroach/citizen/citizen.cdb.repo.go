@@ -87,3 +87,10 @@ func (u *CitizenCDBRepo) CountCitizen(search *citizen.Search) (*int64, error) {
 	}
 	return &r, nil
 }
+
+func (u *CitizenCDBRepo) UpdateCitizen(search *citizen.Search, value *citizen.Citizen) error {
+	if err := applySearch(u.Db, search).Model(&citizen.Citizen{}).Updates(&value).Error; err != nil {
+		return citizen.ErrUpdateFail
+	}
+	return nil
+}

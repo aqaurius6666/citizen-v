@@ -52,4 +52,6 @@ func (s *ApiServer) RegisterEndpoint() {
 	citizen.GET("", s.Citizen.HandleGet)
 	citizen.GET("/:id", s.Citizen.HandleGetById)
 	citizen.POST("", s.Citizen.HandlePost)
+	citizen.PUT("/:id", s.Citizen.HandlePutOne)
+
 }

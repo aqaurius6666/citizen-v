@@ -5,7 +5,7 @@ type AdminDivRepo interface {
 	InsertAdminDiv(*AdminDiv) (*AdminDiv, error)
 	ListAdminDiv(*Search) ([]*AdminDiv, error)
 	CountAdminDiv(*Search) (*int64, error)
-	UpdateAdminDiv(*Search, *AdminDiv) (*AdminDiv, error)
+	UpdateAdminDiv(*Search, *AdminDiv) error
 }
 
 // func (u *AdminDiv) AfterFind(db *gorm.DB) error {

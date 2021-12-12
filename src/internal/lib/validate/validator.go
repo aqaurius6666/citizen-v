@@ -11,14 +11,28 @@ var (
 	myvalidator *validator.Validate
 )
 
-func RegisterValidator() {
+func RegisterValidator() error {
+	var err error
 	myvalidator = validator.New()
-	myvalidator.RegisterValidation("myregexp", RegexTag)
-	myvalidator.RegisterValidation("vietnamese", VietnameseRegexTag)
-
+	err = myvalidator.RegisterValidation("regexp", RegexTag)
+	if err != nil {
+		return err
+	}
+	err = myvalidator.RegisterValidation("vietnamese", VietnameseRegexTag)
+	if err != nil {
+		return err
+	}
+	err = myvalidator.RegisterValidation("pid", PidRegexTag)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func Validate(s interface{}) error {
+	if myvalidator == nil {
+		panic("missing validator")
+	}
 	if err := myvalidator.Struct(s); err != nil {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs {
@@ -58,6 +72,11 @@ func handleField(t reflect.Type, v reflect.Value) bool {
 		if val == 0 {
 			return false
 		}
+	case reflect.Int32:
+		val, _ := v.Interface().(int32)
+		if val == 0 {
+			return false
+		}
 	case reflect.Int64:
 		val, _ := v.Interface().(int64)
 		if val == 0 {
@@ -71,6 +90,7 @@ func requiredStruct(t reflect.Type, v reflect.Value, fields ...string) bool {
 		numberFields := t.NumField()
 		for i := 0; i < numberFields; i++ {
 			if !handleField(t.Field(i).Type, v.Field(i)) {
+				fmt.Printf("missing field %s\n", t.Field(i).Type)
 				return false
 			}
 		}
@@ -84,6 +104,7 @@ func requiredStruct(t reflect.Type, v reflect.Value, fields ...string) bool {
 			return false
 		}
 		if !handleField(_f.Type, v.FieldByName(f)) {
+			fmt.Printf("missing field %s\n", f)
 			return false
 		}
 	}

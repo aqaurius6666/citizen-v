@@ -4,8 +4,10 @@ import (
 	"strconv"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/aqaurius6666/go-utils/utils"
@@ -17,6 +19,47 @@ type CitizenService struct {
 	Repo db.ServerRepo
 }
 
+func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCitizenResponse_Data, error) {
+	var err error
+	var sid uuid.UUID
+	var search citizen.Search
+	if ok := validate.RequiredFields(req,
+		"Id", "Name",
+		"Birthday", "Gender",
+		"Nationality", "FatherName", "FatherPid",
+		"MotherName", "MotherPid", "CurrentPlace",
+		"JobName", "Pid",
+	); !ok {
+		return nil, e.ErrMissingBody
+	}
+	if sid, err = uuid.Parse(req.Id); err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	search.ID = sid
+	tmpBirthday := uint64(int(req.Birthday))
+	tmp := citizen.Citizen{
+		Name:         &req.Name,
+		Birthday:     &tmpBirthday,
+		PID:          &req.Pid,
+		Gender:       &req.Gender,
+		Nationality:  &req.Nationality,
+		FatherName:   &req.FatherName,
+		FatherPID:    &req.FatherPid,
+		MotherName:   &req.MotherName,
+		MotherPID:    &req.MotherPid,
+		CurrentPlace: &req.CurrentPlace,
+		JobName:      &req.JobName,
+	}
+	if err := validate.Validate(tmp); err != nil {
+		return nil, admindiv.ErrInvalid
+	}
+
+	err = s.Repo.UpdateCitizen(&search, &tmp)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	return &pb.PutOneCitizenResponse_Data{}, nil
+}
 func (s *CitizenService) GetCitizenById(req *pb.GetOneCitizenRequest) (*pb.GetOneCitizenResponse_Data, error) {
 	var err error
 	var search citizen.Search

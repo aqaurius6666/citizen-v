@@ -7,9 +7,9 @@ import (
 
 type AdminDiv struct {
 	database.BaseModel
-	Name             *string     `gorm:"column:name;index:idx_admin_div_name,unique;not null" validate:"vietnamese"`
-	Code             *string     `gorm:"column:code;index:idx_admin_div_code,unique;not null" validate:"myregexp=^[0-9]+$"`
-	Type             *string     `gorm:"column:type;not null"`
+	Name             *string     `gorm:"column:name;index:idx_admin_div_name,unique;not null" validate:"omitempty,vietnamese"`
+	Code             *string     `gorm:"column:code;index:idx_admin_div_code,unique;not null" validate:"omitempty,regexp=^[0-9]+$"`
+	Type             *string     `gorm:"column:type;not null" validate:"eq=CITY|eq=DISTRICT|eq=TOWN"`
 	SuperiorID       uuid.UUID   `gorm:"column:superior_id;type:uuid;not null"`
 	SuperiorAdminDiv *AdminDiv   `gorm:"foreignKey:SuperiorID"`
 	SubDiv           []*AdminDiv `gorm:"many2many:div_sub_divs;joinForeignKey:SuperiorID"`

@@ -72,6 +72,10 @@ func (s *ServerCDBRepo) CountAdminDiv(u *admindiv.Search) (*int64, error) {
 	return s.AdminDivRepo.CountAdminDiv(u)
 }
 
-func (s *ServerCDBRepo) UpdateAdminDiv(u *admindiv.Search, v *admindiv.AdminDiv) (*admindiv.AdminDiv, error) {
+func (s *ServerCDBRepo) UpdateAdminDiv(u *admindiv.Search, v *admindiv.AdminDiv) error {
 	return s.AdminDivRepo.UpdateAdminDiv(u, v)
+}
+
+func (s *ServerCDBRepo) UpdateCitizen(u *citizen.Search, v *citizen.Citizen) error {
+	return s.CitizenRepo.UpdateCitizen(u, v)
 }

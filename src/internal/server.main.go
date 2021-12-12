@@ -28,14 +28,16 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func runMain(appCtx *cli.Context) error {
+func runMain(appCtx *cli.Context) (err error) {
 
 	var wg sync.WaitGroup
 	ctx, cancelFn := context.WithCancel(context.Background())
 	defer cancelFn()
 
-	validate.RegisterValidator()
-
+	err = validate.RegisterValidator()
+	if err != nil {
+		return err
+	}
 	errChan := make(chan error, 1)
 	if appCtx.Bool("disable-tracing") {
 		logger.Info("Tracing disabled.")

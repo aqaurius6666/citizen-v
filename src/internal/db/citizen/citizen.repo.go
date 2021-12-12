@@ -5,6 +5,7 @@ type CitizenRepo interface {
 	InsertCitizen(*Citizen) (*Citizen, error)
 	ListCitizen(*Search) ([]*Citizen, error)
 	CountCitizen(*Search) (*int64, error)
+	UpdateCitizen(*Search, *Citizen) error
 }
 
 // func (u *Citizen) AfterFind(db *gorm.DB) error {

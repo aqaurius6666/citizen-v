@@ -396,8 +396,39 @@
             "schema": {
               "type": "object",
               "properties": {
-                "citizen": {
-                  "$ref": "#/definitions/citizenvCitizen"
+                "name": {
+                  "type": "string"
+                },
+                "birthday": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "gender": {
+                  "type": "string"
+                },
+                "nationality": {
+                  "type": "string"
+                },
+                "fatherName": {
+                  "type": "string"
+                },
+                "fatherPid": {
+                  "type": "string"
+                },
+                "motherName": {
+                  "type": "string"
+                },
+                "motherPid": {
+                  "type": "string"
+                },
+                "currentPlace": {
+                  "type": "string"
+                },
+                "jobName": {
+                  "type": "string"
+                },
+                "pid": {
+                  "type": "string"
                 }
               }
             }
@@ -791,12 +822,7 @@
       }
     },
     "citizenvPutOneAdminDivResponseData": {
-      "type": "object",
-      "properties": {
-        "adminDiv": {
-          "$ref": "#/definitions/citizenvAdminDiv"
-        }
-      }
+      "type": "object"
     },
     "citizenvPutOneCitizenResponse": {
       "type": "object",
@@ -814,12 +840,7 @@
       }
     },
     "citizenvPutOneCitizenResponseData": {
-      "type": "object",
-      "properties": {
-        "citizen": {
-          "$ref": "#/definitions/citizenvCitizen"
-        }
-      }
+      "type": "object"
     },
     "protobufAny": {
       "type": "object",

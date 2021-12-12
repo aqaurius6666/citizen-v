@@ -111,13 +111,22 @@ message PutOneAdminDivResponse {
     int32 status = 2;
     Data data = 3;
     message Data {
-        AdminDiv adminDiv = 1;
     }
 }
 
 message PutOneCitizenRequest {
-    Citizen citizen = 1;
-    string id = 2;
+    string id = 1;
+    string name = 2;
+    int32 birthday = 3;
+    string gender = 4;
+    string nationality = 5;
+    string fatherName = 6;
+    string fatherPid = 7;
+    string motherName = 8;
+    string motherPid = 9;
+    string currentPlace = 10;
+    string jobName = 11;
+    string pid = 12;
 }
 
 message PutOneCitizenResponse {
@@ -125,7 +134,6 @@ message PutOneCitizenResponse {
     int32 status = 2;
     Data data = 3;
     message Data {
-        Citizen citizen = 1;
     }
 }
 

@@ -10,6 +10,23 @@ type CitizenController struct {
 	Service *CitizenService
 }
 
+func (s *CitizenController) HandlePutOne(g *gin.Context) {
+	var err error
+	var req pb.PutOneCitizenRequest
+	err = lib.GetBody(g, &req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	req.Id = g.Param("id")
+	res, err := s.Service.UpdateOne(&req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *CitizenController) HandleGetById(g *gin.Context) {
 	var err error
 	req := &pb.GetOneCitizenRequest{

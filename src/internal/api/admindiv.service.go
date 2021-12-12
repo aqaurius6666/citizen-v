@@ -37,13 +37,12 @@ func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAd
 		return nil, admindiv.ErrInvalid
 	}
 
-	add, err := s.Repo.UpdateAdminDiv(&search, &tempAdminDiv)
+	err = s.Repo.UpdateAdminDiv(&search, &tempAdminDiv)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	return &pb.PutOneAdminDivResponse_Data{
-		AdminDiv: lib.ConvertOneAdminDiv(add),
-	}, nil
+
+	return &pb.PutOneAdminDivResponse_Data{}, nil
 }
 
 func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostAdminDivResponse_Data, error) {
