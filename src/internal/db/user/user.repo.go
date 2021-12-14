@@ -5,4 +5,5 @@ type UserRepo interface {
 	InsertUser(*User) (*User, error)
 	CountUser(*Search) (*int64, error)
 	UpdateUser(*Search, *User) error
+	ListUser(*Search) ([]*User, error)
 }

@@ -68,6 +68,10 @@ func (s *ServerCDBRepo) ListAdminDiv(u *admindiv.Search) ([]*admindiv.AdminDiv, 
 	return s.AdminDivRepo.ListAdminDiv(u)
 }
 
+func (s *ServerCDBRepo) ListUser(u *user.Search) ([]*user.User, error) {
+	return s.UserRepo.ListUser(u)
+}
+
 func (s *ServerCDBRepo) CountAdminDiv(u *admindiv.Search) (*int64, error) {
 	return s.AdminDivRepo.CountAdminDiv(u)
 }

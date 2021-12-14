@@ -35,7 +35,7 @@ type RoleCDBRepo struct {
 
 func (u *RoleCDBRepo) SelectRole(search *role.Search) (*role.Role, error) {
 	r := role.Role{}
-	if err := applySearch(u.Db, search).First(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Select(search.Fields).First(&r).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, role.ErrNotFound
 		}

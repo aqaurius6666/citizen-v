@@ -27,11 +27,11 @@ type AuthService struct {
 
 func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResponse_Data, error) {
 	var err error
-	if !validate.RequiredFields(req, "PermissionZoneId", "RoleId") {
+	if !validate.RequiredFields(req, "AdminDivId", "RoleId") {
 		return nil, e.ErrMissingBody
 	}
 	var aid, rid uuid.UUID
-	if aid, err = uuid.Parse(req.PermissionZoneId); err != nil {
+	if aid, err = uuid.Parse(req.AdminDivId); err != nil {
 		return nil, e.ErrIdInvalid
 	}
 	if rid, err = uuid.Parse(req.RoleId); err != nil {
@@ -56,7 +56,7 @@ func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResp
 	}
 	number, err := s.Repo.CountUser(&user.Search{
 		User: user.User{
-			PermissionZoneID: aid,
+			AdminDivID: aid,
 		},
 	})
 	if err != nil {
@@ -68,10 +68,10 @@ func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResp
 	}
 	pass := lib.RandomPassword()
 	tmp := user.User{
-		Username:         utils.StrPtr(fmt.Sprintf("citizen%s", *add.Code)),
-		HashPassword:     lib.MyHashPassword(pass),
-		PermissionZoneID: add.ID,
-		RoleID:           rol.ID,
+		Username:     utils.StrPtr(fmt.Sprintf("citizen%s", *add.Code)),
+		HashPassword: lib.MyHashPassword(pass),
+		AdminDivID:   add.ID,
+		RoleID:       rol.ID,
 	}
 	usr, err := s.Repo.InsertUser(&tmp)
 	if err != nil {

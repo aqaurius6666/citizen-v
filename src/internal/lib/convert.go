@@ -1,10 +1,18 @@
 package lib
 
 import (
+	"fmt"
+	"strings"
+
+	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/utils"
+	"github.com/google/uuid"
 )
 
 func ConvertAdminDivs(db []*admindiv.AdminDiv) []*pb.AdminDiv {
@@ -23,6 +31,95 @@ func ConvertOneAdminDiv(s *admindiv.AdminDiv) *pb.AdminDiv {
 		Type:       utils.StrVal(s.Type),
 		Id:         s.ID.String(),
 		Subdiv:     ConvertAdminDivs(s.SubDiv),
+	}
+}
+
+func GetAdminDivFullName(id uuid.UUID, repo db.ServerRepo) (*string, error) {
+	var name string
+	count := 0
+	tmp := id
+	for tmp != uuid.Nil {
+		add, err := repo.SelectAdminDiv(&admindiv.Search{
+			DefaultSearchModel: database.DefaultSearchModel{
+				Fields: []string{"name", "superior_id"},
+			},
+			AdminDiv: admindiv.AdminDiv{
+				BaseModel: database.BaseModel{
+					ID: tmp,
+				},
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		name = fmt.Sprintf("%s$$%s", *add.Name, name)
+		tmp = add.SuperiorID
+		count++
+	}
+	name = strings.Replace(name, "$$", ", ", count-1)
+	name = strings.ReplaceAll(name, "$$", "")
+
+	return &name, nil
+}
+
+func GetRoleName(id uuid.UUID, repo db.ServerRepo) (*string, error) {
+	r, err := repo.SelectRole(&role.Search{
+		DefaultSearchModel: database.DefaultSearchModel{
+			Fields: []string{"name"},
+		},
+		Role: role.Role{
+			BaseModel: database.BaseModel{
+				ID: id,
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return r.Name, nil
+}
+
+func ConvertUsers(d []*user.User, repo db.ServerRepo) []*pb.User {
+	usrs := make([]*pb.User, 0)
+	for _, s := range d {
+		usrs = append(usrs, ConvertOneUser(s, repo))
+	}
+	return usrs
+}
+
+func ConvertPagination(skip, limit int, total int64) *pb.Pagination {
+	return &pb.Pagination{
+		Total:  int32(total),
+		Limit:  int32(limit),
+		Offset: int32(skip),
+	}
+}
+
+func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {
+	var adminDivName, roleName *string
+	var err error
+	if s.AdminDivID != uuid.Nil {
+		adminDivName, err = GetAdminDivFullName(s.AdminDivID, repo)
+		if err != nil {
+			fmt.Printf("err: %v\n", err)
+		}
+
+	}
+	if s.RoleID != uuid.Nil {
+		roleName, err = GetRoleName(s.RoleID, repo)
+		if err != nil {
+			fmt.Printf("err: %v\n", err)
+		}
+	}
+	return &pb.User{
+		Id:           s.ID.String(),
+		Username:     utils.StrVal(s.Username),
+		AdminDivId:   s.AdminDivID.String(),
+		RoleId:       s.RoleID.String(),
+		IsActive:     utils.BoolVal(s.IsActive),
+		AdminDivName: utils.StrVal(adminDivName),
+		RoleName:     utils.StrVal(roleName),
 	}
 }
 

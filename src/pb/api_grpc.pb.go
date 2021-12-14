@@ -30,6 +30,7 @@ type ApiClient interface {
 	PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivRequest, opts ...grpc.CallOption) (*PutOneAdminDivResponse, error)
 	PostAuthIssue(ctx context.Context, in *PostAuthIssueRequest, opts ...grpc.CallOption) (*PostAuthIssueResponse, error)
 	PostAuthPassword(ctx context.Context, in *PostAuthPasswordRequest, opts ...grpc.CallOption) (*PostAuthPasswordResponse, error)
+	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 }
 
 type apiClient struct {
@@ -148,6 +149,15 @@ func (c *apiClient) PostAuthPassword(ctx context.Context, in *PostAuthPasswordRe
 	return out, nil
 }
 
+func (c *apiClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error) {
+	out := new(GetUsersResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -164,6 +174,7 @@ type ApiServer interface {
 	PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error)
 	PostAuthIssue(context.Context, *PostAuthIssueRequest) (*PostAuthIssueResponse, error)
 	PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error)
+	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -206,6 +217,9 @@ func (UnimplementedApiServer) PostAuthIssue(context.Context, *PostAuthIssueReque
 }
 func (UnimplementedApiServer) PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostAuthPassword not implemented")
+}
+func (UnimplementedApiServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -436,6 +450,24 @@ func _Api_PostAuthPassword_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetUsers(ctx, req.(*GetUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -490,6 +522,10 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostAuthPassword",
 			Handler:    _Api_PostAuthPassword_Handler,
+		},
+		{
+			MethodName: "GetUsers",
+			Handler:    _Api_GetUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -17,6 +17,7 @@ type ApiServer struct {
 	AuthMiddleware   *AuthMiddleware
 	AdminDiv         *AdminDivController
 	Citizen          *CitizenController
+	User             *UserController
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -55,5 +56,9 @@ func (s *ApiServer) RegisterEndpoint() {
 	citizen.GET("/:id", s.Citizen.HandleGetById)
 	citizen.POST("", s.Citizen.HandlePost)
 	citizen.PUT("/:id", s.Citizen.HandlePutOne)
+
+	// User group
+	user := api.Group("/users")
+	user.GET("", s.User.HandleGet)
 
 }

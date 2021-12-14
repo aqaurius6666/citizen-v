@@ -25,9 +25,9 @@ func applySearch(db *gorm.DB, search *user.Search) *gorm.DB {
 			Username: search.Username,
 		})
 	}
-	if search.PermissionZoneID != uuid.Nil {
+	if search.AdminDivID != uuid.Nil {
 		db = db.Where(&user.User{
-			PermissionZoneID: search.PermissionZoneID,
+			AdminDivID: search.AdminDivID,
 		})
 
 	}
@@ -76,4 +76,12 @@ func (u *UserCDBRepo) CountUser(search *user.Search) (*int64, error) {
 		return nil, err
 	}
 	return &r, nil
+}
+
+func (u *UserCDBRepo) ListUser(search *user.Search) ([]*user.User, error) {
+	r := make([]*user.User, 0)
+	if err := applySearch(u.Db, search).Offset(search.Skip).Limit(search.Limit).Find(&r).Error; err != nil {
+		return nil, err
+	}
+	return r, nil
 }

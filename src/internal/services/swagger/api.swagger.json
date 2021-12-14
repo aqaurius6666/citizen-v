@@ -502,6 +502,66 @@
           "Api"
         ]
       }
+    },
+    "/api/users": {
+      "get": {
+        "operationId": "Api_GetUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetUsersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "roleId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
     }
   },
   "definitions": {
@@ -677,6 +737,35 @@
         }
       }
     },
+    "citizenvGetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetUsersResponseData"
+        }
+      }
+    },
+    "citizenvGetUsersResponseData": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvUser"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
     "citizenvPagination": {
       "type": "object",
       "properties": {
@@ -737,7 +826,7 @@
     "citizenvPostAuthIssueRequest": {
       "type": "object",
       "properties": {
-        "permissionZoneId": {
+        "adminDivId": {
           "type": "string"
         },
         "roleId": {
@@ -977,6 +1066,32 @@
     },
     "citizenvPutOneCitizenResponseData": {
       "type": "object"
+    },
+    "citizenvUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "adminDivId": {
+          "type": "string"
+        },
+        "adminDivName": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "string"
+        },
+        "roleName": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      }
     },
     "protobufAny": {
       "type": "object",

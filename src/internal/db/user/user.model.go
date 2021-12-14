@@ -14,8 +14,9 @@ type User struct {
 	UseDefaultPassword *bool              `gorm:"column:use_default_password;default:true;not null"`
 	Role               *role.Role         `gorm:"foreignKey:RoleID"`
 	RoleID             uuid.UUID          `gorm:"column:role_id;type:uuid;not null" `
-	PermissionZoneID   uuid.UUID          `gorm:"column:permission_zone_id;uuid" `
-	PermissionZone     *admindiv.AdminDiv `gorm:"foreignKey:PermissionZoneID"`
+	AdminDivID         uuid.UUID          `gorm:"column:admin_div_id;uuid" `
+	AdminDiv           *admindiv.AdminDiv `gorm:"foreignKey:AdminDivID"`
+	IsActive           *bool              `gorm:"column:is_active;default:true"`
 }
 
 type Search struct {
