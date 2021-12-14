@@ -79,3 +79,10 @@ func (s *ServerCDBRepo) UpdateAdminDiv(u *admindiv.Search, v *admindiv.AdminDiv)
 func (s *ServerCDBRepo) UpdateCitizen(u *citizen.Search, v *citizen.Citizen) error {
 	return s.CitizenRepo.UpdateCitizen(u, v)
 }
+func (s *ServerCDBRepo) UpdateUser(u *user.Search, v *user.User) error {
+	return s.UserRepo.UpdateUser(u, v)
+}
+
+func (s *ServerCDBRepo) CountUser(u *user.Search) (*int64, error) {
+	return s.UserRepo.CountUser(u)
+}

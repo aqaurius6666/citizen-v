@@ -26,9 +26,6 @@ func (s JWTService) Sign(c ClaimStruct) (string, error) {
 	claim := jwt.MapClaims{
 		"exp":  jwt.NewNumericDate(c.ExpiresAt),
 		"iat":  jwt.NewNumericDate(c.IssuedAt),
-		"nbf":  jwt.NewNumericDate(c.NotBefore),
-		"sub":  c.Subject,
-		"iss":  c.Issuer,
 		"uid":  c.Uid,
 		"role": c.RoleName,
 	}

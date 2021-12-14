@@ -17,8 +17,5 @@ type ClaimStruct struct {
 	ExpiresAt time.Time
 	Uid       string
 	IssuedAt  time.Time
-	Issuer    string
-	NotBefore time.Time
-	Subject   string
 	RoleName  string
 }

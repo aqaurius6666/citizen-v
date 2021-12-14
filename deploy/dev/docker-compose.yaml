@@ -44,6 +44,7 @@ services:
       - LOG_LEVEL=debug
       - LOG_FORMAT=plain
       - JWT_SECRET_KEY=hangngungok-_-
+      - SERVER_KEY=vuvjppro.-.
       - GCFLAGS
     networks:
       - main

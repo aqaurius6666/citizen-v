@@ -10,6 +10,22 @@ type AuthController struct {
 	Service *AuthService
 }
 
+func (s *AuthController) HandlePostIssue(g *gin.Context) {
+	var req pb.PostAuthIssueRequest
+	var err error
+	err = lib.GetBody(g, &req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	res, err := s.Service.Issue(&req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *AuthController) HandlePostRegister(g *gin.Context) {
 	var req pb.PostRegisterRequest
 	var err error
@@ -35,6 +51,23 @@ func (s *AuthController) HandlePostLogin(g *gin.Context) {
 		return
 	}
 	res, err := s.Service.Login(&req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
+func (s *AuthController) HandlePostPassword(g *gin.Context) {
+	var req pb.PostAuthPasswordRequest
+	var err error
+	err = lib.GetBody(g, &req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	req.Id = g.GetString("uid")
+	res, err := s.Service.ChangePassword(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
 		return

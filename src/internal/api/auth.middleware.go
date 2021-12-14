@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
@@ -26,6 +27,7 @@ func (s *AuthMiddleware) CheckAuth(g *gin.Context) {
 	token := authString[7:]
 	ok, data, err := s.JWTService.Verify(token)
 	if err != nil {
+		fmt.Printf("err: %v\n", err)
 		lib.Unauthorized(g, err)
 		return
 	}

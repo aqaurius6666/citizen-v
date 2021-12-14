@@ -183,6 +183,38 @@
         ]
       }
     },
+    "/api/auth/issue": {
+      "post": {
+        "operationId": "Api_PostAuthIssue",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAuthIssueResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAuthIssueRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/auth/login": {
       "post": {
         "operationId": "Api_PostLogin",
@@ -207,6 +239,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/citizenvPostLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/auth/password": {
+      "post": {
+        "operationId": "Api_PostAuthPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAuthPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostAuthPasswordRequest"
             }
           }
         ],
@@ -670,6 +734,75 @@
         }
       }
     },
+    "citizenvPostAuthIssueRequest": {
+      "type": "object",
+      "properties": {
+        "permissionZoneId": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostAuthIssueResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostAuthIssueResponseData"
+        }
+      }
+    },
+    "citizenvPostAuthIssueResponseData": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostAuthPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "oldPassword": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostAuthPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostAuthPasswordResponseData"
+        }
+      }
+    },
+    "citizenvPostAuthPasswordResponseData": {
+      "type": "object"
+    },
     "citizenvPostCitizenRequest": {
       "type": "object",
       "properties": {
@@ -763,6 +896,9 @@
       "properties": {
         "token": {
           "type": "string"
+        },
+        "useDefaultPassword": {
+          "type": "boolean"
         }
       }
     },

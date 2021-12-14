@@ -39,6 +39,8 @@ func (s *ApiServer) RegisterEndpoint() {
 	auth.POST("/register", s.Auth.HandlePostRegister)
 	auth.POST("/login", s.Auth.HandlePostLogin)
 	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
+	auth.POST("/issue", s.Auth.HandlePostIssue)
+	auth.POST("/password", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostPassword)
 
 	// Administrative division group
 	admindiv := api.Group("/administrative-divisions")

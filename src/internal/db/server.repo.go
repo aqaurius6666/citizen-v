@@ -19,7 +19,7 @@ import (
 
 type ServerRepo interface {
 	database.CommonRepository
-	user.RoleRepo
+	user.UserRepo
 	role.RoleRepo
 	admindiv.AdminDivRepo
 	citizen.CitizenRepo

@@ -28,6 +28,8 @@ type ApiClient interface {
 	GetOneAdminDiv(ctx context.Context, in *GetOneAdminDivRequest, opts ...grpc.CallOption) (*GetOneAdminDivResponse, error)
 	PutOneCitizen(ctx context.Context, in *PutOneCitizenRequest, opts ...grpc.CallOption) (*PutOneCitizenResponse, error)
 	PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivRequest, opts ...grpc.CallOption) (*PutOneAdminDivResponse, error)
+	PostAuthIssue(ctx context.Context, in *PostAuthIssueRequest, opts ...grpc.CallOption) (*PostAuthIssueResponse, error)
+	PostAuthPassword(ctx context.Context, in *PostAuthPasswordRequest, opts ...grpc.CallOption) (*PostAuthPasswordResponse, error)
 }
 
 type apiClient struct {
@@ -128,6 +130,24 @@ func (c *apiClient) PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivReques
 	return out, nil
 }
 
+func (c *apiClient) PostAuthIssue(ctx context.Context, in *PostAuthIssueRequest, opts ...grpc.CallOption) (*PostAuthIssueResponse, error) {
+	out := new(PostAuthIssueResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostAuthIssue", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PostAuthPassword(ctx context.Context, in *PostAuthPasswordRequest, opts ...grpc.CallOption) (*PostAuthPasswordResponse, error) {
+	out := new(PostAuthPasswordResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostAuthPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -142,6 +162,8 @@ type ApiServer interface {
 	GetOneAdminDiv(context.Context, *GetOneAdminDivRequest) (*GetOneAdminDivResponse, error)
 	PutOneCitizen(context.Context, *PutOneCitizenRequest) (*PutOneCitizenResponse, error)
 	PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error)
+	PostAuthIssue(context.Context, *PostAuthIssueRequest) (*PostAuthIssueResponse, error)
+	PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -178,6 +200,12 @@ func (UnimplementedApiServer) PutOneCitizen(context.Context, *PutOneCitizenReque
 }
 func (UnimplementedApiServer) PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutOneAdminDiv not implemented")
+}
+func (UnimplementedApiServer) PostAuthIssue(context.Context, *PostAuthIssueRequest) (*PostAuthIssueResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostAuthIssue not implemented")
+}
+func (UnimplementedApiServer) PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostAuthPassword not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -372,6 +400,42 @@ func _Api_PutOneAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_PostAuthIssue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuthIssueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostAuthIssue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostAuthIssue",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostAuthIssue(ctx, req.(*PostAuthIssueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PostAuthPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostAuthPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostAuthPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostAuthPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostAuthPassword(ctx, req.(*PostAuthPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +482,14 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PutOneAdminDiv",
 			Handler:    _Api_PutOneAdminDiv_Handler,
+		},
+		{
+			MethodName: "PostAuthIssue",
+			Handler:    _Api_PostAuthIssue_Handler,
+		},
+		{
+			MethodName: "PostAuthPassword",
+			Handler:    _Api_PostAuthPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
