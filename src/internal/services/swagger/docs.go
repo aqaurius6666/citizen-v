@@ -5,8 +5,10 @@ package swagger
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"text/template"
+	"time"
 )
 
 type swaggerInfo struct {
@@ -36,6 +38,7 @@ type SwaggerStruct struct {
 func (s *SwaggerStruct) ReadDoc() string {
 	sInfo := SwaggerInfo
 	sInfo.Description = strings.Replace(sInfo.Description, "\n", "\\n", -1)
+	sInfo.Version = fmt.Sprintf("%s", time.Now().String())
 
 	t, err := template.New("swagger_info").Funcs(template.FuncMap{
 		"marshal": func(v interface{}) string {

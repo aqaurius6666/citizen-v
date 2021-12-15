@@ -50,3 +50,5 @@ prom:
 lint:
 	@golangci-lint run
 
+logs-heroku:
+	@heroku logs --tail -a citizen-v

@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"text/template"
+	"time"
 )
 
 func main() {
@@ -66,7 +67,7 @@ func writeFile(name, path, from string) {
 	}
 	temp.Execute(file, map[string]string{
 		"VAR_NAME":  fmt.Sprintf("%s_JSON", strings.ToUpper(name)),
-		"JSON_STR":  string(b),
+		"JSON_STR":  strings.Replace(string(b), "version not set", time.Now().Format(time.RFC1123), 1),
 		"BACK_TICK": "`",
 	})
 	// Save file changes.
