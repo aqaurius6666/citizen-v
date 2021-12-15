@@ -16,9 +16,12 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/swagger"
 	commongrpc "github.com/aqaurius6666/go-utils/common_grpc"
 	commonpb "github.com/aqaurius6666/go-utils/common_grpc/pb"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"github.com/urfave/cli/v2"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
@@ -79,6 +82,12 @@ func runMain(appCtx *cli.Context) (err error) {
 	go func() {
 		defer wg.Done()
 		mainServer.ApiServer.RegisterEndpoint()
+		mainServer.ApiServer.G.GET("/swagger/*any", swagger.CustomWrapHandler(
+			&ginSwagger.Config{
+				URL:         "api.json",
+				DeepLinking: true,
+			},
+			swaggerFiles.Handler))
 		logger.WithField("port", appCtx.Int("http-port")).Info("listening for HTTP connections")
 		if err := http.Serve(httpListner, mainServer.ApiServer.G); err != nil {
 			logger.Fatalf("failed to serve: %v", err)

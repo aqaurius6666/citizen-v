@@ -41,11 +41,12 @@ logs:
 proto3:
 	@/bin/sh -c ./scripts/gen-proto.sh
 
-swagger: proto
-	@go generate ./src/swagger github.com/sotanext-team/medical-chain/src/mainservice/src/swagger 
+swagger: proto3
+	@go generate ./src/swagger github.com/aqaurius6666/citizen-v/src/internal/services/swagger 
 
 prom:
 	@docker-compose --project-name=go-go -f deploy/dev/docker-prometheus.yaml up -d --build --force-recreate
 
 lint:
 	@golangci-lint run
+
