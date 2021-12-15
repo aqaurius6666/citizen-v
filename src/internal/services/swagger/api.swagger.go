@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Wed, 15 Dec 2021 13:15:58 +07"
+    "version": "Wed, 15 Dec 2021 15:20:30 +07"
   },
   "tags": [
     {
@@ -568,6 +568,17 @@ var API_JSON = `{
     }
   },
   "definitions": {
+    "DataResults": {
+      "type": "object",
+      "properties": {
+        "adminDiv": {
+          "$ref": "#/definitions/citizenvAdminDiv"
+        },
+        "campaign": {
+          "$ref": "#/definitions/citizenvCampaign"
+        }
+      }
+    },
     "citizenvAdminDiv": {
       "type": "object",
       "properties": {
@@ -591,6 +602,18 @@ var API_JSON = `{
           "items": {
             "$ref": "#/definitions/citizenvAdminDiv"
           }
+        }
+      }
+    },
+    "citizenvCampaign": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDone": {
+          "type": "boolean"
         }
       }
     },
@@ -657,7 +680,7 @@ var API_JSON = `{
         "results": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/citizenvAdminDiv"
+            "$ref": "#/definitions/DataResults"
           }
         },
         "pagination": {

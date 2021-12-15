@@ -565,6 +565,17 @@
     }
   },
   "definitions": {
+    "DataResults": {
+      "type": "object",
+      "properties": {
+        "adminDiv": {
+          "$ref": "#/definitions/citizenvAdminDiv"
+        },
+        "campaign": {
+          "$ref": "#/definitions/citizenvCampaign"
+        }
+      }
+    },
     "citizenvAdminDiv": {
       "type": "object",
       "properties": {
@@ -588,6 +599,18 @@
           "items": {
             "$ref": "#/definitions/citizenvAdminDiv"
           }
+        }
+      }
+    },
+    "citizenvCampaign": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDone": {
+          "type": "boolean"
         }
       }
     },
@@ -654,7 +677,7 @@
         "results": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/citizenvAdminDiv"
+            "$ref": "#/definitions/DataResults"
           }
         },
         "pagination": {

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
@@ -23,6 +24,7 @@ type ServerRepo interface {
 	role.RoleRepo
 	admindiv.AdminDivRepo
 	citizen.CitizenRepo
+	campaign.CampaignRepo
 }
 type DBDsn string
 

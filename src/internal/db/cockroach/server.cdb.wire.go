@@ -7,8 +7,10 @@ import (
 	"context"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	admindivcdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	campaigncdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/campaign"
 	citizencdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/citizen"
 	rolecdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/role"
 	usercdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/user"
@@ -34,6 +36,7 @@ func initServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 		rolecdb.InitRoleCDBRepo,
 		admindivcdb.InitAdminDivCDBRepo,
 		citizencdb.InitCitizenCDBRepo,
+		campaigncdb.InitCampaignCDBRepo,
 		wire.Struct(new(ServerCDBRepo), "*"),
 	)
 	return &ServerCDBRepo{}, nil
@@ -44,6 +47,6 @@ func InitServerCDBRepo(ctx context.Context, logger *logrus.Logger, opts ServerCD
 	if err != nil {
 		return nil, err
 	}
-	s.SetInterfaces(&user.User{}, &role.Role{}, &admindiv.AdminDiv{}, &citizen.Citizen{})
+	s.SetInterfaces(&user.User{}, &role.Role{}, &admindiv.AdminDiv{}, &citizen.Citizen{}, &campaign.Campaign{})
 	return s, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
@@ -144,8 +145,25 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
+	results := make([]*pb.GetAdminDivResponse_Data_Results, 0)
+	for _, l := range list {
+		add := lib.ConvertOneAdminDiv(l)
+		camp, _ := s.Repo.TotalCampaignRecord(&campaign.Search{
+			Campaign: campaign.Campaign{
+				Code: &add.Code,
+			},
+		})
+		record := utils.IntVal(camp.RecordNumber)
+		results = append(results, &pb.GetAdminDivResponse_Data_Results{
+			AdminDiv: add,
+			Campaign: &pb.Campaign{
+				Record: int32(record),
+				IsDone: utils.BoolVal(camp.IsDone),
+			},
+		})
+	}
 	return &pb.GetAdminDivResponse_Data{
-		Results: lib.ConvertAdminDivs(list),
+		Results: results,
 		Pagination: &pb.Pagination{
 			Limit:  int32(limit),
 			Offset: int32(skip),

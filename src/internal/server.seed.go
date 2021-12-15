@@ -7,6 +7,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/role"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/user"
 	"github.com/urfave/cli/v2"
 )
@@ -74,6 +75,10 @@ func seedData(appCtx *cli.Context) error {
 	if err != nil {
 		logger.Error("seed user fail, err:", err)
 	}
+	err = seedCampaign(service)
+	if err != nil {
+		logger.Error("seed fail, err:", err)
+	}
 
 	return nil
 }
@@ -105,6 +110,14 @@ func seedCitizen(dbase db.ServerRepo) error {
 	return nil
 }
 
+func seedCampaign(dbase db.ServerRepo) error {
+	err := dbase.RawSQL(campaign.SQL)
+	if err != nil {
+		return err
+	}
+	logger.Info("seed campaign successfully")
+	return nil
+}
 func seedUser(dbase db.ServerRepo) error {
 	err := dbase.RawSQL(user.SQL)
 	if err != nil {

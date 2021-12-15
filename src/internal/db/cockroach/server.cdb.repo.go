@@ -2,8 +2,10 @@ package cockroach
 
 import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	admindivcdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	campaigncdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/campaign"
 	citizencdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/citizen"
 	rolecdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/role"
 	usercdb "github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/user"
@@ -22,6 +24,7 @@ type ServerCDBRepo struct {
 	RoleRepo     *rolecdb.RoleCDBRepo
 	AdminDivRepo *admindivcdb.AdminDivCDBRepo
 	CitizenRepo  *citizencdb.CitizenCDBRepo
+	CampaignRepo *campaigncdb.CampaignCDBRepo
 }
 
 func (s *ServerCDBRepo) CountCitizen(search *citizen.Search) (*int64, error) {
@@ -89,4 +92,27 @@ func (s *ServerCDBRepo) UpdateUser(u *user.Search, v *user.User) error {
 
 func (s *ServerCDBRepo) CountUser(u *user.Search) (*int64, error) {
 	return s.UserRepo.CountUser(u)
+}
+
+func (s *ServerCDBRepo) CountCampaign(u *campaign.Search) (*int64, error) {
+	return s.CampaignRepo.CountCampaign(u)
+}
+
+func (s *ServerCDBRepo) UpdateCampaign(u *campaign.Search, v *campaign.Campaign) error {
+	return s.CampaignRepo.UpdateCampaign(u, v)
+}
+
+func (s *ServerCDBRepo) ListCampaign(u *campaign.Search) ([]*campaign.Campaign, error) {
+	return s.CampaignRepo.ListCampaign(u)
+}
+
+func (s *ServerCDBRepo) InsertCampaign(u *campaign.Campaign) (*campaign.Campaign, error) {
+	return s.CampaignRepo.InsertCampaign(u)
+}
+
+func (s *ServerCDBRepo) SelectCampaign(search *campaign.Search) (*campaign.Campaign, error) {
+	return s.CampaignRepo.SelectCampaign(search)
+}
+func (s *ServerCDBRepo) TotalCampaignRecord(search *campaign.Search) (*campaign.Campaign, error) {
+	return s.CampaignRepo.TotalCampaignRecord(search)
 }
