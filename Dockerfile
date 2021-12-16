@@ -40,4 +40,5 @@ FROM alpine as release
 WORKDIR /app
 COPY --from=builder /bin/grpc_health_probe /bin/grpc_health_probe
 COPY --from=builder /app/dist/server /usr/bin/server
+COPY --from=builder /app/cdb.crt /app/cdb.crt
 ENTRYPOINT ["/usr/bin/server"]
