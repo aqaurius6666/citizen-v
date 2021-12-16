@@ -5,12 +5,14 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/go-utils/database"
+	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
 
 type User interface {
 	HasPermission(user, add uuid.UUID) (bool, error)
+	IsRoleActive(userId uuid.UUID) (bool, error)
 }
 
 var (
@@ -22,6 +24,9 @@ type UserModel struct {
 }
 
 func (u *UserModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error) {
+	if uid == uuid.Nil || addid == uuid.Nil {
+		return false, nil
+	}
 	usr, err := u.Repo.SelectUser(&user.Search{
 		User: user.User{
 			BaseModel: database.BaseModel{ID: uid},
@@ -38,12 +43,77 @@ func (u *UserModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error) 
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	tmpUser := usr
+	valid := false
 	tmpAdd := add
-	valid := *tmpUser.IsActive
-	for *tmpUser.IsActive && tmpAdd.ID != uuid.Nil {
-
+	for {
+		if usr.AdminDivID == tmpAdd.ID {
+			valid = true
+			break
+		}
+		if tmpAdd.SuperiorID == uuid.Nil {
+			break
+		}
+		if tmpAdd, err = u.Repo.SelectAdminDiv(&admindiv.Search{
+			AdminDiv: admindiv.AdminDiv{
+				BaseModel: database.BaseModel{
+					ID: tmpAdd.SuperiorID,
+				},
+			},
+		}); err != nil {
+			return false, xerrors.Errorf("%w", err)
+		}
 	}
 
+	return valid, nil
+}
+
+func (u *UserModel) IsRoleActive(userId uuid.UUID) (bool, error) {
+	if userId == uuid.Nil {
+		return false, nil
+	}
+	usr, err := u.Repo.SelectUser(&user.Search{
+		User: user.User{
+			BaseModel: database.BaseModel{ID: userId},
+		},
+	})
+	if err != nil {
+		return false, xerrors.Errorf("%w", err)
+	}
+	add, err := u.Repo.SelectAdminDiv(&admindiv.Search{
+		AdminDiv: admindiv.AdminDiv{
+			BaseModel: database.BaseModel{ID: usr.AdminDivID},
+		},
+	})
+	if err != nil {
+		return false, xerrors.Errorf("%w", err)
+	}
+	valid := utils.BoolVal(usr.IsActive)
+	tmpAdd := add
+	for {
+		usr, err := u.Repo.SelectUser(&user.Search{
+			User: user.User{
+				AdminDivID: tmpAdd.ID,
+			},
+		})
+		if err != nil {
+			return false, xerrors.Errorf("%w", err)
+		}
+		if !utils.BoolVal(usr.IsActive) {
+			valid = false
+			break
+		}
+		if tmpAdd.SuperiorID == uuid.Nil {
+			break
+		}
+		tmpAdd, err = u.Repo.SelectAdminDiv(&admindiv.Search{
+			AdminDiv: admindiv.AdminDiv{
+				BaseModel: database.BaseModel{ID: tmpAdd.SuperiorID},
+			},
+		})
+		if err != nil {
+			return false, xerrors.Errorf("%w", err)
+		}
+
+	}
 	return valid, nil
 }

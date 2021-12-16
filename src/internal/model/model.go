@@ -30,3 +30,7 @@ type ServerModel struct {
 func (s *ServerModel) HasPermission(user uuid.UUID, add uuid.UUID) (bool, error) {
 	return s.User.HasPermission(user, add)
 }
+
+func (s *ServerModel) IsRoleActive(user uuid.UUID) (bool, error) {
+	return s.User.IsRoleActive(user)
+}

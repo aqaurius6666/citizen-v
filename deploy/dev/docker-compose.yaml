@@ -30,6 +30,7 @@ services:
       - -c
       - |
         air
+    env_file: .env
     environment:
       - DISABLE_TRACING=true
       - DISABLE_PROFILER=true
@@ -39,11 +40,11 @@ services:
       - PROMETHEUS=7070
       - PPROF_PORT=6000
       - DISABLE_STATS=true
-      - DB_URI=
+      - DB_URI
       - LOG_LEVEL=debug
       - LOG_FORMAT=plain
-      - JWT_SECRET_KEY=
-      - SERVER_KEY=
+      - JWT_SECRET_KEY
+      - SERVER_KEY
       - GCFLAGS
     networks:
       - main

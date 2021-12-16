@@ -5,31 +5,101 @@ import (
 	"testing"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	ct "github.com/aqaurius6666/citizen-v/src/internal/var/t"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHasPermission(t *testing.T) {
-
+func SetupModel() Server {
 	ctx := context.Background()
 	logger := logrus.New()
-	repo, err := db.InitServerRepo(ctx, logger, db.DBDsn("postgresql://root:root@cdb:26257/defaultdb?sslmode=disable"))
-	assert.Nil(t, err)
+	repo, err := db.InitServerRepo(ctx, logger, db.DBDsn("postgresql://root:root@localhost:20000/defaultdb?sslmode=disable"))
+	if err != nil {
+		return nil
+	}
 
 	model, err := NewServerModel(ctx, logger, repo)
-	assert.Nil(t, err)
+	if err != nil {
+		return nil
+	}
+	return model
+}
 
+func TestHasPermission(t *testing.T) {
+
+	model := SetupModel()
+	if !assert.NotNil(t, model) {
+		return
+	}
 	testcase := []map[string]interface{}{
 		{
-			"u": uuid.MustParse("8993850e-9445-4aec-946c-fdb63698739d"),
-			"a": uuid.MustParse("6a31b531-1bb5-496a-b00f-d7cf6161bf6f"),
+			"u": ct.U011001, //u011001
+			"a": ct.A011001, //a011001
 			"e": true,
+		},
+		{
+			"u": ct.U011001, //u011001
+			"a": ct.A0110,   //a0110
+			"e": false,
+		},
+		{
+			"u": ct.U01,     //u01
+			"a": ct.A011001, //a011001
+			"e": true,
+		},
+		{
+			"u": ct.U01,   //u01
+			"a": uuid.Nil, //00000
+			"e": false,
+		},
+		{
+			"u": ct.U0110, //u0110
+			"a": ct.A03,   //a03
+			"e": false,
 		},
 	}
 	for _, s := range testcase {
 		res, err := model.HasPermission(s["u"].(uuid.UUID), s["a"].(uuid.UUID))
-		assert.Nil(t, err)
-		assert.Equal(t, s["e"], res, "case (%s, %s)", s["u"], s["a"])
+		if !assert.Nil(t, err) {
+			return
+		}
+		if !assert.Equal(t, s["e"], res, "case (%s, %s)", s["u"], s["a"]) {
+			return
+		}
+	}
+}
+
+func TestIsRoleActive(t *testing.T) {
+	model := SetupModel()
+	if !assert.NotNil(t, model) {
+		return
+	}
+	testcase := []map[string]interface{}{
+		{
+			"u": ct.U01, //u011001
+			"e": true,
+		},
+		{
+			"u": uuid.Nil,
+			"e": false,
+		},
+		{
+			"u": ct.U03,
+			"e": false,
+		},
+		{
+			"u": ct.U0301,
+			"e": false,
+		},
+	}
+	for _, s := range testcase {
+		res, err := model.IsRoleActive(s["u"].(uuid.UUID))
+		if !assert.Nil(t, err) {
+			return
+		}
+		if !assert.Equal(t, s["e"], res, "case (%s)", s["u"]) {
+			return
+		}
 	}
 }
