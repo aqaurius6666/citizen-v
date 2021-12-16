@@ -8,6 +8,7 @@ import (
 
 	"github.com/aqaurius6666/citizen-v/src/internal/api"
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
@@ -28,6 +29,7 @@ func InitMainServer(ctx context.Context, logger *logrus.Logger, opts ServerOptio
 	wire.Build(
 		wire.FieldsOf(&opts, "DBDsn", "Sec"),
 		db.InitServerRepo,
+		model.NewServerModel,
 		wire.Struct(new(api.ApiServerOptions), "*"),
 		api.InitApiServer,
 		wire.Struct(new(Server), "*"),

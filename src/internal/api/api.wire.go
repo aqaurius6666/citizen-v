@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -16,11 +17,12 @@ import (
 type ApiServerOptions struct {
 	MainRepo db.ServerRepo
 	Sec      jwt.SecretKey
+	Model    model.Server
 }
 
 func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOptions) (*ApiServer, error) {
 	wire.Build(
-		wire.FieldsOf(&opts, "MainRepo", "Sec"),
+		wire.FieldsOf(&opts, "MainRepo", "Sec", "Model"),
 		gin.New,
 		jwt.NewJWT,
 		wire.Struct(new(IndexController), "*"),

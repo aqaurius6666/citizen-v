@@ -134,7 +134,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           }
         ],
         "tags": [
@@ -162,7 +163,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           },
           {
             "name": "body",
@@ -423,7 +425,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           }
         ],
         "tags": [
@@ -451,7 +454,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           },
           {
             "name": "body",
@@ -611,6 +615,10 @@
         },
         "isDone": {
           "type": "boolean"
+        },
+        "percent": {
+          "type": "number",
+          "format": "float"
         }
       }
     },

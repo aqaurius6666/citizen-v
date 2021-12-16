@@ -9,6 +9,7 @@ package api
 import (
 	"context"
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -49,8 +50,10 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	citizenController := &CitizenController{
 		Service: citizenService,
 	}
+	server := opts.Model
 	userService := &UserService{
-		Repo: serverRepo,
+		Repo:  serverRepo,
+		Model: server,
 	}
 	userController := &UserController{
 		Service: userService,
@@ -75,4 +78,5 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 type ApiServerOptions struct {
 	MainRepo db.ServerRepo
 	Sec      jwt.SecretKey
+	Model    model.Server
 }

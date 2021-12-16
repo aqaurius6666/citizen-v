@@ -153,12 +153,13 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 				Code: &add.Code,
 			},
 		})
-		record := utils.IntVal(camp.RecordNumber)
+		percent := utils.Float32Val(camp.Percent)
+		records := utils.IntVal(camp.RecordNumber)
 		results = append(results, &pb.GetAdminDivResponse_Data_Results{
 			AdminDiv: add,
 			Campaign: &pb.Campaign{
-				Record: int32(record),
-				IsDone: utils.BoolVal(camp.IsDone),
+				Percent: percent,
+				Record:  int32(records),
 			},
 		})
 	}

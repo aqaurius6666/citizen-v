@@ -99,6 +99,8 @@ github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kd
 github.com/apache/arrow/go/arrow v0.0.0-20191024131854-af6fa24be0db/go.mod h1:VTxUBvSJ3s3eHAg65PNgrsn5BtqCRPdmyXh6rAfdxN0=
 github.com/aqaurius6666/go-utils v1.0.8 h1:U9sTRaNHdNEbq/GCzMGiHL9V46QRgPtZEOG0jSm4vzA=
 github.com/aqaurius6666/go-utils v1.0.8/go.mod h1:7f9MCB7Dm1xbVEN7kFTeA3DBSmTrPzdr7rdbPEh+9UE=
+github.com/aqaurius6666/go-utils v1.0.9 h1:W2ltjh5b4h/0x4wrW5fZCB2BzGzBMpK03zBCl1OBJxA=
+github.com/aqaurius6666/go-utils v1.0.9/go.mod h1:7f9MCB7Dm1xbVEN7kFTeA3DBSmTrPzdr7rdbPEh+9UE=
 github.com/aws/aws-sdk-go v1.37.0 h1:GzFnhOIsrGyQ69s7VgqtrG2BG8v7X7vwB3Xpbd/DBBk=
 github.com/aws/aws-sdk-go v1.37.0/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/aws/aws-sdk-go-v2 v1.2.0/go.mod h1:zEQs02YRBw1DjK0PoJv3ygDYOFTre1ejlJWl8FwAuQo=

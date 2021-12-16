@@ -107,6 +107,7 @@ message AdminDiv {
 message Campaign {
     int32 record = 1;
     bool isDone = 2;
+    float percent = 3;
 }
 message Citizen {
     string id = 1;

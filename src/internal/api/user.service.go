@@ -6,6 +6,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/google/uuid"
@@ -13,7 +14,8 @@ import (
 )
 
 type UserService struct {
-	Repo db.ServerRepo
+	Repo  db.ServerRepo
+	Model model.Server
 }
 
 func (s *UserService) ListUsers(req *pb.GetUsersRequest) (*pb.GetUsersResponse_Data, error) {

@@ -10,6 +10,7 @@ import (
 	"context"
 	"github.com/aqaurius6666/citizen-v/src/internal/api"
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/sirupsen/logrus"
 )
@@ -23,19 +24,24 @@ func InitMainServer(ctx context.Context, logger2 *logrus.Logger, opts ServerOpti
 		return nil, err
 	}
 	secretKey := opts.Sec
+	server, err := model.NewServerModel(ctx, logger2, serverRepo)
+	if err != nil {
+		return nil, err
+	}
 	apiServerOptions := api.ApiServerOptions{
 		MainRepo: serverRepo,
 		Sec:      secretKey,
+		Model:    server,
 	}
 	apiServer, err := api.InitApiServer(ctx, logger2, apiServerOptions)
 	if err != nil {
 		return nil, err
 	}
-	server := &Server{
+	mainServer := &Server{
 		ApiServer: apiServer,
 		MainRepo:  serverRepo,
 	}
-	return server, nil
+	return mainServer, nil
 }
 
 // server.wire.go:

@@ -94,7 +94,9 @@ func (u *CampaignCDBRepo) TotalCampaignRecord(search *campaign.Search) (*campaig
 	var v campaign.Campaign
 	if err := u.Db.Model(&campaign.Campaign{}).Select(`
 		sum(record_number) as record_number,
-		bool_and(is_done) as is_done`).
+		bool_and(is_done) as is_done,
+		sum(if(is_done, 1, 0)) / count(*) as percent
+		`).
 		Where("code like ?", *search.Code+"%").
 		Scan(&v).Error; err != nil {
 		return &v, campaign.ErrUpdateFail
