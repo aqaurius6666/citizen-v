@@ -18,6 +18,7 @@ func (s *AuthController) HandlePostIssue(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
+	req.Id = g.GetString("uid")
 	res, err := s.Service.Issue(&req)
 	if err != nil {
 		lib.BadRequest(g, err)

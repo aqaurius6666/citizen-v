@@ -10,6 +10,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/c"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
@@ -17,24 +18,31 @@ import (
 	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/xerrors"
 )
 
 type AuthService struct {
 	Repo       db.ServerRepo
 	JWTService jwt.JWT
+	Model      model.Server
+	Logger     *logrus.Logger
 }
 
 func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResponse_Data, error) {
 	var err error
-	if !validate.RequiredFields(req, "AdminDivId", "RoleId") {
+	fmt.Printf("req.Id: %v\n", req.Id)
+	if !validate.RequiredFields(req, "AdminDivId", "RoleId", "Id") {
 		return nil, e.ErrMissingBody
 	}
-	var aid, rid uuid.UUID
+	var aid, rid, uid uuid.UUID
 	if aid, err = uuid.Parse(req.AdminDivId); err != nil {
 		return nil, e.ErrIdInvalid
 	}
 	if rid, err = uuid.Parse(req.RoleId); err != nil {
+		return nil, e.ErrIdInvalid
+	}
+	if uid, err = uuid.Parse(req.Id); err != nil {
 		return nil, e.ErrIdInvalid
 	}
 	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
@@ -54,6 +62,22 @@ func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResp
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
+
+	if ok, err := s.Model.IsRoleActive(uid); err == nil {
+		if !ok {
+			return nil, e.ErrAuthNoPermission
+		}
+	} else {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	if ok, err := s.Model.HasPermission(uid, add.ID); err == nil {
+		if !ok {
+			return nil, e.ErrAuthNoPermission
+		}
+	} else {
+		return nil, xerrors.Errorf("%w", err)
+	}
+
 	number, err := s.Repo.CountUser(&user.Search{
 		User: user.User{
 			AdminDivID: aid,
@@ -62,7 +86,6 @@ func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResp
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	fmt.Printf("number: %v\n", *number)
 	if *number > 0 {
 		return nil, e.ErrZoneAccountExisted
 	}

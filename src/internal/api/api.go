@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -13,6 +14,7 @@ type ApiServer struct {
 	serverRepo       db.ServerRepo
 	Index            *IndexController
 	LoggerMiddleware LoggerMiddleware
+	RoleMiddleware   RoleMiddleware
 	Auth             *AuthController
 	AuthMiddleware   *AuthMiddleware
 	AdminDiv         *AdminDivController
@@ -40,14 +42,14 @@ func (s *ApiServer) RegisterEndpoint() {
 	auth.POST("/register", s.Auth.HandlePostRegister)
 	auth.POST("/login", s.Auth.HandlePostLogin)
 	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
-	auth.POST("/issue", s.Auth.HandlePostIssue)
+	auth.POST("/issue", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostIssue)
 	auth.POST("/password", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostPassword)
 
 	// Administrative division group
 	admindiv := api.Group("/administrative-divisions")
 	admindiv.GET("", s.AdminDiv.HandleGet)
 	admindiv.GET("/:id", s.AdminDiv.HandleGetOne)
-	admindiv.POST("", s.AdminDiv.HandlePost)
+	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePost)
 	admindiv.PUT("/:id", s.AdminDiv.HandlePutOne)
 
 	// Citizen group

@@ -17,4 +17,11 @@ var (
 	A0108   = uuid.MustParse("c1f1616c-8e7b-412e-8352-d03c972c2322")
 	A010802 = uuid.MustParse("cfa977b5-6709-4b33-bf33-b19fe5fd8ed7")
 	A03     = uuid.MustParse("35bc69a6-1a46-4060-ae5e-3352fe21426b")
+	A00     = uuid.MustParse("d531dc36-5e31-4941-9ca1-ec87eaca9b95")
+
+	RA1 = uuid.MustParse("68a264e2-4f1b-42a5-a0ff-5c4ea50ef15f")
+	RA2 = uuid.MustParse("89c913de-9254-4e8c-a09b-492d5a248f28")
+	RA3 = uuid.MustParse("3157db78-b283-4a23-8b73-669b27be17fa")
+	RB1 = uuid.MustParse("f508a982-2016-45e5-a429-ba1bd229dca4")
+	RB2 = uuid.MustParse("4ae5030a-78f0-491c-9b9e-299c96b2ed82")
 )

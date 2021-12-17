@@ -817,16 +817,13 @@
     "citizenvPostAdminDivRequest": {
       "type": "object",
       "properties": {
-        "code": {
-          "type": "string"
-        },
         "name": {
           "type": "string"
         },
-        "superiorId": {
+        "type": {
           "type": "string"
         },
-        "type": {
+        "superiorId": {
           "type": "string"
         }
       }
@@ -861,6 +858,9 @@
           "type": "string"
         },
         "roleId": {
+          "type": "string"
+        },
+        "id": {
           "type": "string"
         }
       }

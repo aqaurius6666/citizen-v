@@ -26,11 +26,16 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	loggerMiddleware := LoggerMiddleware{
 		logger: logger,
 	}
+	roleMiddleware := RoleMiddleware{
+		logger: logger,
+	}
 	secretKey := opts.Sec
 	jwtJWT := jwt.NewJWT(secretKey)
+	server := opts.Model
 	authService := &AuthService{
 		Repo:       serverRepo,
 		JWTService: jwtJWT,
+		Model:      server,
 	}
 	authController := &AuthController{
 		Service: authService,
@@ -39,7 +44,8 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		JWTService: jwtJWT,
 	}
 	adminDivService := &AdminDivService{
-		Repo: serverRepo,
+		Repo:  serverRepo,
+		Model: server,
 	}
 	adminDivController := &AdminDivController{
 		Service: adminDivService,
@@ -50,7 +56,6 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	citizenController := &CitizenController{
 		Service: citizenService,
 	}
-	server := opts.Model
 	userService := &UserService{
 		Repo:  serverRepo,
 		Model: server,
@@ -64,6 +69,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		serverRepo:       serverRepo,
 		Index:            indexController,
 		LoggerMiddleware: loggerMiddleware,
+		RoleMiddleware:   roleMiddleware,
 		Auth:             authController,
 		AuthMiddleware:   authMiddleware,
 		AdminDiv:         adminDivController,

@@ -8,6 +8,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/aqaurius6666/go-utils/utils"
@@ -16,7 +17,8 @@ import (
 )
 
 type AdminDivService struct {
-	Repo db.ServerRepo
+	Repo  db.ServerRepo
+	Model model.Server
 }
 
 func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAdminDivResponse_Data, error) {
@@ -48,16 +50,22 @@ func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAd
 
 func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostAdminDivResponse_Data, error) {
 	var err error
-	if ok := validate.RequiredFields(req, "Code", "Name", "SuperiorId", "Type"); !ok {
+	if ok := validate.RequiredFields(req, "Name", "SuperiorId", "Type"); !ok {
 		return nil, e.ErrMissingBody
 	}
 	var sid uuid.UUID
 	if sid, err = uuid.Parse(req.SuperiorId); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
+
+	code, err := s.Model.GetNewCode(sid)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+
 	tempAdminDiv := admindiv.AdminDiv{
 		Name:       &req.Name,
-		Code:       &req.Code,
+		Code:       &code,
 		Type:       &req.Type,
 		SuperiorID: sid,
 	}

@@ -11,6 +11,7 @@ import (
 type Server interface {
 	Role
 	User
+	AdminDiv
 }
 
 var (
@@ -23,8 +24,9 @@ func NewServerModel(ctx context.Context, logger *logrus.Logger, repo db.ServerRe
 }
 
 type ServerModel struct {
-	Role *RoleModel
-	User *UserModel
+	Role     *RoleModel
+	User     *UserModel
+	AdminDiv *AdminDivModel
 }
 
 func (s *ServerModel) HasPermission(user uuid.UUID, add uuid.UUID) (bool, error) {
@@ -33,4 +35,12 @@ func (s *ServerModel) HasPermission(user uuid.UUID, add uuid.UUID) (bool, error)
 
 func (s *ServerModel) IsRoleActive(user uuid.UUID) (bool, error) {
 	return s.User.IsRoleActive(user)
+}
+
+func (s *ServerModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
+	return s.User.GetRoleId(addid)
+}
+
+func (s *ServerModel) GetNewCode(superId uuid.UUID) (string, error) {
+	return s.AdminDiv.GetNewCode(superId)
 }

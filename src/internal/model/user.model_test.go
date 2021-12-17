@@ -26,6 +26,41 @@ func SetupModel() Server {
 	return model
 }
 
+func TestGetRoleId(t *testing.T) {
+	model := SetupModel()
+	if !assert.NotNil(t, model) {
+		return
+	}
+
+	testcase := []map[string]interface{}{
+		{
+			"a": ct.A01, //a011001
+			"e": ct.RA1,
+		},
+		{
+			"a": ct.A0108, //a0110
+			"e": ct.RA2,
+		},
+		{
+			"a": ct.A011001, //a011001
+			"e": ct.RA3,
+		},
+		{
+			"a": uuid.Nil, //00000
+			"e": uuid.Nil,
+		},
+	}
+	for _, s := range testcase {
+		res, err := model.GetRoleId(s["a"].(uuid.UUID))
+		if !assert.Nil(t, err) {
+			return
+		}
+		if !assert.Equal(t, s["e"], res, "case (%s, %s)", s["u"], s["a"]) {
+			return
+		}
+	}
+}
+
 func TestHasPermission(t *testing.T) {
 
 	model := SetupModel()
@@ -57,6 +92,16 @@ func TestHasPermission(t *testing.T) {
 			"u": ct.U0110, //u0110
 			"a": ct.A03,   //a03
 			"e": false,
+		},
+		{
+			"u": ct.A00,
+			"a": ct.A01,
+			"e": true,
+		},
+		{
+			"u": ct.A00,
+			"a": ct.A0108,
+			"e": true,
 		},
 	}
 	for _, s := range testcase {
@@ -91,6 +136,10 @@ func TestIsRoleActive(t *testing.T) {
 		{
 			"u": ct.U0301,
 			"e": false,
+		},
+		{
+			"u": ct.A00,
+			"e": true,
 		},
 	}
 	for _, s := range testcase {

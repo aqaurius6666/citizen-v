@@ -8,4 +8,5 @@ var (
 	ErrAuthTokenFail            = xerrors.New("token fail")
 	ErrAuthMissingAuthorization = xerrors.New("missing authorization token")
 	ErrAuthTokenInvalid         = xerrors.New("Token is invalid")
+	ErrAuthNoPermission         = xerrors.New("no permission")
 )

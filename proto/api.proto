@@ -168,6 +168,7 @@ message PostAuthPasswordResponse {
 message PostAuthIssueRequest {
     string adminDivId = 1;
     string roleId = 2;
+    string id = 3;
 }
 
 message PostAuthIssueResponse {
@@ -304,10 +305,9 @@ message GetAdminDivResponse {
 }
 
 message PostAdminDivRequest {
-    string code = 1;
-    string name = 2;
+    string name = 1;
+    string type = 2;
     string superiorId = 3;
-    string type = 4;
 }
 
 message PostAdminDivResponse {

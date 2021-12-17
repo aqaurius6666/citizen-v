@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Wed, 15 Dec 2021 15:20:30 +07"
+    "version": "Fri, 17 Dec 2021 15:05:21 +07"
   },
   "tags": [
     {
@@ -137,7 +137,8 @@ var API_JSON = `{
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           }
         ],
         "tags": [
@@ -165,7 +166,8 @@ var API_JSON = `{
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           },
           {
             "name": "body",
@@ -426,7 +428,8 @@ var API_JSON = `{
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           }
         ],
         "tags": [
@@ -454,7 +457,8 @@ var API_JSON = `{
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "message"
           },
           {
             "name": "body",
@@ -614,6 +618,10 @@ var API_JSON = `{
         },
         "isDone": {
           "type": "boolean"
+        },
+        "percent": {
+          "type": "number",
+          "format": "float"
         }
       }
     },
@@ -812,16 +820,13 @@ var API_JSON = `{
     "citizenvPostAdminDivRequest": {
       "type": "object",
       "properties": {
-        "code": {
-          "type": "string"
-        },
         "name": {
           "type": "string"
         },
-        "superiorId": {
+        "type": {
           "type": "string"
         },
-        "type": {
+        "superiorId": {
           "type": "string"
         }
       }
@@ -856,6 +861,9 @@ var API_JSON = `{
           "type": "string"
         },
         "roleId": {
+          "type": "string"
+        },
+        "id": {
           "type": "string"
         }
       }

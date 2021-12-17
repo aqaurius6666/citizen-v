@@ -21,9 +21,13 @@ func InitModel(ctx context.Context, logger *logrus.Logger, repo db.ServerRepo) (
 	userModel := &UserModel{
 		Repo: repo,
 	}
+	adminDivModel := &AdminDivModel{
+		Repo: repo,
+	}
 	serverModel := &ServerModel{
-		Role: roleModel,
-		User: userModel,
+		Role:     roleModel,
+		User:     userModel,
+		AdminDiv: adminDivModel,
 	}
 	return serverModel, nil
 }

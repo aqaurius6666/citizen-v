@@ -5,9 +5,9 @@ import (
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/role"
-	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach/user"
 	"github.com/urfave/cli/v2"
 )

@@ -16,6 +16,7 @@ func InitModel(ctx context.Context, logger *logrus.Logger, repo db.ServerRepo) (
 	wire.Build(
 		wire.Struct(new(UserModel), "*"),
 		wire.Struct(new(RoleModel), "*"),
+		wire.Struct(new(AdminDivModel), "*"),
 		wire.Struct(new(ServerModel), "*"),
 	)
 	return &ServerModel{}, nil
