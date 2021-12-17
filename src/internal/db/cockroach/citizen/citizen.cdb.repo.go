@@ -94,3 +94,13 @@ func (u *CitizenCDBRepo) UpdateCitizen(search *citizen.Search, value *citizen.Ci
 	}
 	return nil
 }
+func (u *CitizenCDBRepo) DeleteCitizen(search *citizen.Search) error {
+	tx := applySearch(u.Db, search).Delete(citizen.Citizen{})
+	if err := tx.Error; err != nil {
+		return citizen.ErrDeleteFail
+	}
+	if row := tx.RowsAffected; row == 0 {
+		return citizen.ErrNotFound
+	}
+	return nil
+}

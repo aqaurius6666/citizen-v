@@ -131,7 +131,7 @@ func (u *UserModel) IsRoleActive(userId uuid.UUID) (bool, error) {
 	}
 	valid := utils.BoolVal(usr.IsActive)
 	tmpAdd := add
-	for {
+	for valid {
 		usr, err := u.Repo.SelectUser(&user.Search{
 			User: user.User{
 				AdminDivID: tmpAdd.ID,

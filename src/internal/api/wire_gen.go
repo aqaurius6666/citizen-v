@@ -26,16 +26,18 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	loggerMiddleware := LoggerMiddleware{
 		logger: logger,
 	}
+	server := opts.Model
 	roleMiddleware := RoleMiddleware{
 		logger: logger,
+		Model:  server,
 	}
 	secretKey := opts.Sec
 	jwtJWT := jwt.NewJWT(secretKey)
-	server := opts.Model
 	authService := &AuthService{
 		Repo:       serverRepo,
 		JWTService: jwtJWT,
 		Model:      server,
+		Logger:     logger,
 	}
 	authController := &AuthController{
 		Service: authService,

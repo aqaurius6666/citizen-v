@@ -8,6 +8,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
+	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/aqaurius6666/go-utils/utils"
@@ -16,39 +17,76 @@ import (
 )
 
 type CitizenService struct {
-	Repo db.ServerRepo
+	Repo  db.ServerRepo
+	Model model.Server
+}
+
+func (s *CitizenService) Delete(req *pb.DeleteCitizenRequest) (*pb.DeleteCitizenResponse_Data, error) {
+	var err error
+	var sid uuid.UUID
+	var search citizen.Search
+	if f, ok := validate.RequiredFields(req, "Id", "CallerId"); !ok {
+		return nil, e.ErrMissingField(f)
+	}
+	if sid, err = uuid.Parse(req.Id); err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	search.ID = sid
+	err = s.Repo.DeleteCitizen(&search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	return &pb.DeleteCitizenResponse_Data{}, nil
 }
 
 func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCitizenResponse_Data, error) {
 	var err error
 	var sid uuid.UUID
 	var search citizen.Search
-	if ok := validate.RequiredFields(req,
+	if f, ok := validate.RequiredFields(req,
 		"Id", "Name",
 		"Birthday", "Gender",
 		"Nationality", "FatherName", "FatherPid",
 		"MotherName", "MotherPid", "CurrentPlace",
-		"JobName", "Pid",
+		"JobName", "Pid", "CallerId", "ResidencePlace",
+		"Hometown", "Religion", "EducationalLevel",
+		"AdminDivCode",
 	); !ok {
-		return nil, e.ErrMissingBody
+		return nil, e.ErrMissingField(f)
 	}
 	if sid, err = uuid.Parse(req.Id); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
+	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
+		AdminDiv: admindiv.AdminDiv{
+			Code: utils.StrPtr(req.AdminDivCode),
+		},
+	})
+	if err != nil || add == nil {
+		return nil, e.ErrBodyInvalid
+	}
+	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), add.ID); err != nil || !ok {
+		return nil, e.ErrAuthNoPermission
+	}
 	search.ID = sid
 	tmpBirthday := uint64(int(req.Birthday))
 	tmp := citizen.Citizen{
-		Name:         &req.Name,
-		Birthday:     &tmpBirthday,
-		PID:          &req.Pid,
-		Gender:       &req.Gender,
-		Nationality:  &req.Nationality,
-		FatherName:   &req.FatherName,
-		FatherPID:    &req.FatherPid,
-		MotherName:   &req.MotherName,
-		MotherPID:    &req.MotherPid,
-		CurrentPlace: &req.CurrentPlace,
-		JobName:      &req.JobName,
+		Name:             &req.Name,
+		Birthday:         &tmpBirthday,
+		PID:              &req.Pid,
+		Gender:           &req.Gender,
+		Nationality:      &req.Nationality,
+		FatherName:       &req.FatherName,
+		FatherPID:        &req.FatherPid,
+		MotherName:       &req.MotherName,
+		MotherPID:        &req.MotherPid,
+		CurrentPlace:     &req.CurrentPlace,
+		JobName:          &req.JobName,
+		ResidencePlace:   &req.ResidencePlace,
+		Hometown:         &req.Hometown,
+		Religion:         &req.Religion,
+		EducationalLevel: &req.EducationalLevel,
+		AdminDivCode:     &req.AdminDivCode,
 	}
 	if err := validate.Validate(tmp); err != nil {
 		return nil, admindiv.ErrInvalid
@@ -74,70 +112,59 @@ func (s *CitizenService) GetCitizenById(req *pb.GetOneCitizenRequest) (*pb.GetOn
 		return nil, xerrors.Errorf("%w", err)
 	}
 	return &pb.GetOneCitizenResponse_Data{
-		Citizen: &pb.Citizen{
-			Id:           ctz.ID.String(),
-			Name:         *ctz.Name,
-			Birthday:     int32(*ctz.Birthday),
-			Gender:       *ctz.Gender,
-			Nationality:  *ctz.Nationality,
-			FatherName:   *ctz.Nationality,
-			FatherPid:    *ctz.FatherPID,
-			MotherName:   *ctz.MotherName,
-			MotherPid:    *ctz.MotherPID,
-			CurrentPlace: *ctz.CurrentPlace,
-			JobName:      *ctz.JobName,
-			Pid:          *ctz.PID,
-		},
+		Citizen: lib.ConvertOneCitizen(ctz),
 	}, nil
 }
 func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCitizenResponse_Data, error) {
 	var err error
-	if req.CurrentPlace == "" ||
-		req.Name == "" ||
-		req.FatherName == "" ||
-		req.FatherPid == "" ||
-		req.Gender == "" ||
-		req.JobName == "" ||
-		req.MotherPid == "" ||
-		req.MotherName == "" ||
-		req.Nationality == "" ||
-		req.Pid == "" {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req,
+		"Pid", "Name", "Birthday", "Gender",
+		"Nationality", "MotherName", "MotherPid",
+		"FatherName", "FatherPid", "CurrentPlace",
+		"JobName", "ResidencePlace", "Hometown",
+		"Religion", "EducationalLevel", "CallerId"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
-
-	tmp := uint64(int(req.Birthday))
-	ctz, err := s.Repo.InsertCitizen(&citizen.Citizen{
-		Name:         &req.Name,
-		Birthday:     &tmp,
-		PID:          &req.Pid,
-		Gender:       &req.Gender,
-		Nationality:  &req.Nationality,
-		FatherName:   &req.FatherName,
-		FatherPID:    &req.Pid,
-		MotherName:   &req.MotherName,
-		MotherPID:    &req.MotherPid,
-		CurrentPlace: &req.CurrentPlace,
-		JobName:      &req.JobName,
+	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
+		AdminDiv: admindiv.AdminDiv{
+			Code: utils.StrPtr(req.AdminDivCode),
+		},
 	})
+	if err != nil || add == nil {
+		return nil, e.ErrBodyInvalid
+	}
+	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), add.ID); err != nil || !ok {
+		return nil, e.ErrAuthNoPermission
+	}
+	tmp := uint64(int(req.Birthday))
+	tmpCitizen := citizen.Citizen{
+		Name:             &req.Name,
+		Birthday:         &tmp,
+		PID:              &req.Pid,
+		Gender:           &req.Gender,
+		Nationality:      &req.Nationality,
+		FatherName:       &req.FatherName,
+		FatherPID:        &req.Pid,
+		MotherName:       &req.MotherName,
+		MotherPID:        &req.MotherPid,
+		CurrentPlace:     &req.CurrentPlace,
+		JobName:          &req.JobName,
+		ResidencePlace:   &req.ResidencePlace,
+		Hometown:         &req.Hometown,
+		Religion:         &req.Religion,
+		EducationalLevel: &req.EducationalLevel,
+		AdminDivCode:     &req.AdminDivCode,
+	}
+	if err := validate.Validate(tmpCitizen); err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	ctz, err := s.Repo.InsertCitizen(&tmpCitizen)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
 
 	return &pb.PostCitizenResponse_Data{
-		Citizen: &pb.Citizen{
-			Id:           ctz.ID.String(),
-			Name:         *ctz.Name,
-			Birthday:     int32(*ctz.Birthday),
-			Gender:       *ctz.Gender,
-			Nationality:  *ctz.Nationality,
-			FatherName:   *ctz.Nationality,
-			FatherPid:    *ctz.FatherPID,
-			MotherName:   *ctz.MotherName,
-			MotherPid:    *ctz.MotherPID,
-			CurrentPlace: *ctz.CurrentPlace,
-			JobName:      *ctz.JobName,
-			Pid:          *ctz.PID,
-		},
+		Citizen: lib.ConvertOneCitizen(ctz),
 	}, nil
 }
 func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenResponse_Data, error) {

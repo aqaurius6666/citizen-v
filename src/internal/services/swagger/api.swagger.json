@@ -185,38 +185,6 @@
         ]
       }
     },
-    "/api/auth/issue": {
-      "post": {
-        "operationId": "Api_PostAuthIssue",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/citizenvPostAuthIssueResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/citizenvPostAuthIssueRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
     "/api/auth/login": {
       "post": {
         "operationId": "Api_PostLogin",
@@ -433,6 +401,41 @@
           "Api"
         ]
       },
+      "delete": {
+        "operationId": "Api_DeleteCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvDeleteCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
       "put": {
         "operationId": "Api_PutOneCitizen",
         "responses": {
@@ -497,6 +500,24 @@
                 },
                 "pid": {
                   "type": "string"
+                },
+                "hometown": {
+                  "type": "string"
+                },
+                "religion": {
+                  "type": "string"
+                },
+                "educationalLevel": {
+                  "type": "string"
+                },
+                "adminDivCode": {
+                  "type": "string"
+                },
+                "residencePlace": {
+                  "type": "string"
+                },
+                "callerId": {
+                  "type": "string"
                 }
               }
             }
@@ -557,6 +578,124 @@
           },
           {
             "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/issue": {
+      "post": {
+        "operationId": "Api_PostUserIssue",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserIssueResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserIssueRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/{id}/ban": {
+      "post": {
+        "operationId": "Api_PostUserBan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserActiveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/{id}/unban": {
+      "post": {
+        "operationId": "Api_PostUserUnban",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserActiveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -661,8 +800,41 @@
         },
         "pid": {
           "type": "string"
+        },
+        "hometown": {
+          "type": "string"
+        },
+        "religion": {
+          "type": "string"
+        },
+        "educationalLevel": {
+          "type": "string"
+        },
+        "adminDivCode": {
+          "type": "string"
+        },
+        "residencePlace": {
+          "type": "string"
         }
       }
+    },
+    "citizenvDeleteCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvDeleteCitizenResponseData"
+        }
+      }
+    },
+    "citizenvDeleteCitizenResponseData": {
+      "type": "object"
     },
     "citizenvGetAdminDivResponse": {
       "type": "object",
@@ -851,46 +1023,6 @@
         }
       }
     },
-    "citizenvPostAuthIssueRequest": {
-      "type": "object",
-      "properties": {
-        "adminDivId": {
-          "type": "string"
-        },
-        "roleId": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        }
-      }
-    },
-    "citizenvPostAuthIssueResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/citizenvPostAuthIssueResponseData"
-        }
-      }
-    },
-    "citizenvPostAuthIssueResponseData": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
     "citizenvPostAuthPasswordRequest": {
       "type": "object",
       "properties": {
@@ -958,6 +1090,24 @@
           "type": "string"
         },
         "jobName": {
+          "type": "string"
+        },
+        "residencePlace": {
+          "type": "string"
+        },
+        "hometown": {
+          "type": "string"
+        },
+        "religion": {
+          "type": "string"
+        },
+        "educationalLevel": {
+          "type": "string"
+        },
+        "adminDivCode": {
+          "type": "string"
+        },
+        "callerId": {
           "type": "string"
         }
       }
@@ -1058,6 +1208,64 @@
           "type": "string"
         },
         "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostUserActiveResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostUserActiveResponseData"
+        }
+      }
+    },
+    "citizenvPostUserActiveResponseData": {
+      "type": "object"
+    },
+    "citizenvPostUserIssueRequest": {
+      "type": "object",
+      "properties": {
+        "adminDivId": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostUserIssueResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostUserIssueResponseData"
+        }
+      }
+    },
+    "citizenvPostUserIssueResponseData": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
           "type": "string"
         }
       }

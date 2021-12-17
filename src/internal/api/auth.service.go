@@ -1,11 +1,9 @@
 package api
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
-	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
@@ -29,90 +27,12 @@ type AuthService struct {
 	Logger     *logrus.Logger
 }
 
-func (s *AuthService) Issue(req *pb.PostAuthIssueRequest) (*pb.PostAuthIssueResponse_Data, error) {
-	var err error
-	fmt.Printf("req.Id: %v\n", req.Id)
-	if !validate.RequiredFields(req, "AdminDivId", "RoleId", "Id") {
-		return nil, e.ErrMissingBody
-	}
-	var aid, rid, uid uuid.UUID
-	if aid, err = uuid.Parse(req.AdminDivId); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	if rid, err = uuid.Parse(req.RoleId); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	if uid, err = uuid.Parse(req.Id); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
-		AdminDiv: admindiv.AdminDiv{
-			BaseModel: database.BaseModel{ID: aid},
-		},
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-
-	rol, err := s.Repo.SelectRole(&role.Search{
-		Role: role.Role{
-			BaseModel: database.BaseModel{ID: rid},
-		},
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-
-	if ok, err := s.Model.IsRoleActive(uid); err == nil {
-		if !ok {
-			return nil, e.ErrAuthNoPermission
-		}
-	} else {
-		return nil, xerrors.Errorf("%w", err)
-	}
-	if ok, err := s.Model.HasPermission(uid, add.ID); err == nil {
-		if !ok {
-			return nil, e.ErrAuthNoPermission
-		}
-	} else {
-		return nil, xerrors.Errorf("%w", err)
-	}
-
-	number, err := s.Repo.CountUser(&user.Search{
-		User: user.User{
-			AdminDivID: aid,
-		},
-	})
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-	if *number > 0 {
-		return nil, e.ErrZoneAccountExisted
-	}
-	pass := lib.RandomPassword()
-	tmp := user.User{
-		Username:     utils.StrPtr(fmt.Sprintf("citizen%s", *add.Code)),
-		HashPassword: lib.MyHashPassword(pass),
-		AdminDivID:   add.ID,
-		RoleID:       rol.ID,
-	}
-	usr, err := s.Repo.InsertUser(&tmp)
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-
-	return &pb.PostAuthIssueResponse_Data{
-		Username: *usr.Username,
-		Password: *pass,
-	}, nil
-}
-
 func (s *AuthService) Register(req *pb.PostRegisterRequest) (*pb.PostRegisterResponse_Data, error) {
 	var err error
 	var u *user.User
 	var r *role.Role
-	if req.Username == "" || req.Password == "" {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "Password", "Username"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	if _, err = s.Repo.SelectUser(&user.Search{
 		User: user.User{
@@ -145,8 +65,8 @@ func (s *AuthService) Register(req *pb.PostRegisterRequest) (*pb.PostRegisterRes
 func (s *AuthService) Login(req *pb.PostLoginRequest) (*pb.PostLoginResponse_Data, error) {
 	var err error
 	var u *user.User
-	if !validate.RequiredFields(req, "Username", "Password") {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "Username", "Password"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	if u, err = s.Repo.SelectUser(&user.Search{
 		User: user.User{
@@ -174,8 +94,8 @@ func (s *AuthService) Login(req *pb.PostLoginRequest) (*pb.PostLoginResponse_Dat
 func (s *AuthService) ChangePassword(req *pb.PostAuthPasswordRequest) (*pb.PostAuthPasswordResponse_Data, error) {
 	var err error
 	var u *user.User
-	if !validate.RequiredFields(req, "OldPassword", "NewPassword", "Id") {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "OldPassword", "NewPassword", "Id"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	if u, err = s.Repo.SelectUser(&user.Search{
 		User: user.User{

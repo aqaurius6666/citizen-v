@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/golang-jwt/jwt/v4"
@@ -39,6 +40,10 @@ func (s JWTService) Sign(c ClaimStruct) (string, error) {
 }
 func (s JWTService) Verify(tokenString string) (bool, map[string]interface{}, error) {
 	var idString string
+
+	if len(strings.Split(tokenString, ".")) != 3 {
+		return false, nil, e.ErrAuthTokenInvalid
+	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

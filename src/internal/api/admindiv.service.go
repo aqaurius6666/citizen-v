@@ -25,8 +25,8 @@ func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAd
 	var err error
 	var sid uuid.UUID
 	var search admindiv.Search
-	if ok := validate.RequiredFields(req, "Id", "Name"); !ok {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "Id", "Name"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	if sid, err = uuid.Parse(req.Id); err != nil {
 		return nil, xerrors.Errorf("%w", err)
@@ -50,8 +50,8 @@ func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAd
 
 func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostAdminDivResponse_Data, error) {
 	var err error
-	if ok := validate.RequiredFields(req, "Name", "SuperiorId", "Type"); !ok {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "Name", "SuperiorId", "Type"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	var sid uuid.UUID
 	if sid, err = uuid.Parse(req.SuperiorId); err != nil {
@@ -91,8 +91,8 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 func (s *AdminDivService) GetAdminDivById(req *pb.GetOneAdminDivRequest) (*pb.GetOneAdminDivResponse_Data, error) {
 	var err error
 	var search admindiv.Search
-	if ok := validate.RequiredFields(req, "Id"); !ok {
-		return nil, e.ErrMissingBody
+	if f, ok := validate.RequiredFields(req, "Id"); !ok {
+		return nil, e.ErrMissingField(f)
 	}
 	if search.ID, err = uuid.Parse(req.Id); err != nil {
 		return nil, e.ErrIdInvalid

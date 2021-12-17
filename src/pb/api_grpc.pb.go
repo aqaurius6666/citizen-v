@@ -28,9 +28,12 @@ type ApiClient interface {
 	GetOneAdminDiv(ctx context.Context, in *GetOneAdminDivRequest, opts ...grpc.CallOption) (*GetOneAdminDivResponse, error)
 	PutOneCitizen(ctx context.Context, in *PutOneCitizenRequest, opts ...grpc.CallOption) (*PutOneCitizenResponse, error)
 	PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivRequest, opts ...grpc.CallOption) (*PutOneAdminDivResponse, error)
-	PostAuthIssue(ctx context.Context, in *PostAuthIssueRequest, opts ...grpc.CallOption) (*PostAuthIssueResponse, error)
+	PostUserIssue(ctx context.Context, in *PostUserIssueRequest, opts ...grpc.CallOption) (*PostUserIssueResponse, error)
 	PostAuthPassword(ctx context.Context, in *PostAuthPasswordRequest, opts ...grpc.CallOption) (*PostAuthPasswordResponse, error)
 	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
+	PostUserBan(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error)
+	PostUserUnban(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error)
+	DeleteCitizen(ctx context.Context, in *DeleteCitizenRequest, opts ...grpc.CallOption) (*DeleteCitizenResponse, error)
 }
 
 type apiClient struct {
@@ -131,9 +134,9 @@ func (c *apiClient) PutOneAdminDiv(ctx context.Context, in *PutOneAdminDivReques
 	return out, nil
 }
 
-func (c *apiClient) PostAuthIssue(ctx context.Context, in *PostAuthIssueRequest, opts ...grpc.CallOption) (*PostAuthIssueResponse, error) {
-	out := new(PostAuthIssueResponse)
-	err := c.cc.Invoke(ctx, "/citizenv.Api/PostAuthIssue", in, out, opts...)
+func (c *apiClient) PostUserIssue(ctx context.Context, in *PostUserIssueRequest, opts ...grpc.CallOption) (*PostUserIssueResponse, error) {
+	out := new(PostUserIssueResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostUserIssue", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -158,6 +161,33 @@ func (c *apiClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...g
 	return out, nil
 }
 
+func (c *apiClient) PostUserBan(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error) {
+	out := new(PostUserActiveResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostUserBan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PostUserUnban(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error) {
+	out := new(PostUserActiveResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostUserUnban", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) DeleteCitizen(ctx context.Context, in *DeleteCitizenRequest, opts ...grpc.CallOption) (*DeleteCitizenResponse, error) {
+	out := new(DeleteCitizenResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/DeleteCitizen", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -172,9 +202,12 @@ type ApiServer interface {
 	GetOneAdminDiv(context.Context, *GetOneAdminDivRequest) (*GetOneAdminDivResponse, error)
 	PutOneCitizen(context.Context, *PutOneCitizenRequest) (*PutOneCitizenResponse, error)
 	PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error)
-	PostAuthIssue(context.Context, *PostAuthIssueRequest) (*PostAuthIssueResponse, error)
+	PostUserIssue(context.Context, *PostUserIssueRequest) (*PostUserIssueResponse, error)
 	PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error)
 	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
+	PostUserBan(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error)
+	PostUserUnban(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error)
+	DeleteCitizen(context.Context, *DeleteCitizenRequest) (*DeleteCitizenResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -212,14 +245,23 @@ func (UnimplementedApiServer) PutOneCitizen(context.Context, *PutOneCitizenReque
 func (UnimplementedApiServer) PutOneAdminDiv(context.Context, *PutOneAdminDivRequest) (*PutOneAdminDivResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutOneAdminDiv not implemented")
 }
-func (UnimplementedApiServer) PostAuthIssue(context.Context, *PostAuthIssueRequest) (*PostAuthIssueResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostAuthIssue not implemented")
+func (UnimplementedApiServer) PostUserIssue(context.Context, *PostUserIssueRequest) (*PostUserIssueResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostUserIssue not implemented")
 }
 func (UnimplementedApiServer) PostAuthPassword(context.Context, *PostAuthPasswordRequest) (*PostAuthPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostAuthPassword not implemented")
 }
 func (UnimplementedApiServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
+}
+func (UnimplementedApiServer) PostUserBan(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostUserBan not implemented")
+}
+func (UnimplementedApiServer) PostUserUnban(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostUserUnban not implemented")
+}
+func (UnimplementedApiServer) DeleteCitizen(context.Context, *DeleteCitizenRequest) (*DeleteCitizenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCitizen not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -414,20 +456,20 @@ func _Api_PutOneAdminDiv_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Api_PostAuthIssue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostAuthIssueRequest)
+func _Api_PostUserIssue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserIssueRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServer).PostAuthIssue(ctx, in)
+		return srv.(ApiServer).PostUserIssue(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/citizenv.Api/PostAuthIssue",
+		FullMethod: "/citizenv.Api/PostUserIssue",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).PostAuthIssue(ctx, req.(*PostAuthIssueRequest))
+		return srv.(ApiServer).PostUserIssue(ctx, req.(*PostUserIssueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -464,6 +506,60 @@ func _Api_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServer).GetUsers(ctx, req.(*GetUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PostUserBan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserActiveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostUserBan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostUserBan",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostUserBan(ctx, req.(*PostUserActiveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PostUserUnban_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUserActiveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostUserUnban(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostUserUnban",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostUserUnban(ctx, req.(*PostUserActiveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_DeleteCitizen_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCitizenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).DeleteCitizen(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/DeleteCitizen",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).DeleteCitizen(ctx, req.(*DeleteCitizenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -516,8 +612,8 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Api_PutOneAdminDiv_Handler,
 		},
 		{
-			MethodName: "PostAuthIssue",
-			Handler:    _Api_PostAuthIssue_Handler,
+			MethodName: "PostUserIssue",
+			Handler:    _Api_PostUserIssue_Handler,
 		},
 		{
 			MethodName: "PostAuthPassword",
@@ -526,6 +622,18 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUsers",
 			Handler:    _Api_GetUsers_Handler,
+		},
+		{
+			MethodName: "PostUserBan",
+			Handler:    _Api_PostUserBan_Handler,
+		},
+		{
+			MethodName: "PostUserUnban",
+			Handler:    _Api_PostUserUnban_Handler,
+		},
+		{
+			MethodName: "DeleteCitizen",
+			Handler:    _Api_DeleteCitizen_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

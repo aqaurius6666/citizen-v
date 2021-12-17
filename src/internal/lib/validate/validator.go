@@ -43,7 +43,7 @@ func Validate(s interface{}) error {
 	return nil
 }
 
-func RequiredFields(s interface{}, fields ...string) bool {
+func RequiredFields(s interface{}, fields ...string) (string, bool) {
 	typ := reflect.TypeOf(s)
 	value := reflect.ValueOf(s)
 	if typ.Kind() == reflect.Ptr {
@@ -53,7 +53,7 @@ func RequiredFields(s interface{}, fields ...string) bool {
 	if typ.Kind() == reflect.Struct {
 		return requiredStruct(typ, value, fields...)
 	}
-	return true
+	return "", true
 }
 func handleField(t reflect.Type, v reflect.Value) bool {
 	switch t.Kind() {
@@ -85,29 +85,26 @@ func handleField(t reflect.Type, v reflect.Value) bool {
 	}
 	return true
 }
-func requiredStruct(t reflect.Type, v reflect.Value, fields ...string) bool {
+func requiredStruct(t reflect.Type, v reflect.Value, fields ...string) (string, bool) {
 	if len(fields) == 0 {
 		numberFields := t.NumField()
 		for i := 0; i < numberFields; i++ {
 			if !handleField(t.Field(i).Type, v.Field(i)) {
-				fmt.Printf("missing field %s\n", t.Field(i).Type)
-				return false
+				return t.Field(i).Name, false
 			}
 		}
-		return true
+		return "", true
 	}
 
 	for _, f := range fields {
 		_f, ok := t.FieldByName(f)
 		if !ok {
-			fmt.Printf("missing field %s\n", f)
-			return false
+			return f, false
 		}
 		if !handleField(_f.Type, v.FieldByName(f)) {
-			fmt.Printf("missing field %s\n", f)
-			return false
+			return f, false
 		}
 	}
 
-	return true
+	return "", true
 }

@@ -125,18 +125,23 @@ func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {
 
 func ConvertOneCitizen(s *citizen.Citizen) *pb.Citizen {
 	return &pb.Citizen{
-		Name:         utils.StrVal(s.Name),
-		Id:           s.ID.String(),
-		Birthday:     int32(*s.Birthday),
-		Gender:       utils.StrVal(s.Gender),
-		Nationality:  utils.StrVal(s.Nationality),
-		FatherName:   utils.StrVal(s.FatherName),
-		FatherPid:    utils.StrVal(s.FatherPID),
-		MotherName:   utils.StrVal(s.MotherName),
-		MotherPid:    utils.StrVal(s.MotherPID),
-		CurrentPlace: utils.StrVal(s.CurrentPlace),
-		JobName:      utils.StrVal(s.JobName),
-		Pid:          utils.StrVal(s.PID),
+		Name:             utils.StrVal(s.Name),
+		Id:               s.ID.String(),
+		Birthday:         int32(*s.Birthday),
+		Gender:           utils.StrVal(s.Gender),
+		Nationality:      utils.StrVal(s.Nationality),
+		FatherName:       utils.StrVal(s.FatherName),
+		FatherPid:        utils.StrVal(s.FatherPID),
+		MotherName:       utils.StrVal(s.MotherName),
+		MotherPid:        utils.StrVal(s.MotherPID),
+		CurrentPlace:     utils.StrVal(s.CurrentPlace),
+		JobName:          utils.StrVal(s.JobName),
+		Pid:              utils.StrVal(s.PID),
+		Hometown:         utils.StrVal(s.Hometown),
+		Religion:         utils.StrVal(s.Religion),
+		EducationalLevel: utils.StrVal(s.EducationalLevel),
+		AdminDivCode:     utils.StrVal(s.AdminDivCode),
+		ResidencePlace:   utils.StrVal(s.ResidencePlace),
 	}
 }
 

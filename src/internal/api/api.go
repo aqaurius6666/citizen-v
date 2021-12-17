@@ -37,30 +37,29 @@ func (s *ApiServer) RegisterEndpoint() {
 
 	api := s.G.Group("/api")
 
-	// Auth group
 	auth := api.Group("/auth")
 	auth.POST("/register", s.Auth.HandlePostRegister)
 	auth.POST("/login", s.Auth.HandlePostLogin)
 	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
-	auth.POST("/issue", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostIssue)
 	auth.POST("/password", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostPassword)
 
-	// Administrative division group
 	admindiv := api.Group("/administrative-divisions")
 	admindiv.GET("", s.AdminDiv.HandleGet)
 	admindiv.GET("/:id", s.AdminDiv.HandleGetOne)
 	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePost)
-	admindiv.PUT("/:id", s.AdminDiv.HandlePutOne)
+	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePutOne)
 
-	// Citizen group
 	citizen := api.Group("/citizens")
 	citizen.GET("", s.Citizen.HandleGet)
-	citizen.GET("/:id", s.Citizen.HandleGetById)
-	citizen.POST("", s.Citizen.HandlePost)
-	citizen.PUT("/:id", s.Citizen.HandlePutOne)
+	citizen.GET("/:id", s.AuthMiddleware.CheckAuth, s.Citizen.HandleGetById)
+	citizen.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePost)
+	citizen.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePutOne)
+	citizen.DELETE("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandleDeleteById)
 
-	// User group
 	user := api.Group("/users")
 	user.GET("", s.User.HandleGet)
+	user.POST("/issue", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostIssue)
+	user.POST("/:id/ban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostBan)
+	user.POST("/:id/unban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostUnban)
 
 }

@@ -38,6 +38,9 @@ kill:
 logs:
 	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml logs -f  mainservice
 
+exec:
+	@docker-compose --project-name=go-go -f deploy/dev/docker-compose.yaml exec mainservice sh
+
 proto3:
 	@/bin/sh -c ./scripts/gen-proto.sh
 
@@ -52,3 +55,6 @@ lint:
 
 logs-heroku:
 	@heroku logs --tail -a citizen-v
+
+wire:
+	@wire ./...

@@ -116,3 +116,7 @@ func (s *ServerCDBRepo) SelectCampaign(search *campaign.Search) (*campaign.Campa
 func (s *ServerCDBRepo) TotalCampaignRecord(search *campaign.Search) (*campaign.Campaign, error) {
 	return s.CampaignRepo.TotalCampaignRecord(search)
 }
+
+func (s *ServerCDBRepo) DeleteCitizen(search *citizen.Search) error {
+	return s.CitizenRepo.DeleteCitizen(search)
+}

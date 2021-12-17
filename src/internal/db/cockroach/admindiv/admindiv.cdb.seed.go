@@ -1,8 +1,7 @@
 package admindiv
 
-var (
-	SQL = `
-    insert into public.admin_divs (id, updated_at, created_at, deleted_at, name, code, type, superior_id)
+var SQL = `
+insert into public.admin_divs (id, updated_at, created_at, deleted_at, name, code, type, superior_id)
 values  ('01144f27-6faf-48dc-8583-ce0b3853ba0b', 1639551602321, 1639551602321, 0, 'Thị trấn Bắc Hà', '060501', 'TOWN', 'eb564077-b6f2-4b25-8085-fe09bf528759'),
         ('01742c22-f1b0-4af4-af61-9800608a8844', 1639551738243, 1639551738243, 0, 'Xã Chim Vàn', '090509', 'TOWN', '4e230370-549b-46b2-9eae-3cb2bd08c923'),
         ('01e3095e-0d59-4889-a847-78a78b36da29', 1639551753430, 1639551753430, 0, 'Xã Chiềng Hặc', '090806', 'TOWN', '778da410-5cd4-4657-94d7-95cd97e50beb'),
@@ -443,6 +442,7 @@ values  ('01144f27-6faf-48dc-8583-ce0b3853ba0b', 1639551602321, 1639551602321, 0
         ('6d80bf52-aea3-48b1-8307-dc69ee399f2a', 1639551644391, 1639551644391, 0, 'Xã Huổi Lèng', '070408', 'TOWN', 'a257381a-0f91-4c9b-8199-15b32f193b25'),
         ('6e0ec249-495d-4299-aa95-d3a74d459446', 1639551623661, 1639551623661, 0, 'Xã Võ Lao', '060902', 'TOWN', '18375a0d-feca-4443-90e3-2862df28b38d'),
         ('6e161ba8-435a-4caf-a17d-0badad8e3232', 1639551283989, 1639551283989, 0, 'Phường Cửa Đông', '010207', 'TOWN', '6ed204b2-feee-42a5-a13c-63f825dab847'),
+        ('6e3890e5-4e89-4661-812d-b7f1987fa8d4', 1639726627902, 1639726627902, 0, 'Tổ 28', '06050101', 'BLOCK', '01144f27-6faf-48dc-8583-ce0b3853ba0b'),
         ('6e927d44-b546-4121-9f5c-5b5ffb24cbaa', 1639551791985, 1639551791985, 0, 'Huyện Văn Yên', '1004', 'DISTRICT', 'd4c3a365-c073-42af-ba0a-598b90256647'),
         ('6ed204b2-feee-42a5-a13c-63f825dab847', 1639551281341, 1639551281341, 0, 'Quận Hoàn Kiếm', '0102', 'DISTRICT', 'abb61a29-53f5-44a8-afdb-1ab9b9dab865'),
         ('6ee2a668-dcf2-40cf-9e0f-7b1f5594e7dc', 1639551594896, 1639551594896, 0, 'Thị trấn Mường Khương', '060304', 'TOWN', '2aecb633-b370-4b19-b977-a1250968a9c6'),
@@ -984,5 +984,5 @@ values  ('01144f27-6faf-48dc-8583-ce0b3853ba0b', 1639551602321, 1639551602321, 0
         ('fecf7b2d-1ecc-46ab-b6a5-c70ed00e5c23', 1639551577531, 1639551577531, 0, 'Xã Minh Thanh', '050703', 'TOWN', '9a1ba377-0ce1-4983-9245-455aa7d9d20f'),
         ('ff519785-356b-48cf-8a44-205b30ee77a5', 1639551527288, 1639551527288, 0, 'Xã Nam Cường', '040603', 'TOWN', 'ee6cb6d1-54ed-42ad-8ffd-b36ba5d7637c'),
         ('ff942d91-ac62-4f19-b1f1-6129d6a5a9ff', 1639551656138, 1639551656138, 0, 'Xã Thanh Nưa', '070702', 'TOWN', 'c3046e93-c5f1-4d3c-921d-25b778a873fa'),
-        ('ffc14cbf-df12-4b9b-8cd4-b32a75726dbf', 1639551602723, 1639551602723, 0, 'Xã Lùng Cải', '060502', 'TOWN', 'eb564077-b6f2-4b25-8085-fe09bf528759');`
-)
+        ('ffc14cbf-df12-4b9b-8cd4-b32a75726dbf', 1639551602723, 1639551602723, 0, 'Xã Lùng Cải', '060502', 'TOWN', 'eb564077-b6f2-4b25-8085-fe09bf528759');
+`

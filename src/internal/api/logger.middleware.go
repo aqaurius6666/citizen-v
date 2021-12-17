@@ -31,7 +31,7 @@ func (l *LoggerMiddleware) Logger() gin.HandlerFunc {
 			reqLogger = reqLogger.WithField("body", string(body.([]byte)))
 		}
 		if err, ok := c.Get("error"); ok {
-			reqLogger.Errorf("%+v", err)
+			reqLogger.Errorf("%v", err)
 		} else {
 			reqLogger.Info()
 		}

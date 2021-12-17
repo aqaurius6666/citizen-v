@@ -63,9 +63,9 @@ service Api {
         };
     }
 
-    rpc PostAuthIssue(PostAuthIssueRequest) returns (PostAuthIssueResponse) {
+    rpc PostUserIssue(PostUserIssueRequest) returns (PostUserIssueResponse) {
         option (google.api.http) = {
-            post: "/api/auth/issue"
+            post: "/api/users/issue"
             body: "*"
         };
     }
@@ -80,6 +80,24 @@ service Api {
     rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {
         option (google.api.http) = {
             get: "/api/users"
+        };
+    }
+
+    rpc PostUserBan(PostUserActiveRequest) returns (PostUserActiveResponse) {
+        option (google.api.http) = {
+            post: "/api/users/{id=message}/ban"
+        };
+    }
+
+    rpc PostUserUnban(PostUserActiveRequest) returns (PostUserActiveResponse) {
+        option (google.api.http) = {
+            post: "/api/users/{id=message}/unban"
+        };
+    }
+
+    rpc DeleteCitizen(DeleteCitizenRequest) returns (DeleteCitizenResponse) {
+        option (google.api.http) = {
+            delete: "/api/citizens/{id=message}"
         };
     }
 }
@@ -122,6 +140,11 @@ message Citizen {
     string currentPlace = 10;
     string jobName = 11;
     string pid = 12;
+    string hometown = 13;
+    string religion = 14;
+    string educationalLevel = 15;
+    string adminDivCode = 16;
+    string residencePlace = 17;
 }
 
 message GetOneAdminDivRequest {
@@ -134,6 +157,35 @@ message GetOneAdminDivResponse {
     Data data = 3;
     message Data {
         AdminDiv adminDiv = 1;
+    }
+}
+
+
+message DeleteCitizenRequest {
+    string id = 1;
+    string callerId = 2;
+}
+
+message DeleteCitizenResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+    }
+}
+
+
+message PostUserActiveRequest {
+    string id = 1;
+    bool value = 2;
+    string callerId = 3;
+}
+
+message PostUserActiveResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
     }
 }
 
@@ -165,13 +217,13 @@ message PostAuthPasswordResponse {
 }
 
 
-message PostAuthIssueRequest {
+message PostUserIssueRequest {
     string adminDivId = 1;
     string roleId = 2;
     string id = 3;
 }
 
-message PostAuthIssueResponse {
+message PostUserIssueResponse {
     bool success = 1;
     int32 status = 2;
     Data data = 3;
@@ -194,6 +246,12 @@ message PutOneCitizenRequest {
     string currentPlace = 10;
     string jobName = 11;
     string pid = 12;
+    string hometown = 13;
+    string religion = 14;
+    string educationalLevel = 15;
+    string adminDivCode = 16;
+    string residencePlace = 17;
+    string callerId = 18;
 }
 
 message PutOneCitizenResponse {
@@ -230,6 +288,12 @@ message PostCitizenRequest {
     string motherPid = 9;
     string currentPlace = 10;
     string jobName = 11; 
+    string residencePlace = 12;
+    string hometown = 13;
+    string religion = 14;
+    string educationalLevel = 15;
+    string adminDivCode = 16;
+    string callerId = 17;
 
 }
 

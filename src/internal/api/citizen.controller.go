@@ -10,6 +10,20 @@ type CitizenController struct {
 	Service *CitizenService
 }
 
+func (s *CitizenController) HandleDeleteById(g *gin.Context) {
+	var err error
+	req := &pb.DeleteCitizenRequest{
+		Id:       g.Param("id"),
+		CallerId: g.GetString("uid"),
+	}
+	res, err := s.Service.Delete(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *CitizenController) HandlePutOne(g *gin.Context) {
 	var err error
 	var req pb.PutOneCitizenRequest
@@ -19,6 +33,7 @@ func (s *CitizenController) HandlePutOne(g *gin.Context) {
 		return
 	}
 	req.Id = g.Param("id")
+	req.CallerId = g.GetString("uid")
 	res, err := s.Service.UpdateOne(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
@@ -66,6 +81,7 @@ func (s *CitizenController) HandlePost(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
+	req.CallerId = g.GetString("uid")
 	res, err := s.Service.CreateCitizen(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
