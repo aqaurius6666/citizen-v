@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Sun, 19 Dec 2021 17:39:42 +07"
+    "version": "Sun, 19 Dec 2021 17:59:55 +07"
   },
   "tags": [
     {

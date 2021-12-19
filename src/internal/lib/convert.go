@@ -142,6 +142,7 @@ func ConvertOneCitizen(s *citizen.Citizen) *pb.Citizen {
 		EducationalLevel: utils.StrVal(s.EducationalLevel),
 		AdminDivCode:     utils.StrVal(s.AdminDivCode),
 		ResidencePlace:   utils.StrVal(s.ResidencePlace),
+		AdminDivId:       s.AdminDivID.String(),
 	}
 }
 
