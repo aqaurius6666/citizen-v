@@ -62,6 +62,45 @@ func GetAdminDivFullName(id uuid.UUID, repo db.ServerRepo) (*string, error) {
 	return &name, nil
 }
 
+func GetAdminDivFullNameCode(code string, repo db.ServerRepo) (*string, error) {
+	var name string
+	count := 0
+	add, err := repo.SelectAdminDiv(&admindiv.Search{
+		DefaultSearchModel: database.DefaultSearchModel{
+			Fields: []string{"id"},
+		},
+		AdminDiv: admindiv.AdminDiv{
+			Code: &code,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	tmp := add.ID
+	for tmp != uuid.Nil {
+		add, err := repo.SelectAdminDiv(&admindiv.Search{
+			DefaultSearchModel: database.DefaultSearchModel{
+				Fields: []string{"name", "superior_id"},
+			},
+			AdminDiv: admindiv.AdminDiv{
+				BaseModel: database.BaseModel{
+					ID: tmp,
+				},
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		name = fmt.Sprintf("%s$$%s", *add.Name, name)
+		tmp = add.SuperiorID
+		count++
+	}
+	name = strings.Replace(name, "$$", ", ", count-1)
+	name = strings.ReplaceAll(name, "$$", "")
+
+	return &name, nil
+}
+
 func GetRoleName(id uuid.UUID, repo db.ServerRepo) (*string, error) {
 	r, err := repo.SelectRole(&role.Search{
 		DefaultSearchModel: database.DefaultSearchModel{
