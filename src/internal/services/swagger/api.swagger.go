@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Fri, 17 Dec 2021 15:05:21 +07"
+    "version": "Sun, 19 Dec 2021 17:39:42 +07"
   },
   "tags": [
     {
@@ -188,38 +188,6 @@ var API_JSON = `{
         ]
       }
     },
-    "/api/auth/issue": {
-      "post": {
-        "operationId": "Api_PostAuthIssue",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/citizenvPostAuthIssueResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/citizenvPostAuthIssueRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Api"
-        ]
-      }
-    },
     "/api/auth/login": {
       "post": {
         "operationId": "Api_PostLogin",
@@ -359,6 +327,18 @@ var API_JSON = `{
             "type": "string"
           },
           {
+            "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -436,6 +416,41 @@ var API_JSON = `{
           "Api"
         ]
       },
+      "delete": {
+        "operationId": "Api_DeleteCitizen",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvDeleteCitizenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
       "put": {
         "operationId": "Api_PutOneCitizen",
         "responses": {
@@ -500,6 +515,24 @@ var API_JSON = `{
                 },
                 "pid": {
                   "type": "string"
+                },
+                "hometown": {
+                  "type": "string"
+                },
+                "religion": {
+                  "type": "string"
+                },
+                "educationalLevel": {
+                  "type": "string"
+                },
+                "adminDivCode": {
+                  "type": "string"
+                },
+                "residencePlace": {
+                  "type": "string"
+                },
+                "callerId": {
+                  "type": "string"
                 }
               }
             }
@@ -560,6 +593,124 @@ var API_JSON = `{
           },
           {
             "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/issue": {
+      "post": {
+        "operationId": "Api_PostUserIssue",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserIssueResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserIssueRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/{id}/ban": {
+      "post": {
+        "operationId": "Api_PostUserBan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserActiveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/{id}/unban": {
+      "post": {
+        "operationId": "Api_PostUserUnban",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostUserActiveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "callerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -664,8 +815,44 @@ var API_JSON = `{
         },
         "pid": {
           "type": "string"
+        },
+        "hometown": {
+          "type": "string"
+        },
+        "religion": {
+          "type": "string"
+        },
+        "educationalLevel": {
+          "type": "string"
+        },
+        "adminDivCode": {
+          "type": "string"
+        },
+        "residencePlace": {
+          "type": "string"
+        },
+        "adminDivId": {
+          "type": "string"
         }
       }
+    },
+    "citizenvDeleteCitizenResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvDeleteCitizenResponseData"
+        }
+      }
+    },
+    "citizenvDeleteCitizenResponseData": {
+      "type": "object"
     },
     "citizenvGetAdminDivResponse": {
       "type": "object",
@@ -854,46 +1041,6 @@ var API_JSON = `{
         }
       }
     },
-    "citizenvPostAuthIssueRequest": {
-      "type": "object",
-      "properties": {
-        "adminDivId": {
-          "type": "string"
-        },
-        "roleId": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        }
-      }
-    },
-    "citizenvPostAuthIssueResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/citizenvPostAuthIssueResponseData"
-        }
-      }
-    },
-    "citizenvPostAuthIssueResponseData": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        }
-      }
-    },
     "citizenvPostAuthPasswordRequest": {
       "type": "object",
       "properties": {
@@ -961,6 +1108,24 @@ var API_JSON = `{
           "type": "string"
         },
         "jobName": {
+          "type": "string"
+        },
+        "residencePlace": {
+          "type": "string"
+        },
+        "hometown": {
+          "type": "string"
+        },
+        "religion": {
+          "type": "string"
+        },
+        "educationalLevel": {
+          "type": "string"
+        },
+        "adminDivCode": {
+          "type": "string"
+        },
+        "callerId": {
           "type": "string"
         }
       }
@@ -1061,6 +1226,64 @@ var API_JSON = `{
           "type": "string"
         },
         "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostUserActiveResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostUserActiveResponseData"
+        }
+      }
+    },
+    "citizenvPostUserActiveResponseData": {
+      "type": "object"
+    },
+    "citizenvPostUserIssueRequest": {
+      "type": "object",
+      "properties": {
+        "adminDivId": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostUserIssueResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostUserIssueResponseData"
+        }
+      }
+    },
+    "citizenvPostUserIssueResponseData": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
           "type": "string"
         }
       }

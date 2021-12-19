@@ -145,6 +145,7 @@ message Citizen {
     string educationalLevel = 15;
     string adminDivCode = 16;
     string residencePlace = 17;
+    string adminDivId = 18;
 }
 
 message GetOneAdminDivRequest {
@@ -329,8 +330,10 @@ message GetCitizenRequest {
     string name = 2;
     string birthday = 3;
     string id = 4;
-    string limit = 5;
-    string offset = 6;
+    string adminDivId = 5;
+    string adminDivCode = 6;
+    string limit = 7;
+    string offset = 8;
 }
 
 message GetCitizenResponse {

@@ -58,12 +58,14 @@ func (s *CitizenController) HandleGetById(g *gin.Context) {
 func (s *CitizenController) HandleGet(g *gin.Context) {
 	var err error
 	req := &pb.GetCitizenRequest{
-		Name:     g.Query("name"),
-		Id:       g.Query("id"),
-		Pid:      g.Query("pid"),
-		Birthday: g.Query("birthday"),
-		Limit:    g.Query("limit"),
-		Offset:   g.Query("offset"),
+		Name:         g.Query("name"),
+		Id:           g.Query("id"),
+		Pid:          g.Query("pid"),
+		Birthday:     g.Query("birthday"),
+		Limit:        g.Query("limit"),
+		Offset:       g.Query("offset"),
+		AdminDivId:   g.Query("adminDivId"),
+		AdminDivCode: g.Query("adminDivCode"),
 	}
 	res, err := s.Service.ListCitizen(req)
 	if err != nil {

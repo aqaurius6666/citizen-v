@@ -82,6 +82,7 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 		MotherPID:        &req.MotherPid,
 		CurrentPlace:     &req.CurrentPlace,
 		JobName:          &req.JobName,
+		AdminDivID:       add.ID,
 		ResidencePlace:   &req.ResidencePlace,
 		Hometown:         &req.Hometown,
 		Religion:         &req.Religion,
@@ -146,6 +147,7 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 		FatherName:       &req.FatherName,
 		FatherPID:        &req.Pid,
 		MotherName:       &req.MotherName,
+		AdminDivID:       add.ID,
 		MotherPID:        &req.MotherPid,
 		CurrentPlace:     &req.CurrentPlace,
 		JobName:          &req.JobName,
@@ -187,6 +189,16 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 	}
 	if req.Pid != "" {
 		search.PID = &req.Pid
+	}
+	if req.AdminDivCode != "" {
+		search.AdminDivCode = &req.AdminDivCode
+	}
+	if req.AdminDivId != "" {
+		tmp, err := uuid.Parse(req.AdminDivId)
+		if err != nil {
+			return nil, e.ErrIdInvalid
+		}
+		search.AdminDivID = tmp
 	}
 
 	limit = 10

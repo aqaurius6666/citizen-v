@@ -36,7 +36,17 @@ func applySearch(db *gorm.DB, search *citizen.Search) *gorm.DB {
 			PID: search.PID,
 		})
 	}
-
+	if search.AdminDivCode != nil {
+		db = db.Where(clause.Like{
+			Column: "admin_div_code",
+			Value:  *search.AdminDivCode + "%",
+		})
+	}
+	if search.AdminDivID != uuid.Nil {
+		db = db.Where(&citizen.Citizen{
+			AdminDivID: search.AdminDivID,
+		})
+	}
 	orderBy := "name"
 	isDesc := true
 	if a := search.OrderBy; a != "" {
@@ -74,7 +84,7 @@ func (u *CitizenCDBRepo) InsertCitizen(value *citizen.Citizen) (*citizen.Citizen
 
 func (u *CitizenCDBRepo) ListCitizen(search *citizen.Search) ([]*citizen.Citizen, error) {
 	r := make([]*citizen.Citizen, 0)
-	if err := applySearch(u.Db, search).Offset(search.Skip).Limit(search.Limit).Find(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Debug().Offset(search.Skip).Limit(search.Limit).Find(&r).Error; err != nil {
 		return nil, err
 	}
 	return r, nil

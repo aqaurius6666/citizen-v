@@ -324,6 +324,18 @@
             "type": "string"
           },
           {
+            "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -814,6 +826,9 @@
           "type": "string"
         },
         "residencePlace": {
+          "type": "string"
+        },
+        "adminDivId": {
           "type": "string"
         }
       }
