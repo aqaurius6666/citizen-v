@@ -1,6 +1,6 @@
 package user
 
-var SQl = `
+var SQL = `
 insert into public.users (id, updated_at, created_at, deleted_at, username, hash_password, use_default_password, role_id, admin_div_id, is_active)
 values  ('27e99822-65b0-4b97-9062-8d5f3ca7a6b7', 1639926636491, 1639926636491, 0, 'citizen0101', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, '89c913de-9254-4e8c-a09b-492d5a248f28', '5e3363c6-0178-4fa9-a71c-1af2f9c0708d', true),
         ('622924ba-ec91-405f-aa61-851a295bb678', 1639926538564, 1639926538564, 0, 'citizen03', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, '68a264e2-4f1b-42a5-a0ff-5c4ea50ef15f', 'b996248f-7fa8-44e1-b695-4eb8b821ec6d', true),
