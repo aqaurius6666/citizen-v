@@ -42,12 +42,14 @@ func (s *ApiServer) RegisterEndpoint() {
 	auth.POST("/login", s.Auth.HandlePostLogin)
 	auth.POST("/ping", s.AuthMiddleware.CheckAuth, s.Index.HandleIndexGet)
 	auth.POST("/password", s.AuthMiddleware.CheckAuth, s.Auth.HandlePostPassword)
+	auth.GET("", s.AuthMiddleware.CheckAuth, s.Auth.HandleGet)
 
 	admindiv := api.Group("/administrative-divisions")
 	admindiv.GET("", s.AdminDiv.HandleGet)
 	admindiv.GET("/:id", s.AdminDiv.HandleGetOne)
 	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePost)
 	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePutOne)
+	admindiv.GET("/options", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOptions)
 
 	citizen := api.Group("/citizens")
 	citizen.GET("", s.Citizen.HandleGet)

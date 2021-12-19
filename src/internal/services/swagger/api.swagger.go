@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Sun, 19 Dec 2021 17:59:55 +07"
+    "version": "Mon, 20 Dec 2021 20:00:00 +07"
   },
   "tags": [
     {
@@ -115,6 +115,36 @@ var API_JSON = `{
         ]
       }
     },
+    "/api/administrative-divisions/options": {
+      "get": {
+        "operationId": "Api_GetAdminDivOptions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetAdminDivOptionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "superiorId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/administrative-divisions/{id}": {
       "get": {
         "operationId": "Api_GetOneAdminDiv",
@@ -139,6 +169,12 @@ var API_JSON = `{
             "required": true,
             "type": "string",
             "pattern": "message"
+          },
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -181,6 +217,36 @@ var API_JSON = `{
                 }
               }
             }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/auth": {
+      "get": {
+        "operationId": "Api_GetAuth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "callerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -486,8 +552,8 @@ var API_JSON = `{
                   "type": "string"
                 },
                 "birthday": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "string",
+                  "format": "int64"
                 },
                 "gender": {
                   "type": "string"
@@ -532,6 +598,15 @@ var API_JSON = `{
                   "type": "string"
                 },
                 "callerId": {
+                  "type": "string"
+                },
+                "residencePlaceCode": {
+                  "type": "string"
+                },
+                "hometownCode": {
+                  "type": "string"
+                },
+                "currentPlaceCode": {
                   "type": "string"
                 }
               }
@@ -786,8 +861,8 @@ var API_JSON = `{
           "type": "string"
         },
         "birthday": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "gender": {
           "type": "string"
@@ -854,6 +929,32 @@ var API_JSON = `{
     "citizenvDeleteCitizenResponseData": {
       "type": "object"
     },
+    "citizenvGetAdminDivOptionsResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetAdminDivOptionsResponseData"
+        }
+      }
+    },
+    "citizenvGetAdminDivOptionsResponseData": {
+      "type": "object",
+      "properties": {
+        "adminDiv": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvAdminDiv"
+          }
+        }
+      }
+    },
     "citizenvGetAdminDivResponse": {
       "type": "object",
       "properties": {
@@ -880,6 +981,29 @@ var API_JSON = `{
         },
         "pagination": {
           "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
+    "citizenvGetAuthResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetAuthResponseData"
+        }
+      }
+    },
+    "citizenvGetAuthResponseData": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/citizenvUser"
         }
       }
     },
@@ -1083,8 +1207,8 @@ var API_JSON = `{
           "type": "string"
         },
         "birthday": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string",
+          "format": "int64"
         },
         "gender": {
           "type": "string"
@@ -1126,6 +1250,15 @@ var API_JSON = `{
           "type": "string"
         },
         "callerId": {
+          "type": "string"
+        },
+        "currentPlaceCode": {
+          "type": "string"
+        },
+        "residencePlaceCode": {
+          "type": "string"
+        },
+        "hometownCode": {
           "type": "string"
         }
       }

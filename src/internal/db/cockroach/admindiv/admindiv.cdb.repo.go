@@ -63,7 +63,7 @@ type AdminDivCDBRepo struct {
 
 func (u *AdminDivCDBRepo) SelectAdminDiv(search *admindiv.Search) (*admindiv.AdminDiv, error) {
 	r := admindiv.AdminDiv{}
-	if err := applySearch(u.Db, search).First(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Debug().First(&r).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, admindiv.ErrNotFound
 		}

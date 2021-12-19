@@ -10,6 +10,21 @@ type AuthController struct {
 	Service *AuthService
 }
 
+func (s *AuthController) HandleGet(g *gin.Context) {
+
+	var err error
+	req := &pb.GetAuthRequest{
+		CallerId: g.GetString("uid"),
+	}
+
+	res, err := s.Service.Auth(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *AuthController) HandlePostRegister(g *gin.Context) {
 	var req pb.PostRegisterRequest
 	var err error

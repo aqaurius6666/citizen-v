@@ -58,6 +58,19 @@ func (s *AdminDivController) HandlePost(g *gin.Context) {
 	lib.Success(g, res)
 }
 
+func (s *AdminDivController) HandleGetOptions(g *gin.Context) {
+	var err error
+	req := &pb.GetAdminDivOptionsRequest{
+		SuperiorId: g.Query("superiorId"),
+	}
+	res, err := s.Service.GetOptions(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *AdminDivController) HandlePutOne(g *gin.Context) {
 	var req pb.PutOneAdminDivRequest
 	var err error

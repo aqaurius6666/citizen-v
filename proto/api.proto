@@ -100,6 +100,18 @@ service Api {
             delete: "/api/citizens/{id=message}"
         };
     }
+
+    rpc GetAdminDivOptions(GetAdminDivOptionsRequest) returns (GetAdminDivOptionsResponse) {
+        option (google.api.http) = {
+            get: "/api/administrative-divisions/options"
+        };
+    }
+
+    rpc GetAuth(GetAuthRequest) returns (GetAuthResponse) {
+        option (google.api.http) = {
+            get: "/api/auth"
+        };
+    }
 }
 
 message User {
@@ -130,7 +142,7 @@ message Campaign {
 message Citizen {
     string id = 1;
     string name = 2;
-    int32 birthday = 3;
+    int64 birthday = 3;
     string gender = 4;
     string nationality = 5;
     string fatherName = 6;
@@ -148,8 +160,23 @@ message Citizen {
     string adminDivId = 18;
 }
 
+message GetAuthRequest {
+    string callerId = 1;
+}
+
+message GetAuthResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        User user = 1;
+    }
+}
+
+
 message GetOneAdminDivRequest {
     string id = 1;
+    string callerId = 2;
 }
 
 message GetOneAdminDivResponse {
@@ -160,6 +187,21 @@ message GetOneAdminDivResponse {
         AdminDiv adminDiv = 1;
     }
 }
+
+
+message GetAdminDivOptionsRequest {
+    string superiorId = 1;
+}
+
+message GetAdminDivOptionsResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated AdminDiv adminDiv = 1;
+    }
+}
+
 
 
 message DeleteCitizenRequest {
@@ -237,7 +279,7 @@ message PostUserIssueResponse {
 message PutOneCitizenRequest {
     string id = 1;
     string name = 2;
-    int32 birthday = 3;
+    int64 birthday = 3;
     string gender = 4;
     string nationality = 5;
     string fatherName = 6;
@@ -253,6 +295,10 @@ message PutOneCitizenRequest {
     string adminDivCode = 16;
     string residencePlace = 17;
     string callerId = 18;
+    string residencePlaceCode = 19;
+    string hometownCode = 20;
+    string currentPlaceCode = 21;
+
 }
 
 message PutOneCitizenResponse {
@@ -280,7 +326,7 @@ message GetOneCitizenResponse {
 message PostCitizenRequest {
     string pid = 1;
     string name = 2;
-    int32 birthday = 3;
+    int64 birthday = 3;
     string gender = 4;
     string nationality = 5;
     string fatherName = 6;
@@ -295,6 +341,9 @@ message PostCitizenRequest {
     string educationalLevel = 15;
     string adminDivCode = 16;
     string callerId = 17;
+    string currentPlaceCode = 18;
+    string residencePlaceCode = 19;
+    string hometownCode = 20;
 
 }
 

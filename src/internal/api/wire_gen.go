@@ -53,7 +53,8 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		Service: adminDivService,
 	}
 	citizenService := &CitizenService{
-		Repo: serverRepo,
+		Repo:  serverRepo,
+		Model: server,
 	}
 	citizenController := &CitizenController{
 		Service: citizenService,

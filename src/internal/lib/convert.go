@@ -166,7 +166,7 @@ func ConvertOneCitizen(s *citizen.Citizen) *pb.Citizen {
 	return &pb.Citizen{
 		Name:             utils.StrVal(s.Name),
 		Id:               s.ID.String(),
-		Birthday:         int32(*s.Birthday),
+		Birthday:         utils.Int64Val(s.Birthday),
 		Gender:           utils.StrVal(s.Gender),
 		Nationality:      utils.StrVal(s.Nationality),
 		FatherName:       utils.StrVal(s.FatherName),

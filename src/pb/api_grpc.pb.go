@@ -34,6 +34,8 @@ type ApiClient interface {
 	PostUserBan(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error)
 	PostUserUnban(ctx context.Context, in *PostUserActiveRequest, opts ...grpc.CallOption) (*PostUserActiveResponse, error)
 	DeleteCitizen(ctx context.Context, in *DeleteCitizenRequest, opts ...grpc.CallOption) (*DeleteCitizenResponse, error)
+	GetAdminDivOptions(ctx context.Context, in *GetAdminDivOptionsRequest, opts ...grpc.CallOption) (*GetAdminDivOptionsResponse, error)
+	GetAuth(ctx context.Context, in *GetAuthRequest, opts ...grpc.CallOption) (*GetAuthResponse, error)
 }
 
 type apiClient struct {
@@ -188,6 +190,24 @@ func (c *apiClient) DeleteCitizen(ctx context.Context, in *DeleteCitizenRequest,
 	return out, nil
 }
 
+func (c *apiClient) GetAdminDivOptions(ctx context.Context, in *GetAdminDivOptionsRequest, opts ...grpc.CallOption) (*GetAdminDivOptionsResponse, error) {
+	out := new(GetAdminDivOptionsResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetAdminDivOptions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) GetAuth(ctx context.Context, in *GetAuthRequest, opts ...grpc.CallOption) (*GetAuthResponse, error) {
+	out := new(GetAuthResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetAuth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -208,6 +228,8 @@ type ApiServer interface {
 	PostUserBan(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error)
 	PostUserUnban(context.Context, *PostUserActiveRequest) (*PostUserActiveResponse, error)
 	DeleteCitizen(context.Context, *DeleteCitizenRequest) (*DeleteCitizenResponse, error)
+	GetAdminDivOptions(context.Context, *GetAdminDivOptionsRequest) (*GetAdminDivOptionsResponse, error)
+	GetAuth(context.Context, *GetAuthRequest) (*GetAuthResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -262,6 +284,12 @@ func (UnimplementedApiServer) PostUserUnban(context.Context, *PostUserActiveRequ
 }
 func (UnimplementedApiServer) DeleteCitizen(context.Context, *DeleteCitizenRequest) (*DeleteCitizenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCitizen not implemented")
+}
+func (UnimplementedApiServer) GetAdminDivOptions(context.Context, *GetAdminDivOptionsRequest) (*GetAdminDivOptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdminDivOptions not implemented")
+}
+func (UnimplementedApiServer) GetAuth(context.Context, *GetAuthRequest) (*GetAuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuth not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -564,6 +592,42 @@ func _Api_DeleteCitizen_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetAdminDivOptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdminDivOptionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetAdminDivOptions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetAdminDivOptions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetAdminDivOptions(ctx, req.(*GetAdminDivOptionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_GetAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetAuth",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetAuth(ctx, req.(*GetAuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -634,6 +698,14 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCitizen",
 			Handler:    _Api_DeleteCitizen_Handler,
+		},
+		{
+			MethodName: "GetAdminDivOptions",
+			Handler:    _Api_GetAdminDivOptions_Handler,
+		},
+		{
+			MethodName: "GetAuth",
+			Handler:    _Api_GetAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

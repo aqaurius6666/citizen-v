@@ -3,6 +3,7 @@ package validate
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -32,4 +33,19 @@ func PidRegexTag(fl validator.FieldLevel) bool {
 	regexString := `^[0-9]{12}$`
 	regex := regexp.MustCompile(regexString)
 	return regex.Match([]byte(field))
+}
+
+func CodeRegexTag(fl validator.FieldLevel) bool {
+	field := fl.Field().String()
+	if field == "" {
+		return true
+	}
+	_, err := strconv.Atoi(field)
+	if err != nil {
+		return false
+	}
+	if len(field)%2 == 0 || len(field) > 0 {
+		return true
+	}
+	return false
 }

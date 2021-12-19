@@ -26,6 +26,10 @@ func RegisterValidator() error {
 	if err != nil {
 		return err
 	}
+	err = myvalidator.RegisterValidation("code", CodeRegexTag)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

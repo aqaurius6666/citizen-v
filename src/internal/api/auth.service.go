@@ -62,6 +62,24 @@ func (s *AuthService) Register(req *pb.PostRegisterRequest) (*pb.PostRegisterRes
 	}, nil
 }
 
+func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, error) {
+	var err error
+	var u *user.User
+	if f, ok := validate.RequiredFields(req, "CallerId"); !ok {
+		return nil, e.ErrMissingField(f)
+	}
+	if u, err = s.Repo.SelectUser(&user.Search{
+		User: user.User{
+			BaseModel: database.BaseModel{ID: uuid.MustParse(req.CallerId)},
+		},
+	}); err != nil {
+		return nil, err
+	}
+	return &pb.GetAuthResponse_Data{
+		User: lib.ConvertOneUser(u, s.Repo),
+	}, nil
+}
+
 func (s *AuthService) Login(req *pb.PostLoginRequest) (*pb.PostLoginResponse_Data, error) {
 	var err error
 	var u *user.User

@@ -6,11 +6,13 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/model"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
+	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/google/uuid"
 	"golang.org/x/xerrors"
@@ -69,10 +71,9 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 		return nil, e.ErrAuthNoPermission
 	}
 	search.ID = sid
-	tmpBirthday := uint64(int(req.Birthday))
 	tmp := citizen.Citizen{
 		Name:             &req.Name,
-		Birthday:         &tmpBirthday,
+		Birthday:         &req.Birthday,
 		PID:              &req.Pid,
 		Gender:           &req.Gender,
 		Nationality:      &req.Nationality,
@@ -121,14 +122,21 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 	if f, ok := validate.RequiredFields(req,
 		"Pid", "Name", "Birthday", "Gender",
 		"Nationality", "MotherName", "MotherPid",
-		"FatherName", "FatherPid", "CurrentPlace",
-		"JobName", "ResidencePlace", "Hometown",
+		"FatherName", "FatherPid",
+		"JobName", "ResidencePlaceCode", "HometownCode", "CurrentPlaceCode",
 		"Religion", "EducationalLevel", "CallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
+	caller, _ := s.Repo.SelectUser(&user.Search{
+		User: user.User{
+			BaseModel: database.BaseModel{ID: uuid.MustParse(req.CallerId)},
+		},
+	})
 	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
 		AdminDiv: admindiv.AdminDiv{
-			Code: utils.StrPtr(req.AdminDivCode),
+			BaseModel: database.BaseModel{
+				ID: caller.AdminDivID,
+			},
 		},
 	})
 	if err != nil || add == nil {
@@ -137,29 +145,41 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), add.ID); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
-	tmp := uint64(int(req.Birthday))
 	tmpCitizen := citizen.Citizen{
-		Name:             &req.Name,
-		Birthday:         &tmp,
-		PID:              &req.Pid,
-		Gender:           &req.Gender,
-		Nationality:      &req.Nationality,
-		FatherName:       &req.FatherName,
-		FatherPID:        &req.Pid,
-		MotherName:       &req.MotherName,
-		AdminDivID:       add.ID,
-		MotherPID:        &req.MotherPid,
-		CurrentPlace:     &req.CurrentPlace,
-		JobName:          &req.JobName,
-		ResidencePlace:   &req.ResidencePlace,
-		Hometown:         &req.Hometown,
-		Religion:         &req.Religion,
-		EducationalLevel: &req.EducationalLevel,
-		AdminDivCode:     &req.AdminDivCode,
+		Name:               &req.Name,
+		Birthday:           &req.Birthday,
+		PID:                &req.Pid,
+		Gender:             &req.Gender,
+		Nationality:        &req.Nationality,
+		FatherName:         &req.FatherName,
+		FatherPID:          &req.Pid,
+		MotherName:         &req.MotherName,
+		AdminDivID:         add.ID,
+		MotherPID:          &req.MotherPid,
+		JobName:            &req.JobName,
+		Religion:           &req.Religion,
+		EducationalLevel:   &req.EducationalLevel,
+		AdminDivCode:       add.Code,
+		CurrentPlaceCode:   &req.CurrentPlaceCode,
+		ResidencePlaceCode: &req.ResidencePlaceCode,
+		HometownCode:       &req.HometownCode,
 	}
 	if err := validate.Validate(tmpCitizen); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
+	tmpCitizen.CurrentPlace, err = lib.GetAdminDivFullNameCode(req.CurrentPlaceCode, s.Repo)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	tmpCitizen.Hometown, err = lib.GetAdminDivFullNameCode(req.HometownCode, s.Repo)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	tmpCitizen.ResidencePlace, err = lib.GetAdminDivFullNameCode(req.ResidencePlaceCode, s.Repo)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+
 	ctz, err := s.Repo.InsertCitizen(&tmpCitizen)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
@@ -183,8 +203,7 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 	}
 	if req.Birthday != "" {
 		if birthday, err := strconv.ParseInt(req.Birthday, 10, 64); err != nil {
-			temp := uint64(birthday)
-			search.Birthday = &temp
+			search.Birthday = &birthday
 		}
 	}
 	if req.Pid != "" {

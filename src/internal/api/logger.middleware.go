@@ -27,8 +27,9 @@ func (l *LoggerMiddleware) Logger() gin.HandlerFunc {
 			"method":  reqMethod,
 			"path":    reqUri,
 		})
-		if body, ok := c.Get("body"); ok {
-			reqLogger = reqLogger.WithField("body", string(body.([]byte)))
+		if _, ok := c.Get("body"); ok {
+			// fmt.Printf("body: %v\n", body)
+			// reqLogger = reqLogger.WithField("body", string(body.([]byte)))
 		}
 		if err, ok := c.Get("error"); ok {
 			reqLogger.Errorf("%v", err)

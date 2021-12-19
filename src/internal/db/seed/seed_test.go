@@ -151,7 +151,7 @@ func TestSeedCitizens(t *testing.T) {
 
 			age := rand.Int() % 60
 			tp := time.Date(time.Now().Year()-age, time.Month(rand.Int()%12), rand.Int()%25, 0, 0, 0, 0, time.Local)
-			tmp := uint64(tp.UnixMilli())
+			tmp := tp.UnixMilli()
 
 			pid := GetRandomPID()
 			fid := GetRandomPID()

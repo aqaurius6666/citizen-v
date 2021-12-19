@@ -88,6 +88,28 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 	}, nil
 }
 
+func (s *AdminDivService) GetOptions(req *pb.GetAdminDivOptionsRequest) (*pb.GetAdminDivOptionsResponse_Data, error) {
+	var err error
+	var search admindiv.Search
+	uid := uuid.Nil
+	search.Type = &admindiv.CITY
+	if req.SuperiorId != "" {
+		uid, err = uuid.Parse(req.SuperiorId)
+		if err != nil {
+			return nil, e.ErrIdInvalid
+		}
+		search.SuperiorID = uid
+		search.Type = nil
+	}
+	add, err := s.Repo.ListAdminDiv(&search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	return &pb.GetAdminDivOptionsResponse_Data{
+		AdminDiv: lib.ConvertAdminDivs(add),
+	}, nil
+}
+
 func (s *AdminDivService) GetAdminDivById(req *pb.GetOneAdminDivRequest) (*pb.GetOneAdminDivResponse_Data, error) {
 	var err error
 	var search admindiv.Search
