@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
@@ -17,15 +16,7 @@ type User interface {
 	GetRoleId(addid uuid.UUID) (uuid.UUID, error)
 }
 
-var (
-	_ User = (*UserModel)(nil)
-)
-
-type UserModel struct {
-	Repo db.ServerRepo
-}
-
-func (u *UserModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
+func (u *ServerModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
 	if addid == uuid.Nil {
 		return uuid.Nil, nil
 	}
@@ -59,7 +50,7 @@ func (u *UserModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
 	return ro.ID, nil
 }
 
-func (u *UserModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error) {
+func (u *ServerModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error) {
 	if uid == uuid.Nil || addid == uuid.Nil {
 		return false, nil
 	}
@@ -106,7 +97,7 @@ func (u *UserModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error) 
 	return valid, nil
 }
 
-func (u *UserModel) IsRoleActive(userId uuid.UUID) (bool, error) {
+func (u *ServerModel) IsRoleActive(userId uuid.UUID) (bool, error) {
 	if userId == uuid.Nil {
 		return false, nil
 	}

@@ -15,19 +15,8 @@ import (
 // Injectors from model.wire.go:
 
 func InitModel(ctx context.Context, logger *logrus.Logger, repo db.ServerRepo) (*ServerModel, error) {
-	roleModel := &RoleModel{
-		Repo: repo,
-	}
-	userModel := &UserModel{
-		Repo: repo,
-	}
-	adminDivModel := &AdminDivModel{
-		Repo: repo,
-	}
 	serverModel := &ServerModel{
-		Role:     roleModel,
-		User:     userModel,
-		AdminDiv: adminDivModel,
+		Repo: repo,
 	}
 	return serverModel, nil
 }

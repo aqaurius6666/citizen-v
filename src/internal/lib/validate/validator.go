@@ -86,6 +86,24 @@ func handleField(t reflect.Type, v reflect.Value) bool {
 		if val == 0 {
 			return false
 		}
+	case reflect.Slice:
+		size := v.Len()
+		if size == 0 {
+			return false
+		}
+		for i := 0; i < size; i++ {
+			val := v.Index(i)
+			newT := reflect.TypeOf(val.Interface())
+			if !handleField(newT, val) {
+				return false
+			}
+		}
+	case reflect.Ptr:
+		if !handleField(t.Elem(), v.Elem()) {
+			return false
+		}
+	default:
+		fmt.Println("unsupported kind %w", t.Kind())
 	}
 	return true
 }

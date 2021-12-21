@@ -112,6 +112,20 @@ service Api {
             get: "/api/auth"
         };
     }
+
+    rpc GetUserOne(GetUserOneRequest) returns (GetUserOneResponse) {
+        option (google.api.http) = {
+            get: "/api/users/{id=message}"
+        };
+    }
+
+    rpc PostCampaign(PostCampaignRequest) returns (PostCampaignResponse) {
+        option (google.api.http) = {
+            post: "/api/campaigns"
+            body: "*"
+        };
+    }
+    
 }
 
 message User {
@@ -138,6 +152,10 @@ message Campaign {
     int32 record = 1;
     bool isDone = 2;
     float percent = 3;
+    string name = 4;
+    string id = 5;
+    int64 startTime = 6;
+    int64 endTime = 7;
 }
 message Citizen {
     string id = 1;
@@ -159,6 +177,37 @@ message Citizen {
     string residencePlace = 17;
     string adminDivId = 18;
 }
+
+message PostCampaignRequest {
+    string callerId = 1;
+    int64 startTime = 2;
+    int64 endTime = 3;
+    repeated string codes = 4;
+}
+
+message PostCampaignResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated Campaign campaign = 1;
+    }
+}
+
+
+message GetUserOneRequest {
+    string id = 1;
+}
+
+message GetUserOneResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        User user = 1;
+    }
+}
+
 
 message GetAuthRequest {
     string callerId = 1;
@@ -286,18 +335,15 @@ message PutOneCitizenRequest {
     string fatherPid = 7;
     string motherName = 8;
     string motherPid = 9;
-    string currentPlace = 10;
     string jobName = 11;
     string pid = 12;
-    string hometown = 13;
+    string callerId = 13;
     string religion = 14;
     string educationalLevel = 15;
     string adminDivCode = 16;
-    string residencePlace = 17;
-    string callerId = 18;
-    string residencePlaceCode = 19;
-    string hometownCode = 20;
-    string currentPlaceCode = 21;
+    string residencePlaceCode = 17;
+    string hometownCode = 19;
+    string currentPlaceCode = 20;
 
 }
 

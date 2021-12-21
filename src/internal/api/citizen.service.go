@@ -72,29 +72,29 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 	}
 	search.ID = sid
 	tmp := citizen.Citizen{
-		Name:             &req.Name,
-		Birthday:         &req.Birthday,
-		PID:              &req.Pid,
-		Gender:           &req.Gender,
-		Nationality:      &req.Nationality,
-		FatherName:       &req.FatherName,
-		FatherPID:        &req.FatherPid,
-		MotherName:       &req.MotherName,
-		MotherPID:        &req.MotherPid,
-		CurrentPlace:     &req.CurrentPlace,
-		JobName:          &req.JobName,
-		AdminDivID:       add.ID,
-		ResidencePlace:   &req.ResidencePlace,
-		Hometown:         &req.Hometown,
-		Religion:         &req.Religion,
-		EducationalLevel: &req.EducationalLevel,
-		AdminDivCode:     &req.AdminDivCode,
+		Name:               &req.Name,
+		Birthday:           &req.Birthday,
+		PID:                &req.Pid,
+		Gender:             &req.Gender,
+		Nationality:        &req.Nationality,
+		FatherName:         &req.FatherName,
+		FatherPID:          &req.FatherPid,
+		MotherName:         &req.MotherName,
+		MotherPID:          &req.MotherPid,
+		JobName:            &req.JobName,
+		AdminDivID:         add.ID,
+		Religion:           &req.Religion,
+		EducationalLevel:   &req.EducationalLevel,
+		AdminDivCode:       &req.AdminDivCode,
+		CurrentPlaceCode:   &req.CurrentPlaceCode,
+		ResidencePlaceCode: &req.ResidencePlaceCode,
+		HometownCode:       &req.HometownCode,
 	}
 	if err := validate.Validate(tmp); err != nil {
 		return nil, admindiv.ErrInvalid
 	}
 
-	err = s.Repo.UpdateCitizen(&search, &tmp)
+	err = s.Model.UpdateCitizen(&search, &tmp)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
@@ -167,20 +167,8 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 	if err := validate.Validate(tmpCitizen); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	tmpCitizen.CurrentPlace, err = lib.GetAdminDivFullNameCode(req.CurrentPlaceCode, s.Repo)
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-	tmpCitizen.Hometown, err = lib.GetAdminDivFullNameCode(req.HometownCode, s.Repo)
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
-	tmpCitizen.ResidencePlace, err = lib.GetAdminDivFullNameCode(req.ResidencePlaceCode, s.Repo)
-	if err != nil {
-		return nil, xerrors.Errorf("%w", err)
-	}
 
-	ctz, err := s.Repo.InsertCitizen(&tmpCitizen)
+	ctz, err := s.Model.InsertCitizen(&tmpCitizen)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}

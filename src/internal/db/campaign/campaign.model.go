@@ -10,6 +10,7 @@ type Campaign struct {
 	IsDone       *bool    `gorm:"column:is_done;default:false;not null"`
 	Code         *string  `gorm:"column:code"`
 	RecordNumber *int     `gorm:"record_number;default:0"`
+	StartTime    *int64   `gorm:"start_time"`
 	EndTime      *int64   `gorm:"end_time"`
 	Percent      *float32 `gorm:"column:percent"`
 }

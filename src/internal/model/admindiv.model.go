@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 
-	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/go-utils/database"
 	"github.com/google/uuid"
@@ -11,17 +10,10 @@ import (
 
 type AdminDiv interface {
 	GetNewCode(uuid.UUID) (string, error)
+	IsChild(code string, codes []string) bool
 }
 
-var (
-	_ AdminDiv = (*AdminDivModel)(nil)
-)
-
-type AdminDivModel struct {
-	Repo db.ServerRepo
-}
-
-func (s *AdminDivModel) GetNewCode(superid uuid.UUID) (string, error) {
+func (s *ServerModel) GetNewCode(superid uuid.UUID) (string, error) {
 	superCode := ""
 	var count *int64
 	var err error
@@ -55,4 +47,23 @@ func (s *AdminDivModel) GetNewCode(superid uuid.UUID) (string, error) {
 	}
 
 	return fmt.Sprintf("%s%02d", superCode, *count+1), nil
+}
+
+func (s *ServerModel) IsChild(code string, codes []string) bool {
+	if len(codes) == 0 || code == "" {
+		return false
+	}
+	l := len(code)
+	for _, c := range codes {
+		if len(c) < l {
+			return false
+		}
+		if len(c)-2 != l {
+			return false
+		}
+		if c[0:l] != code {
+			return false
+		}
+	}
+	return true
 }

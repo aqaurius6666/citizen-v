@@ -20,6 +20,7 @@ type ApiServer struct {
 	AdminDiv         *AdminDivController
 	Citizen          *CitizenController
 	User             *UserController
+	Campaign         *CampaignController
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -45,23 +46,27 @@ func (s *ApiServer) RegisterEndpoint() {
 	auth.GET("", s.AuthMiddleware.CheckAuth, s.Auth.HandleGet)
 
 	admindiv := api.Group("/administrative-divisions")
-	admindiv.GET("", s.AdminDiv.HandleGet)
-	admindiv.GET("/:id", s.AdminDiv.HandleGetOne)
+	admindiv.GET("", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGet)
+	admindiv.GET("/:id", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOne)
 	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePost)
 	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePutOne)
 	admindiv.GET("/options", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOptions)
 
 	citizen := api.Group("/citizens")
-	citizen.GET("", s.Citizen.HandleGet)
+	citizen.GET("", s.AuthMiddleware.CheckAuth, s.Citizen.HandleGet)
 	citizen.GET("/:id", s.AuthMiddleware.CheckAuth, s.Citizen.HandleGetById)
-	citizen.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePost)
-	citizen.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePutOne)
-	citizen.DELETE("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandleDeleteById)
+	citizen.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePost)
+	citizen.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1), s.Citizen.HandlePutOne)
+	citizen.DELETE("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1), s.Citizen.HandleDeleteById)
 
 	user := api.Group("/users")
-	user.GET("", s.User.HandleGet)
+	user.GET("", s.AuthMiddleware.CheckAuth, s.User.HandleGet)
+	user.GET("/:id", s.AuthMiddleware.CheckAuth, s.User.HandleGetOne)
 	user.POST("/issue", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostIssue)
 	user.POST("/:id/ban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostBan)
 	user.POST("/:id/unban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostUnban)
+
+	campaign := api.Group("/campaigns")
+	campaign.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3), s.Campaign.HandlePost)
 
 }

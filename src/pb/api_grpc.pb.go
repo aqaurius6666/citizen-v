@@ -36,6 +36,8 @@ type ApiClient interface {
 	DeleteCitizen(ctx context.Context, in *DeleteCitizenRequest, opts ...grpc.CallOption) (*DeleteCitizenResponse, error)
 	GetAdminDivOptions(ctx context.Context, in *GetAdminDivOptionsRequest, opts ...grpc.CallOption) (*GetAdminDivOptionsResponse, error)
 	GetAuth(ctx context.Context, in *GetAuthRequest, opts ...grpc.CallOption) (*GetAuthResponse, error)
+	GetUserOne(ctx context.Context, in *GetUserOneRequest, opts ...grpc.CallOption) (*GetUserOneResponse, error)
+	PostCampaign(ctx context.Context, in *PostCampaignRequest, opts ...grpc.CallOption) (*PostCampaignResponse, error)
 }
 
 type apiClient struct {
@@ -208,6 +210,24 @@ func (c *apiClient) GetAuth(ctx context.Context, in *GetAuthRequest, opts ...grp
 	return out, nil
 }
 
+func (c *apiClient) GetUserOne(ctx context.Context, in *GetUserOneRequest, opts ...grpc.CallOption) (*GetUserOneResponse, error) {
+	out := new(GetUserOneResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetUserOne", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PostCampaign(ctx context.Context, in *PostCampaignRequest, opts ...grpc.CallOption) (*PostCampaignResponse, error) {
+	out := new(PostCampaignResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostCampaign", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -230,6 +250,8 @@ type ApiServer interface {
 	DeleteCitizen(context.Context, *DeleteCitizenRequest) (*DeleteCitizenResponse, error)
 	GetAdminDivOptions(context.Context, *GetAdminDivOptionsRequest) (*GetAdminDivOptionsResponse, error)
 	GetAuth(context.Context, *GetAuthRequest) (*GetAuthResponse, error)
+	GetUserOne(context.Context, *GetUserOneRequest) (*GetUserOneResponse, error)
+	PostCampaign(context.Context, *PostCampaignRequest) (*PostCampaignResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -290,6 +312,12 @@ func (UnimplementedApiServer) GetAdminDivOptions(context.Context, *GetAdminDivOp
 }
 func (UnimplementedApiServer) GetAuth(context.Context, *GetAuthRequest) (*GetAuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAuth not implemented")
+}
+func (UnimplementedApiServer) GetUserOne(context.Context, *GetUserOneRequest) (*GetUserOneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserOne not implemented")
+}
+func (UnimplementedApiServer) PostCampaign(context.Context, *PostCampaignRequest) (*PostCampaignResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostCampaign not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -628,6 +656,42 @@ func _Api_GetAuth_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetUserOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserOneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetUserOne(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetUserOne",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetUserOne(ctx, req.(*GetUserOneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PostCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostCampaignRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostCampaign(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostCampaign",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostCampaign(ctx, req.(*PostCampaignRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -706,6 +770,14 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAuth",
 			Handler:    _Api_GetAuth_Handler,
+		},
+		{
+			MethodName: "GetUserOne",
+			Handler:    _Api_GetUserOne_Handler,
+		},
+		{
+			MethodName: "PostCampaign",
+			Handler:    _Api_PostCampaign_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

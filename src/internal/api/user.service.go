@@ -115,6 +115,26 @@ func (s *UserService) ListUsers(req *pb.GetUsersRequest) (*pb.GetUsersResponse_D
 	}, nil
 }
 
+func (s *UserService) Get(req *pb.GetUserOneRequest) (*pb.GetUserOneResponse_Data, error) {
+
+	uid, err := uuid.Parse(req.Id)
+	if err != nil {
+		return nil, e.ErrIdInvalid
+	}
+	usr, err := s.Repo.SelectUser(&user.Search{
+		User: user.User{BaseModel: database.BaseModel{
+			ID: uid,
+		}},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetUserOneResponse_Data{
+		User: lib.ConvertOneUser(usr, s.Repo),
+	}, nil
+}
+
 func (s *UserService) Issue(req *pb.PostUserIssueRequest) (*pb.PostUserIssueResponse_Data, error) {
 	var err error
 	if f, ok := validate.RequiredFields(req, "AdminDivId", "RoleId", "Id"); !ok {

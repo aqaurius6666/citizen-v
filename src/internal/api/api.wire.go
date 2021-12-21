@@ -37,6 +37,8 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		wire.Struct(new(RoleMiddleware), "*"),
 		wire.Struct(new(AuthService), "*"),
 		wire.Struct(new(LoggerMiddleware), "*"),
+		wire.Struct(new(CampaignService), "*"),
+		wire.Struct(new(CampaignController), "*"),
 		wire.Struct(new(ApiServer), "*"),
 	)
 	return &ApiServer{}, nil

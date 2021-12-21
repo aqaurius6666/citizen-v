@@ -1,6 +1,8 @@
 package campaign
 
 import (
+	"time"
+
 	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/database/cockroach"
@@ -26,12 +28,21 @@ func applySearch(db *gorm.DB, search *campaign.Search) *gorm.DB {
 			Name: search.Name,
 		})
 	}
-	// if search.Code != nil {
-	// 	db = db.Where(clause.Like{
-	// 		Column: "code",
-	// 		Value:  *search.Code + "%",
-	// 	})
-	// }
+	if search.Code != nil {
+		db = db.Where(&campaign.Campaign{
+			Code: search.Code,
+		})
+	}
+	if search.EndTime != nil {
+		db = db.Where(`"campaigns"."end_time" > ?`, *search.EndTime)
+	} else {
+		db = db.Where(`"campaigns"."end_time" > ?`, time.Now().UnixMilli())
+	}
+	if search.StartTime != nil {
+		db = db.Where(`"campaigns"."start_time" < ?`, *search.StartTime)
+	} else {
+		db = db.Where(`"campaigns"."start_time" < ?`, time.Now().UnixMilli())
+	}
 	orderBy := "name"
 	isDesc := true
 	if a := search.OrderBy; a != "" {

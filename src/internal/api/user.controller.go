@@ -40,6 +40,19 @@ func (s *UserController) HandlePostBan(g *gin.Context) {
 	lib.Success(g, res)
 }
 
+func (s *UserController) HandleGetOne(g *gin.Context) {
+	var err error
+	req := &pb.GetUserOneRequest{
+		Id: g.Param("id"),
+	}
+	res, err := s.Service.Get(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
 func (s *UserController) HandleGet(g *gin.Context) {
 	var err error
 	req := &pb.GetUsersRequest{

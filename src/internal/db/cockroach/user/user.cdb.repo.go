@@ -47,7 +47,7 @@ type UserCDBRepo struct {
 
 func (u *UserCDBRepo) SelectUser(search *user.Search) (*user.User, error) {
 	r := user.User{}
-	if err := applySearch(u.Db, search).Joins("Role").First(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Joins("Role").Joins("AdminDiv").First(&r).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, user.ErrNotFound
 		}

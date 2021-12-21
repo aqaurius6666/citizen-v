@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Mon, 20 Dec 2021 20:00:00 +07"
+    "version": "Tue, 21 Dec 2021 15:00:51 +07"
   },
   "tags": [
     {
@@ -350,6 +350,38 @@ var API_JSON = `{
         ]
       }
     },
+    "/api/campaigns": {
+      "post": {
+        "operationId": "Api_PostCampaign",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCampaignResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCampaignRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/citizens": {
       "get": {
         "operationId": "Api_GetCitizen",
@@ -573,16 +605,13 @@ var API_JSON = `{
                 "motherPid": {
                   "type": "string"
                 },
-                "currentPlace": {
-                  "type": "string"
-                },
                 "jobName": {
                   "type": "string"
                 },
                 "pid": {
                   "type": "string"
                 },
-                "hometown": {
+                "callerId": {
                   "type": "string"
                 },
                 "religion": {
@@ -592,12 +621,6 @@ var API_JSON = `{
                   "type": "string"
                 },
                 "adminDivCode": {
-                  "type": "string"
-                },
-                "residencePlace": {
-                  "type": "string"
-                },
-                "callerId": {
                   "type": "string"
                 },
                 "residencePlaceCode": {
@@ -703,6 +726,37 @@ var API_JSON = `{
             "schema": {
               "$ref": "#/definitions/citizenvPostUserIssueRequest"
             }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "operationId": "Api_GetUserOne",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetUserOneResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
           }
         ],
         "tags": [
@@ -848,6 +902,20 @@ var API_JSON = `{
         "percent": {
           "type": "number",
           "format": "float"
+        },
+        "name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -1082,6 +1150,29 @@ var API_JSON = `{
         }
       }
     },
+    "citizenvGetUserOneResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetUserOneResponseData"
+        }
+      }
+    },
+    "citizenvGetUserOneResponseData": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/citizenvUser"
+        }
+      }
+    },
     "citizenvGetUsersResponse": {
       "type": "object",
       "properties": {
@@ -1196,6 +1287,54 @@ var API_JSON = `{
     },
     "citizenvPostAuthPasswordResponseData": {
       "type": "object"
+    },
+    "citizenvPostCampaignRequest": {
+      "type": "object",
+      "properties": {
+        "callerId": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "citizenvPostCampaignResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostCampaignResponseData"
+        }
+      }
+    },
+    "citizenvPostCampaignResponseData": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvCampaign"
+          }
+        }
+      }
     },
     "citizenvPostCitizenRequest": {
       "type": "object",

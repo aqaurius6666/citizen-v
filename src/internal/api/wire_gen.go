@@ -66,6 +66,13 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	userController := &UserController{
 		Service: userService,
 	}
+	campaignService := &CampaignService{
+		Repo:  serverRepo,
+		Model: server,
+	}
+	campaignController := &CampaignController{
+		Service: campaignService,
+	}
 	apiServer := &ApiServer{
 		G:                engine,
 		logger:           logger,
@@ -78,6 +85,7 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 		AdminDiv:         adminDivController,
 		Citizen:          citizenController,
 		User:             userController,
+		Campaign:         campaignController,
 	}
 	return apiServer, nil
 }
