@@ -33,6 +33,7 @@ func (s *AdminDivController) HandleGet(g *gin.Context) {
 		Id:         g.Query("id"),
 		Limit:      g.Query("limit"),
 		Offset:     g.Query("offset"),
+		XCallerId:  g.GetString("uid"),
 	}
 	res, err := s.Service.ListAdminDiv(req)
 	if err != nil {
@@ -50,6 +51,7 @@ func (s *AdminDivController) HandlePost(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.CreateAdminDiv(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
@@ -62,6 +64,7 @@ func (s *AdminDivController) HandleGetOptions(g *gin.Context) {
 	var err error
 	req := &pb.GetAdminDivOptionsRequest{
 		SuperiorId: g.Query("superiorId"),
+		XCallerId:  g.GetString("uid"),
 	}
 	res, err := s.Service.GetOptions(req)
 	if err != nil {

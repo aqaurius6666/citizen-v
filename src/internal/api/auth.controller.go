@@ -14,7 +14,7 @@ func (s *AuthController) HandleGet(g *gin.Context) {
 
 	var err error
 	req := &pb.GetAuthRequest{
-		CallerId: g.GetString("uid"),
+		XCallerId: g.GetString("uid"),
 	}
 
 	res, err := s.Service.Auth(req)
@@ -65,7 +65,7 @@ func (s *AuthController) HandlePostPassword(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
-	req.Id = g.GetString("uid")
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.ChangePassword(&req)
 	if err != nil {
 		lib.BadRequest(g, err)

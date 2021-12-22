@@ -65,12 +65,12 @@ func (s *AuthService) Register(req *pb.PostRegisterRequest) (*pb.PostRegisterRes
 func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, error) {
 	var err error
 	var u *user.User
-	if f, ok := validate.RequiredFields(req, "CallerId"); !ok {
+	if f, ok := validate.RequiredFields(req, "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	if u, err = s.Repo.SelectUser(&user.Search{
 		User: user.User{
-			BaseModel: database.BaseModel{ID: uuid.MustParse(req.CallerId)},
+			BaseModel: database.BaseModel{ID: uuid.MustParse(req.XCallerId)},
 		},
 	}); err != nil {
 		return nil, err
@@ -112,12 +112,12 @@ func (s *AuthService) Login(req *pb.PostLoginRequest) (*pb.PostLoginResponse_Dat
 func (s *AuthService) ChangePassword(req *pb.PostAuthPasswordRequest) (*pb.PostAuthPasswordResponse_Data, error) {
 	var err error
 	var u *user.User
-	if f, ok := validate.RequiredFields(req, "OldPassword", "NewPassword", "Id"); !ok {
+	if f, ok := validate.RequiredFields(req, "OldPassword", "NewPassword", "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	if u, err = s.Repo.SelectUser(&user.Search{
 		User: user.User{
-			BaseModel:    database.BaseModel{ID: uuid.MustParse(req.Id)},
+			BaseModel:    database.BaseModel{ID: uuid.MustParse(req.XCallerId)},
 			HashPassword: lib.MyHashPassword(&req.OldPassword),
 		},
 	}); err != nil {

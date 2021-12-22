@@ -13,9 +13,9 @@ type UserController struct {
 func (s *UserController) HandlePostUnban(g *gin.Context) {
 	var err error
 	req := &pb.PostUserActiveRequest{
-		Id:       g.Param("id"),
-		Value:    true,
-		CallerId: g.GetString("uid"),
+		Id:        g.Param("id"),
+		XValue:    true,
+		XCallerId: g.GetString("uid"),
 	}
 	res, err := s.Service.Active(req)
 	if err != nil {
@@ -28,9 +28,9 @@ func (s *UserController) HandlePostUnban(g *gin.Context) {
 func (s *UserController) HandlePostBan(g *gin.Context) {
 	var err error
 	req := &pb.PostUserActiveRequest{
-		Id:       g.Param("id"),
-		Value:    false,
-		CallerId: g.GetString("uid"),
+		Id:        g.Param("id"),
+		XValue:    false,
+		XCallerId: g.GetString("uid"),
 	}
 	res, err := s.Service.Active(req)
 	if err != nil {
@@ -79,7 +79,7 @@ func (s *UserController) HandlePostIssue(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
-	req.Id = g.GetString("uid")
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.Issue(&req)
 	if err != nil {
 		lib.BadRequest(g, err)

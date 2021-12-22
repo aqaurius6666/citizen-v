@@ -136,6 +136,7 @@ message User {
     string roleId = 5;
     string roleName = 6;
     bool isActive = 7;
+    bool useDefaultPassword = 8;
 }
 
 
@@ -176,10 +177,13 @@ message Citizen {
     string adminDivCode = 16;
     string residencePlace = 17;
     string adminDivId = 18;
+    string residencePlaceCode = 19;
+    string currentPlaceCode = 20;
+    string hometownCode = 21;
 }
 
 message PostCampaignRequest {
-    string callerId = 1;
+    string _callerId = 1;
     int64 startTime = 2;
     int64 endTime = 3;
     repeated string codes = 4;
@@ -210,7 +214,7 @@ message GetUserOneResponse {
 
 
 message GetAuthRequest {
-    string callerId = 1;
+    string _callerId = 1;
 }
 
 message GetAuthResponse {
@@ -225,7 +229,7 @@ message GetAuthResponse {
 
 message GetOneAdminDivRequest {
     string id = 1;
-    string callerId = 2;
+    string _callerId = 2;
 }
 
 message GetOneAdminDivResponse {
@@ -240,6 +244,7 @@ message GetOneAdminDivResponse {
 
 message GetAdminDivOptionsRequest {
     string superiorId = 1;
+    string _callerId = 2;
 }
 
 message GetAdminDivOptionsResponse {
@@ -255,7 +260,7 @@ message GetAdminDivOptionsResponse {
 
 message DeleteCitizenRequest {
     string id = 1;
-    string callerId = 2;
+    string _callerId = 2;
 }
 
 message DeleteCitizenResponse {
@@ -269,8 +274,8 @@ message DeleteCitizenResponse {
 
 message PostUserActiveRequest {
     string id = 1;
-    bool value = 2;
-    string callerId = 3;
+    bool _value = 2;
+    string _callerId = 3;
 }
 
 message PostUserActiveResponse {
@@ -284,6 +289,7 @@ message PostUserActiveResponse {
 message PutOneAdminDivRequest {
     string name = 1;
     string id = 2;
+    string _callerId = 3;
 }
 
 message PutOneAdminDivResponse {
@@ -297,7 +303,7 @@ message PutOneAdminDivResponse {
 message PostAuthPasswordRequest {
     string oldPassword = 1;
     string newPassword = 2;
-    string id = 3;
+    string _callerId = 3;
 }
 
 message PostAuthPasswordResponse {
@@ -310,9 +316,8 @@ message PostAuthPasswordResponse {
 
 
 message PostUserIssueRequest {
-    string adminDivId = 1;
-    string roleId = 2;
-    string id = 3;
+    string _callerId = 1;
+    string adminDivCode = 2;
 }
 
 message PostUserIssueResponse {
@@ -337,7 +342,7 @@ message PutOneCitizenRequest {
     string motherPid = 9;
     string jobName = 11;
     string pid = 12;
-    string callerId = 13;
+    string _callerId = 13;
     string religion = 14;
     string educationalLevel = 15;
     string adminDivCode = 16;
@@ -379,17 +384,13 @@ message PostCitizenRequest {
     string fatherPid = 7;
     string motherName = 8;
     string motherPid = 9;
-    string currentPlace = 10;
+    string religion = 10;
     string jobName = 11; 
-    string residencePlace = 12;
-    string hometown = 13;
-    string religion = 14;
-    string educationalLevel = 15;
-    string adminDivCode = 16;
-    string callerId = 17;
-    string currentPlaceCode = 18;
-    string residencePlaceCode = 19;
-    string hometownCode = 20;
+    string educationalLevel = 12;
+    string _callerId = 13;
+    string currentPlaceCode = 14;
+    string residencePlaceCode = 15;
+    string hometownCode = 16;
 
 }
 
@@ -406,9 +407,10 @@ message GetUsersRequest {
     string id = 1;
     string roleId = 2;
     string adminDivId = 3;
-    string username = 4;
-    string limit = 5;
-    string offset = 6;
+    string adminDivCode = 4;
+    string username = 5;
+    string limit = 6;
+    string offset = 7;
 }
 
 message GetUsersResponse {
@@ -429,6 +431,7 @@ message GetCitizenRequest {
     string adminDivCode = 6;
     string limit = 7;
     string offset = 8;
+    string _callerId = 9;
 }
 
 message GetCitizenResponse {
@@ -449,6 +452,7 @@ message GetAdminDivRequest {
     string id = 5;
     string limit = 6;
     string offset = 7;
+    string _callerId = 8;
 }
 
 message GetAdminDivResponse {
@@ -468,8 +472,7 @@ message GetAdminDivResponse {
 
 message PostAdminDivRequest {
     string name = 1;
-    string type = 2;
-    string superiorId = 3;
+    string _callerId = 2;
 }
 
 message PostAdminDivResponse {

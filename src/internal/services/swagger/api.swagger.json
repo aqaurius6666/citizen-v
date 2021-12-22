@@ -75,6 +75,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -135,6 +141,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -168,7 +180,7 @@
             "pattern": "message"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -211,6 +223,9 @@
               "properties": {
                 "name": {
                   "type": "string"
+                },
+                "CallerId": {
+                  "type": "string"
                 }
               }
             }
@@ -240,7 +255,7 @@
         },
         "parameters": [
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -444,6 +459,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -536,7 +557,7 @@
             "pattern": "message"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -608,7 +629,7 @@
                 "pid": {
                   "type": "string"
                 },
-                "callerId": {
+                "CallerId": {
                   "type": "string"
                 },
                 "religion": {
@@ -670,6 +691,12 @@
           },
           {
             "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
             "in": "query",
             "required": false,
             "type": "string"
@@ -787,13 +814,13 @@
             "pattern": "message"
           },
           {
-            "name": "value",
+            "name": "Value",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -830,13 +857,13 @@
             "pattern": "message"
           },
           {
-            "name": "value",
+            "name": "Value",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -972,6 +999,15 @@
           "type": "string"
         },
         "adminDivId": {
+          "type": "string"
+        },
+        "residencePlaceCode": {
+          "type": "string"
+        },
+        "currentPlaceCode": {
+          "type": "string"
+        },
+        "hometownCode": {
           "type": "string"
         }
       }
@@ -1222,10 +1258,7 @@
         "name": {
           "type": "string"
         },
-        "type": {
-          "type": "string"
-        },
-        "superiorId": {
+        "CallerId": {
           "type": "string"
         }
       }
@@ -1262,7 +1295,7 @@
         "newPassword": {
           "type": "string"
         },
-        "id": {
+        "CallerId": {
           "type": "string"
         }
       }
@@ -1288,7 +1321,7 @@
     "citizenvPostCampaignRequest": {
       "type": "object",
       "properties": {
-        "callerId": {
+        "CallerId": {
           "type": "string"
         },
         "startTime": {
@@ -1364,28 +1397,16 @@
         "motherPid": {
           "type": "string"
         },
-        "currentPlace": {
+        "religion": {
           "type": "string"
         },
         "jobName": {
           "type": "string"
         },
-        "residencePlace": {
-          "type": "string"
-        },
-        "hometown": {
-          "type": "string"
-        },
-        "religion": {
-          "type": "string"
-        },
         "educationalLevel": {
           "type": "string"
         },
-        "adminDivCode": {
-          "type": "string"
-        },
-        "callerId": {
+        "CallerId": {
           "type": "string"
         },
         "currentPlaceCode": {
@@ -1520,13 +1541,10 @@
     "citizenvPostUserIssueRequest": {
       "type": "object",
       "properties": {
-        "adminDivId": {
+        "CallerId": {
           "type": "string"
         },
-        "roleId": {
-          "type": "string"
-        },
-        "id": {
+        "adminDivCode": {
           "type": "string"
         }
       }
@@ -1615,6 +1633,9 @@
           "type": "string"
         },
         "isActive": {
+          "type": "boolean"
+        },
+        "useDefaultPassword": {
           "type": "boolean"
         }
       }

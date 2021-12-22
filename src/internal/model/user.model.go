@@ -12,8 +12,16 @@ import (
 
 type User interface {
 	HasPermission(user, add uuid.UUID) (bool, error)
+	HasPermissionByCode(user uuid.UUID, addCode string) (bool, error)
 	IsRoleActive(userId uuid.UUID) (bool, error)
 	GetRoleId(addid uuid.UUID) (uuid.UUID, error)
+	GetUserById(uid uuid.UUID) (*user.User, error)
+}
+
+func (s *ServerModel) GetUserById(uid uuid.UUID) (*user.User, error) {
+	return s.Repo.SelectUser(&user.Search{
+		User: user.User{BaseModel: database.BaseModel{ID: uid}},
+	})
 }
 
 func (u *ServerModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
@@ -54,22 +62,14 @@ func (u *ServerModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error
 	if uid == uuid.Nil || addid == uuid.Nil {
 		return false, nil
 	}
-	usr, err := u.Repo.SelectUser(&user.Search{
-		User: user.User{
-			BaseModel: database.BaseModel{ID: uid},
-		},
-	})
+	usr, err := u.GetUserById(uid)
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	if *usr.Role.Name == role.ROLE_ADMIN {
+	if *usr.Role.Name == role.ROLE_A1 {
 		return true, nil
 	}
-	add, err := u.Repo.SelectAdminDiv(&admindiv.Search{
-		AdminDiv: admindiv.AdminDiv{
-			BaseModel: database.BaseModel{ID: addid},
-		},
-	})
+	add, err := u.GetAdminDivById(addid)
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
@@ -83,13 +83,40 @@ func (u *ServerModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error
 		if tmpAdd.SuperiorID == uuid.Nil {
 			break
 		}
-		if tmpAdd, err = u.Repo.SelectAdminDiv(&admindiv.Search{
-			AdminDiv: admindiv.AdminDiv{
-				BaseModel: database.BaseModel{
-					ID: tmpAdd.SuperiorID,
-				},
-			},
-		}); err != nil {
+		if tmpAdd, err = u.GetAdminDivById(tmpAdd.SuperiorID); err != nil {
+			return false, xerrors.Errorf("%w", err)
+		}
+	}
+
+	return valid, nil
+}
+
+func (u *ServerModel) HasPermissionByCode(uid uuid.UUID, addCode string) (bool, error) {
+	if uid == uuid.Nil || addCode == "" {
+		return false, nil
+	}
+	usr, err := u.GetUserById(uid)
+	if err != nil {
+		return false, xerrors.Errorf("%w", err)
+	}
+	if *usr.Role.Name == role.ROLE_A1 {
+		return true, nil
+	}
+	add, err := u.GetAdminDivByCode(addCode)
+	if err != nil {
+		return false, xerrors.Errorf("%w", err)
+	}
+	valid := false
+	tmpAdd := add
+	for {
+		if usr.AdminDivID == tmpAdd.ID {
+			valid = true
+			break
+		}
+		if tmpAdd.SuperiorID == uuid.Nil {
+			break
+		}
+		if tmpAdd, err = u.GetAdminDivById(tmpAdd.SuperiorID); err != nil {
 			return false, xerrors.Errorf("%w", err)
 		}
 	}
@@ -109,7 +136,7 @@ func (u *ServerModel) IsRoleActive(userId uuid.UUID) (bool, error) {
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	if *usr.Role.Name == role.ROLE_ADMIN {
+	if *usr.Role.Name == role.ROLE_A1 {
 		return true, nil
 	}
 	add, err := u.Repo.SelectAdminDiv(&admindiv.Search{

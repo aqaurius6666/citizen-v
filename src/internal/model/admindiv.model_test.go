@@ -48,3 +48,25 @@ func TestGetNewCode(t *testing.T) {
 		}
 	}
 }
+
+func TestIsChild(t *testing.T) {
+	model := SetupModel()
+	if !assert.NotNil(t, model) {
+		return
+	}
+	testcase := []map[string]interface{}{
+		{
+			"a": "",
+			"c": []string{"01"},
+			"e": true,
+		},
+	}
+
+	for _, s := range testcase {
+		res := model.IsChild(s["a"].(string), s["c"].([]string))
+		if !assert.Equal(t, s["e"], res, "case (%s)", s["a"]) {
+			return
+		}
+	}
+
+}

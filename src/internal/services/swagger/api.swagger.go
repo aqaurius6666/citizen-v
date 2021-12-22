@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Tue, 21 Dec 2021 15:00:51 +07"
+    "version": "Wed, 22 Dec 2021 08:16:45 UTC"
   },
   "tags": [
     {
@@ -78,6 +78,12 @@ var API_JSON = `{
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -138,6 +144,12 @@ var API_JSON = `{
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -171,7 +183,7 @@ var API_JSON = `{
             "pattern": "message"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -214,6 +226,9 @@ var API_JSON = `{
               "properties": {
                 "name": {
                   "type": "string"
+                },
+                "CallerId": {
+                  "type": "string"
                 }
               }
             }
@@ -243,7 +258,7 @@ var API_JSON = `{
         },
         "parameters": [
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -447,6 +462,12 @@ var API_JSON = `{
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -539,7 +560,7 @@ var API_JSON = `{
             "pattern": "message"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -611,7 +632,7 @@ var API_JSON = `{
                 "pid": {
                   "type": "string"
                 },
-                "callerId": {
+                "CallerId": {
                   "type": "string"
                 },
                 "religion": {
@@ -673,6 +694,12 @@ var API_JSON = `{
           },
           {
             "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
             "in": "query",
             "required": false,
             "type": "string"
@@ -790,13 +817,13 @@ var API_JSON = `{
             "pattern": "message"
           },
           {
-            "name": "value",
+            "name": "Value",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -833,13 +860,13 @@ var API_JSON = `{
             "pattern": "message"
           },
           {
-            "name": "value",
+            "name": "Value",
             "in": "query",
             "required": false,
             "type": "boolean"
           },
           {
-            "name": "callerId",
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -975,6 +1002,15 @@ var API_JSON = `{
           "type": "string"
         },
         "adminDivId": {
+          "type": "string"
+        },
+        "residencePlaceCode": {
+          "type": "string"
+        },
+        "currentPlaceCode": {
+          "type": "string"
+        },
+        "hometownCode": {
           "type": "string"
         }
       }
@@ -1225,10 +1261,7 @@ var API_JSON = `{
         "name": {
           "type": "string"
         },
-        "type": {
-          "type": "string"
-        },
-        "superiorId": {
+        "CallerId": {
           "type": "string"
         }
       }
@@ -1265,7 +1298,7 @@ var API_JSON = `{
         "newPassword": {
           "type": "string"
         },
-        "id": {
+        "CallerId": {
           "type": "string"
         }
       }
@@ -1291,7 +1324,7 @@ var API_JSON = `{
     "citizenvPostCampaignRequest": {
       "type": "object",
       "properties": {
-        "callerId": {
+        "CallerId": {
           "type": "string"
         },
         "startTime": {
@@ -1367,28 +1400,16 @@ var API_JSON = `{
         "motherPid": {
           "type": "string"
         },
-        "currentPlace": {
+        "religion": {
           "type": "string"
         },
         "jobName": {
           "type": "string"
         },
-        "residencePlace": {
-          "type": "string"
-        },
-        "hometown": {
-          "type": "string"
-        },
-        "religion": {
-          "type": "string"
-        },
         "educationalLevel": {
           "type": "string"
         },
-        "adminDivCode": {
-          "type": "string"
-        },
-        "callerId": {
+        "CallerId": {
           "type": "string"
         },
         "currentPlaceCode": {
@@ -1523,13 +1544,10 @@ var API_JSON = `{
     "citizenvPostUserIssueRequest": {
       "type": "object",
       "properties": {
-        "adminDivId": {
+        "CallerId": {
           "type": "string"
         },
-        "roleId": {
-          "type": "string"
-        },
-        "id": {
+        "adminDivCode": {
           "type": "string"
         }
       }
@@ -1618,6 +1636,9 @@ var API_JSON = `{
           "type": "string"
         },
         "isActive": {
+          "type": "boolean"
+        },
+        "useDefaultPassword": {
           "type": "boolean"
         }
       }

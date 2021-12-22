@@ -56,7 +56,11 @@ func applySearch(db *gorm.DB, search *citizen.Search) *gorm.DB {
 	if orderType := search.OrderType; orderType != "DESC" {
 		isDesc = false
 	}
+	if search.Fields != nil {
+		db = db.Select(search.Fields)
+	}
 	db = db.Order(clause.OrderByColumn{Column: clause.Column{Name: orderBy}, Desc: isDesc})
+
 	return db
 }
 

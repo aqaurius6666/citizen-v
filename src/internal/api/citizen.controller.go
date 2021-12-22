@@ -13,8 +13,8 @@ type CitizenController struct {
 func (s *CitizenController) HandleDeleteById(g *gin.Context) {
 	var err error
 	req := &pb.DeleteCitizenRequest{
-		Id:       g.Param("id"),
-		CallerId: g.GetString("uid"),
+		Id:        g.Param("id"),
+		XCallerId: g.GetString("uid"),
 	}
 	res, err := s.Service.Delete(req)
 	if err != nil {
@@ -33,7 +33,7 @@ func (s *CitizenController) HandlePutOne(g *gin.Context) {
 		return
 	}
 	req.Id = g.Param("id")
-	req.CallerId = g.GetString("uid")
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.UpdateOne(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
@@ -66,6 +66,7 @@ func (s *CitizenController) HandleGet(g *gin.Context) {
 		Offset:       g.Query("offset"),
 		AdminDivId:   g.Query("adminDivId"),
 		AdminDivCode: g.Query("adminDivCode"),
+		XCallerId:    g.GetString("uid"),
 	}
 	res, err := s.Service.ListCitizen(req)
 	if err != nil {
@@ -83,7 +84,7 @@ func (s *CitizenController) HandlePost(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
-	req.CallerId = g.GetString("uid")
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.CreateCitizen(&req)
 	if err != nil {
 		lib.BadRequest(g, err)

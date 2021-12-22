@@ -50,15 +50,19 @@ func (s *AdminDivService) UpdateOne(req *pb.PutOneAdminDivRequest) (*pb.PutOneAd
 
 func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostAdminDivResponse_Data, error) {
 	var err error
-	if f, ok := validate.RequiredFields(req, "Name", "SuperiorId", "Type"); !ok {
+	if f, ok := validate.RequiredFields(req, "Name", "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
-	var sid uuid.UUID
-	if sid, err = uuid.Parse(req.SuperiorId); err != nil {
+	usr, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
+	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
 
-	code, err := s.Model.GetNewCode(sid)
+	code, err := s.Model.GetNewCode(usr.AdminDivID)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	t, err := s.Model.GetChildType(usr.AdminDivID)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
@@ -66,8 +70,8 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 	tempAdminDiv := admindiv.AdminDiv{
 		Name:       &req.Name,
 		Code:       &code,
-		Type:       &req.Type,
-		SuperiorID: sid,
+		Type:       &t,
+		SuperiorID: usr.AdminDivID,
 	}
 	if err := validate.Validate(tempAdminDiv); err != nil {
 		return nil, admindiv.ErrInvalid
@@ -139,17 +143,27 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 		search.Name = &req.Name
 	}
 	if req.SuperiorId != "" {
-		if sid, err := uuid.Parse(req.SuperiorId); err == nil {
-			search.SuperiorID = sid
+		sid, err := uuid.Parse(req.SuperiorId)
+		if err != nil {
+			return nil, xerrors.Errorf("%w", err)
 		}
+		if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), sid); err != nil || !ok {
+			return nil, e.ErrAuthNoPermission
+		}
+		search.SuperiorID = sid
 	}
 	if req.Type != "" {
 		search.Type = &req.Type
 	}
 	if req.Id != "" {
-		if sid, err := uuid.Parse(req.Id); err == nil {
-			search.ID = sid
+		sid, err := uuid.Parse(req.Id)
+		if err != nil {
+			return nil, xerrors.Errorf("%w", err)
 		}
+		if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), sid); err != nil || !ok {
+			return nil, e.ErrAuthNoPermission
+		}
+		search.ID = sid
 	}
 
 	limit = 10
@@ -167,6 +181,26 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 		}
 	}
 	search.Skip = skip
+
+	usr, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	if search.SuperiorID == uuid.Nil && search.ID == uuid.Nil {
+		if usr.AdminDivID != uuid.Nil {
+			add, err := s.Model.GetAdminDivById(usr.AdminDivID)
+			if err != nil {
+				return nil, xerrors.Errorf("%w", err)
+			}
+			search.SuperiorID = add.ID
+		} else {
+			search.Type = &admindiv.CITY
+			search.SuperiorID = uuid.Nil
+		}
+	}
+
+	search.Fields = []string{"id", "name", "superior_id", "code"}
+
 	total, err := s.Repo.CountAdminDiv(&search)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)

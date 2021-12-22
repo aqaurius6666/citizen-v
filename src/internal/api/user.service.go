@@ -5,8 +5,6 @@ import (
 	"strconv"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
-	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
-	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
@@ -25,7 +23,7 @@ type UserService struct {
 }
 
 func (s *UserService) Active(req *pb.PostUserActiveRequest) (*pb.PostUserActiveResponse_Data, error) {
-	if f, ok := validate.RequiredFields(req, "Id", "Value", "CallerId"); !ok {
+	if f, ok := validate.RequiredFields(req, "Id", "XValue", "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	var err error
@@ -42,12 +40,12 @@ func (s *UserService) Active(req *pb.PostUserActiveRequest) (*pb.PostUserActiveR
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), usr.AdminDivID); err != nil || !ok {
+	if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), usr.AdminDivID); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
 
 	if err = s.Repo.UpdateUser(search, &user.User{
-		IsActive: &req.Value,
+		IsActive: &req.XValue,
 	}); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
@@ -137,39 +135,32 @@ func (s *UserService) Get(req *pb.GetUserOneRequest) (*pb.GetUserOneResponse_Dat
 
 func (s *UserService) Issue(req *pb.PostUserIssueRequest) (*pb.PostUserIssueResponse_Data, error) {
 	var err error
-	if f, ok := validate.RequiredFields(req, "AdminDivId", "RoleId", "Id"); !ok {
+	if f, ok := validate.RequiredFields(req, "XCallerId", "AdminDivCode"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
-	var aid, rid, uid uuid.UUID
-	if aid, err = uuid.Parse(req.AdminDivId); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	if rid, err = uuid.Parse(req.RoleId); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	if uid, err = uuid.Parse(req.Id); err != nil {
-		return nil, e.ErrIdInvalid
-	}
-	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
-		AdminDiv: admindiv.AdminDiv{
-			BaseModel: database.BaseModel{ID: aid},
-		},
-	})
+	uid := uuid.MustParse(req.XCallerId)
+	usr, err := s.Model.GetUserById(uid)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-
-	rol, err := s.Repo.SelectRole(&role.Search{
-		Role: role.Role{
-			BaseModel: database.BaseModel{ID: rid},
-		},
-	})
+	add, err := s.Model.GetAdminDivByCode(req.AdminDivCode)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-
+	rolename, err := s.Model.GetChildRole(*usr.Role.Name)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	r, err := s.Model.GetRoleByName(rolename)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	code := ""
+	if usr.AdminDivID != uuid.Nil {
+		code = *usr.AdminDiv.Code
+	}
 	if ok, err := s.Model.HasPermission(uid, add.ID); err == nil {
-		if !ok {
+		if !ok || !s.Model.IsChild(code, []string{req.AdminDivCode}) {
 			return nil, e.ErrAuthNoPermission
 		}
 	} else {
@@ -178,7 +169,7 @@ func (s *UserService) Issue(req *pb.PostUserIssueRequest) (*pb.PostUserIssueResp
 
 	number, err := s.Repo.CountUser(&user.Search{
 		User: user.User{
-			AdminDivID: aid,
+			AdminDivID: add.ID,
 		},
 	})
 	if err != nil {
@@ -192,9 +183,9 @@ func (s *UserService) Issue(req *pb.PostUserIssueRequest) (*pb.PostUserIssueResp
 		Username:     utils.StrPtr(fmt.Sprintf("citizen%s", *add.Code)),
 		HashPassword: lib.MyHashPassword(pass),
 		AdminDivID:   add.ID,
-		RoleID:       rol.ID,
+		RoleID:       r.ID,
 	}
-	usr, err := s.Repo.InsertUser(&tmp)
+	usr, err = s.Repo.InsertUser(&tmp)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}

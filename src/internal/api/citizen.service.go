@@ -6,7 +6,6 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
-	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/model"
@@ -67,7 +66,7 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 	if err != nil || add == nil {
 		return nil, e.ErrBodyInvalid
 	}
-	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), add.ID); err != nil || !ok {
+	if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), add.ID); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
 	search.ID = sid
@@ -124,14 +123,10 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 		"Nationality", "MotherName", "MotherPid",
 		"FatherName", "FatherPid",
 		"JobName", "ResidencePlaceCode", "HometownCode", "CurrentPlaceCode",
-		"Religion", "EducationalLevel", "CallerId"); !ok {
+		"Religion", "EducationalLevel", "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
-	caller, _ := s.Repo.SelectUser(&user.Search{
-		User: user.User{
-			BaseModel: database.BaseModel{ID: uuid.MustParse(req.CallerId)},
-		},
-	})
+	caller, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
 	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
 		AdminDiv: admindiv.AdminDiv{
 			BaseModel: database.BaseModel{
@@ -142,7 +137,7 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 	if err != nil || add == nil {
 		return nil, e.ErrBodyInvalid
 	}
-	if ok, err := s.Model.HasPermission(uuid.MustParse(req.CallerId), add.ID); err != nil || !ok {
+	if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), add.ID); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
 	tmpCitizen := citizen.Citizen{
@@ -198,12 +193,18 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 		search.PID = &req.Pid
 	}
 	if req.AdminDivCode != "" {
+		if ok, err := s.Model.HasPermissionByCode(uuid.MustParse(req.XCallerId), req.AdminDivCode); err != nil || !ok {
+			return nil, e.ErrAuthNoPermission
+		}
 		search.AdminDivCode = &req.AdminDivCode
 	}
 	if req.AdminDivId != "" {
 		tmp, err := uuid.Parse(req.AdminDivId)
 		if err != nil {
 			return nil, e.ErrIdInvalid
+		}
+		if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), tmp); err != nil || !ok {
+			return nil, e.ErrAuthNoPermission
 		}
 		search.AdminDivID = tmp
 	}
@@ -223,6 +224,24 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 		}
 	}
 	search.Skip = skip
+
+	search.Fields = []string{"id", "name", "birthday", "pid", "admin_div_id"}
+
+	usr, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	if req.AdminDivCode == "" && req.AdminDivId == "" {
+		code := ""
+		if usr.AdminDivID != uuid.Nil {
+			add, err := s.Model.GetAdminDivById(usr.AdminDivID)
+			if err != nil {
+				return nil, xerrors.Errorf("%w", err)
+			}
+			code = *add.Code
+		}
+		search.AdminDivCode = &code
+	}
 	total, err := s.Repo.CountCitizen(&search)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)

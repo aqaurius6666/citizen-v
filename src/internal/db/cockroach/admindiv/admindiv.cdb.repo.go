@@ -48,6 +48,11 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 		orderBy = a
 
 	}
+
+	if search.Fields != nil {
+		db = db.Select(search.Fields)
+	}
+
 	if orderType := search.OrderType; orderType != "DESC" {
 		isDesc = false
 	}
@@ -81,7 +86,7 @@ func (u *AdminDivCDBRepo) InsertAdminDiv(value *admindiv.AdminDiv) (*admindiv.Ad
 
 func (u *AdminDivCDBRepo) ListAdminDiv(search *admindiv.Search) ([]*admindiv.AdminDiv, error) {
 	r := make([]*admindiv.AdminDiv, 0)
-	if err := applySearch(u.Db, search).Find(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Debug().Find(&r).Error; err != nil {
 		return nil, err
 	}
 	return r, nil

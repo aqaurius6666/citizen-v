@@ -18,7 +18,7 @@ func (s *CampaignController) HandlePost(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
-	req.CallerId = g.GetString("uid")
+	req.XCallerId = g.GetString("uid")
 	res, err := s.Service.New(&req)
 	if err != nil {
 		lib.BadRequest(g, err)

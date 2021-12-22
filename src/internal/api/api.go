@@ -48,8 +48,8 @@ func (s *ApiServer) RegisterEndpoint() {
 	admindiv := api.Group("/administrative-divisions")
 	admindiv.GET("", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGet)
 	admindiv.GET("/:id", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOne)
-	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePost)
-	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_ADMIN), s.AdminDiv.HandlePutOne)
+	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.AdminDiv.HandlePost)
+	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.AdminDiv.HandlePutOne)
 	admindiv.GET("/options", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOptions)
 
 	citizen := api.Group("/citizens")
@@ -67,6 +67,6 @@ func (s *ApiServer) RegisterEndpoint() {
 	user.POST("/:id/unban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostUnban)
 
 	campaign := api.Group("/campaigns")
-	campaign.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3), s.Campaign.HandlePost)
+	campaign.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.Campaign.HandlePost)
 
 }

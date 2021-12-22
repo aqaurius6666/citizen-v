@@ -20,7 +20,7 @@ type CampaignService struct {
 }
 
 func (s *CampaignService) New(req *pb.PostCampaignRequest) (*pb.PostCampaignResponse_Data, error) {
-	if f, ok := validate.RequiredFields(req, "CallerId", "Codes", "EndTime", "StartTime"); !ok {
+	if f, ok := validate.RequiredFields(req, "XCallerId", "Codes", "EndTime", "StartTime"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	if req.StartTime >= req.EndTime || req.EndTime <= time.Now().UnixMilli() {
@@ -28,7 +28,7 @@ func (s *CampaignService) New(req *pb.PostCampaignRequest) (*pb.PostCampaignResp
 	}
 	usr, err := s.Repo.SelectUser(&user.Search{
 		User: user.User{BaseModel: database.BaseModel{
-			ID: uuid.MustParse(req.CallerId),
+			ID: uuid.MustParse(req.XCallerId),
 		}},
 	})
 	if err != nil {
