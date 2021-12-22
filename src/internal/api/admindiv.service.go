@@ -199,7 +199,7 @@ func (s *AdminDivService) ListAdminDiv(req *pb.GetAdminDivRequest) (*pb.GetAdmin
 		}
 	}
 
-	search.Fields = []string{"id", "name", "superior_id", "code"}
+	search.Fields = []string{"id", "name", "superior_id", "code", "type"}
 
 	total, err := s.Repo.CountAdminDiv(&search)
 	if err != nil {
