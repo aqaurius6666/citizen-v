@@ -465,6 +465,16 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "adminDivCodes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -1637,6 +1647,9 @@
         },
         "useDefaultPassword": {
           "type": "boolean"
+        },
+        "adminDivCode": {
+          "type": "string"
         }
       }
     },

@@ -137,6 +137,7 @@ message User {
     string roleName = 6;
     bool isActive = 7;
     bool useDefaultPassword = 8;
+    string adminDivCode = 9;
 }
 
 
@@ -432,6 +433,7 @@ message GetCitizenRequest {
     string limit = 7;
     string offset = 8;
     string _callerId = 9;
+    repeated string adminDivCodes = 10;
 }
 
 message GetCitizenResponse {

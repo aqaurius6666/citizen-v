@@ -47,6 +47,18 @@ func applySearch(db *gorm.DB, search *citizen.Search) *gorm.DB {
 			AdminDivID: search.AdminDivID,
 		})
 	}
+	if search.ArrayCode != nil {
+		exprs := make([]clause.Expression, 0)
+		for _, s := range search.ArrayCode {
+			exprs = append(exprs, clause.Like{
+				Column: "admin_div_code",
+				Value:  s + "%",
+			})
+		}
+		db = db.Where(clause.OrConditions{
+			Exprs: exprs,
+		})
+	}
 	orderBy := "name"
 	isDesc := true
 	if a := search.OrderBy; a != "" {

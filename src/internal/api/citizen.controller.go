@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/gin-gonic/gin"
@@ -57,16 +59,26 @@ func (s *CitizenController) HandleGetById(g *gin.Context) {
 
 func (s *CitizenController) HandleGet(g *gin.Context) {
 	var err error
+	adminDivCodesStr := g.Query("adminDivCodes")
+	var adminDivCodes []string
+	if adminDivCodesStr != "" {
+		err = json.Unmarshal([]byte(adminDivCodesStr), &adminDivCodes)
+		if err != nil {
+			lib.BadRequest(g, err)
+			return
+		}
+	}
 	req := &pb.GetCitizenRequest{
-		Name:         g.Query("name"),
-		Id:           g.Query("id"),
-		Pid:          g.Query("pid"),
-		Birthday:     g.Query("birthday"),
-		Limit:        g.Query("limit"),
-		Offset:       g.Query("offset"),
-		AdminDivId:   g.Query("adminDivId"),
-		AdminDivCode: g.Query("adminDivCode"),
-		XCallerId:    g.GetString("uid"),
+		Name:          g.Query("name"),
+		Id:            g.Query("id"),
+		Pid:           g.Query("pid"),
+		Birthday:      g.Query("birthday"),
+		Limit:         g.Query("limit"),
+		Offset:        g.Query("offset"),
+		AdminDivId:    g.Query("adminDivId"),
+		AdminDivCode:  g.Query("adminDivCode"),
+		XCallerId:     g.GetString("uid"),
+		AdminDivCodes: adminDivCodes,
 	}
 	res, err := s.Service.ListCitizen(req)
 	if err != nil {

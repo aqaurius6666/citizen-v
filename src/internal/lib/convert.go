@@ -135,6 +135,22 @@ func ConvertPagination(skip, limit int, total int64) *pb.Pagination {
 	}
 }
 
+func GetAdminDivCode(id uuid.UUID, repo db.ServerRepo) (string, error) {
+	if id == uuid.Nil {
+		return "", nil
+	}
+	add, err := repo.SelectAdminDiv(&admindiv.Search{
+		AdminDiv: admindiv.AdminDiv{BaseModel: database.BaseModel{
+			ID: id,
+		}},
+	})
+	if err != nil {
+		return "", err
+	}
+	return *add.Code, nil
+
+}
+
 func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {
 	var adminDivName, roleName *string
 	var err error
@@ -151,14 +167,20 @@ func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {
 			fmt.Printf("err: %v\n", err)
 		}
 	}
+	adminDivCode, err := GetAdminDivCode(s.AdminDivID, repo)
+	if err != nil {
+		fmt.Printf("err %w", err)
+	}
 	return &pb.User{
-		Id:           s.ID.String(),
-		Username:     utils.StrVal(s.Username),
-		AdminDivId:   s.AdminDivID.String(),
-		RoleId:       s.RoleID.String(),
-		IsActive:     utils.BoolVal(s.IsActive),
-		AdminDivName: utils.StrVal(adminDivName),
-		RoleName:     utils.StrVal(roleName),
+		Id:                 s.ID.String(),
+		Username:           utils.StrVal(s.Username),
+		AdminDivId:         s.AdminDivID.String(),
+		RoleId:             s.RoleID.String(),
+		IsActive:           utils.BoolVal(s.IsActive),
+		AdminDivName:       utils.StrVal(adminDivName),
+		RoleName:           utils.StrVal(roleName),
+		AdminDivCode:       adminDivCode,
+		UseDefaultPassword: utils.BoolVal(s.UseDefaultPassword),
 	}
 }
 

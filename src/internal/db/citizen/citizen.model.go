@@ -32,4 +32,5 @@ type Citizen struct {
 type Search struct {
 	database.DefaultSearchModel
 	Citizen
+	ArrayCode []string
 }

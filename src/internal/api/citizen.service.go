@@ -208,7 +208,9 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 		}
 		search.AdminDivID = tmp
 	}
-
+	if req.AdminDivCodes != nil {
+		search.ArrayCode = req.AdminDivCodes
+	}
 	limit = 10
 	if req.Limit != "" {
 		if o, err := strconv.Atoi(req.Limit); err == nil {
@@ -225,13 +227,13 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 	}
 	search.Skip = skip
 
-	search.Fields = []string{"id", "name", "birthday", "pid", "admin_div_id"}
+	search.Fields = []string{"id", "name", "birthday", "pid", "admin_div_id", "admin_div_code"}
 
 	usr, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	if req.AdminDivCode == "" && req.AdminDivId == "" {
+	if req.AdminDivCode == "" && req.AdminDivId == "" && req.AdminDivCodes == nil {
 		code := ""
 		if usr.AdminDivID != uuid.Nil {
 			add, err := s.Model.GetAdminDivById(usr.AdminDivID)
