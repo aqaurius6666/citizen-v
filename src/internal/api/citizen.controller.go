@@ -80,6 +80,7 @@ func (s *CitizenController) HandleGet(g *gin.Context) {
 		XCallerId:     g.GetString("uid"),
 		AdminDivCodes: adminDivCodes,
 	}
+
 	res, err := s.Service.ListCitizen(req)
 	if err != nil {
 		lib.BadRequest(g, err)

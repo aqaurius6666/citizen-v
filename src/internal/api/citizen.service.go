@@ -209,6 +209,11 @@ func (s *CitizenService) ListCitizen(req *pb.GetCitizenRequest) (*pb.GetCitizenR
 		search.AdminDivID = tmp
 	}
 	if req.AdminDivCodes != nil {
+		for _, c := range req.AdminDivCodes {
+			if ok, err := s.Model.HasPermissionByCode(uuid.MustParse(req.XCallerId), c); err != nil || !ok {
+				return nil, e.ErrAuthNoPermission
+			}
+		}
 		search.ArrayCode = req.AdminDivCodes
 	}
 	limit = 10

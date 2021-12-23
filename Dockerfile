@@ -28,7 +28,7 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 RUN go install github.com/vadimi/grpc-client-cli/cmd/grpc-client-cli@latest
 COPY ./scripts /bin
 RUN chmod +x /bin/*.sh
-
+RUN apk add protobuf
 
 FROM base as builder
 COPY go.mod go.sum ./
