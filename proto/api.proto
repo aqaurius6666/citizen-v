@@ -125,7 +125,25 @@ service Api {
             body: "*"
         };
     }
+
+    rpc GetStatisticsCitizens(GetStatisticsCitizensRequest) returns (GetStatisticsCitizensResponse) {
+        option (google.api.http) = {
+            get: "/api/statistics/citizens"
+        };
+    }
     
+}
+
+message Record {
+    string adminDivCode = 1;
+    string gender = 2;
+    int32 age = 3;
+    string educationalLevel = 4;
+    string currentPlaceCode = 5;
+    string residencePlaceCode = 6;
+    string hometownCode = 7;
+    string jobName = 8;
+    string religion = 9;
 }
 
 message User {
@@ -198,6 +216,23 @@ message PostCampaignResponse {
         repeated Campaign campaign = 1;
     }
 }
+
+message GetStatisticsCitizensRequest {
+    string _callerId = 1;
+    string adminDivCode = 2;
+    repeated string adminDivCodes = 3;
+
+}
+
+message GetStatisticsCitizensResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated Record results = 1;
+    }
+}
+
 
 
 message GetUserOneRequest {

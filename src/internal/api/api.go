@@ -21,6 +21,7 @@ type ApiServer struct {
 	Citizen          *CitizenController
 	User             *UserController
 	Campaign         *CampaignController
+	Statistic        *StatisticController
 }
 
 func (s *ApiServer) RegisterEndpoint() {
@@ -69,4 +70,10 @@ func (s *ApiServer) RegisterEndpoint() {
 	campaign := api.Group("/campaigns")
 	campaign.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.Campaign.HandlePost)
 
+	statistic := api.Group("/statistics")
+	statistic.GET("/citizens", s.AuthMiddleware.CheckAuth, s.Statistic.HandleGetCitizen)
+
+	static := s.G.Group("/static")
+	static.Use(s.AuthMiddleware.CheckAuth)
+	static.StaticFS("", gin.Dir("statics", true))
 }

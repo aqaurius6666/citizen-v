@@ -1,8 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/gin-gonic/gin"
@@ -59,14 +57,10 @@ func (s *CitizenController) HandleGetById(g *gin.Context) {
 
 func (s *CitizenController) HandleGet(g *gin.Context) {
 	var err error
-	adminDivCodesStr := g.Query("adminDivCodes")
-	var adminDivCodes []string
-	if adminDivCodesStr != "" {
-		err = json.Unmarshal([]byte(adminDivCodesStr), &adminDivCodes)
-		if err != nil {
-			lib.BadRequest(g, err)
-			return
-		}
+	adminDivCodes, err := lib.StrToStrArray(g.Query("adminDivCodes"))
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
 	}
 	req := &pb.GetCitizenRequest{
 		Name:          g.Query("name"),

@@ -1,8 +1,11 @@
 package lib
 
 import (
+	"encoding/json"
 	"fmt"
+	"math"
 	"strings"
+	"time"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
@@ -13,6 +16,7 @@ import (
 	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/utils"
 	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 func ConvertAdminDivs(db []*admindiv.AdminDiv) []*pb.AdminDiv {
@@ -149,6 +153,41 @@ func GetAdminDivCode(id uuid.UUID, repo db.ServerRepo) (string, error) {
 	}
 	return *add.Code, nil
 
+}
+
+func StrToStrArray(a string) ([]string, error) {
+	var array []string
+	var err error
+	if a != "" {
+		err = json.Unmarshal([]byte(a), &array)
+		if err != nil {
+			return nil, xerrors.Errorf("%w", err)
+		}
+	}
+	return array, nil
+}
+func ConvertOneRecord(s *citizen.Citizen) *pb.Record {
+
+	k := time.Since(time.UnixMilli(utils.Int64Val(s.Birthday))).Hours()
+	age := math.Floor(k / 365.25 / 24)
+	return &pb.Record{
+		AdminDivCode:       utils.StrVal(s.AdminDivCode),
+		Gender:             utils.StrVal(s.Gender),
+		Age:                int32(age),
+		EducationalLevel:   utils.StrVal(s.EducationalLevel),
+		CurrentPlaceCode:   utils.StrVal(s.CurrentPlaceCode),
+		ResidencePlaceCode: utils.StrVal(s.ResidencePlaceCode),
+		HometownCode:       utils.StrVal(s.HometownCode),
+		JobName:            utils.StrVal(s.JobName),
+		Religion:           utils.StrVal(s.Religion),
+	}
+}
+func ConvertRecords(s []*citizen.Citizen) []*pb.Record {
+	ret := make([]*pb.Record, 0)
+	for _, k := range s {
+		ret = append(ret, ConvertOneRecord(k))
+	}
+	return ret
 }
 
 func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {

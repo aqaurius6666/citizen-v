@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Wed, 22 Dec 2021 08:16:45 UTC"
+    "version": "Thu, 23 Dec 2021 13:39:40 +07"
   },
   "tags": [
     {
@@ -468,6 +468,16 @@ var API_JSON = `{
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "adminDivCodes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -655,6 +665,52 @@ var API_JSON = `{
                 }
               }
             }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/statistics/citizens": {
+      "get": {
+        "operationId": "Api_GetStatisticsCitizens",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetStatisticsCitizensResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCodes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -1186,6 +1242,32 @@ var API_JSON = `{
         }
       }
     },
+    "citizenvGetStatisticsCitizensResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetStatisticsCitizensResponseData"
+        }
+      }
+    },
+    "citizenvGetStatisticsCitizensResponseData": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvRecord"
+          }
+        }
+      }
+    },
     "citizenvGetUserOneResponse": {
       "type": "object",
       "properties": {
@@ -1614,6 +1696,39 @@ var API_JSON = `{
     "citizenvPutOneCitizenResponseData": {
       "type": "object"
     },
+    "citizenvRecord": {
+      "type": "object",
+      "properties": {
+        "adminDivCode": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "educationalLevel": {
+          "type": "string"
+        },
+        "currentPlaceCode": {
+          "type": "string"
+        },
+        "residencePlaceCode": {
+          "type": "string"
+        },
+        "hometownCode": {
+          "type": "string"
+        },
+        "jobName": {
+          "type": "string"
+        },
+        "religion": {
+          "type": "string"
+        }
+      }
+    },
     "citizenvUser": {
       "type": "object",
       "properties": {
@@ -1640,6 +1755,9 @@ var API_JSON = `{
         },
         "useDefaultPassword": {
           "type": "boolean"
+        },
+        "adminDivCode": {
+          "type": "string"
         }
       }
     },
