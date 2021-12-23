@@ -102,8 +102,10 @@ func (s *AdminDivService) GetOptions(req *pb.GetAdminDivOptionsRequest) (*pb.Get
 		if err != nil {
 			return nil, e.ErrIdInvalid
 		}
-		search.SuperiorID = uid
-		search.Type = nil
+		if uid != uuid.Nil {
+			search.SuperiorID = uid
+			search.Type = nil
+		}
 	}
 	add, err := s.Repo.ListAdminDiv(&search)
 	if err != nil {
