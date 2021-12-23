@@ -11,7 +11,23 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v2.5.2
+#     - name: Run golangci-lint
+#       uses: golangci/golangci-lint-action@v2.5.2
+    - name: Setup Heroku
+      run: |
+        export HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }}
+        curl https://cli-assets.heroku.com/install.sh | sh
     - name: Build
-      run: make build-image
+      run: |
+        docker build -f release.Dockerfile -t citizen-v:pre-release .
+    - name: Push
+      run: |
+        docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+        docker tag citizen-v:pre-release registry.heroku.com/citizen-v/web
+        docker push registry.heroku.com/citizen-v/web
+    - name: Release
+      run: |
+        heroku container:release web -a citizen-v
+        
+        
+        
