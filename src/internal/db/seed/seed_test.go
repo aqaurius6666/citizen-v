@@ -82,7 +82,7 @@ func TestSeedCampaign(t *testing.T) {
 }
 
 func GetRandomPID() string {
-	return fmt.Sprintf("001200%06d", rand.Int())
+	return fmt.Sprintf("001200%06d", rand.Int()%999999)
 }
 
 func TestSeedCitizens(t *testing.T) {
@@ -170,25 +170,36 @@ func TestSeedCitizens(t *testing.T) {
 			place, err := lib.GetAdminDivFullNameCode(code, repo)
 			assert.Nil(t, err)
 			repo.InsertCitizen(&citizen.Citizen{
-				Name:             &name,
-				Birthday:         &tmp,
-				PID:              &pid,
-				Gender:           &gender,
-				Nationality:      utils.StrPtr("Việt Nam"),
-				CurrentPlace:     place,
-				ResidencePlace:   place,
-				Hometown:         place,
-				JobName:          &job,
-				EducationalLevel: &edu,
-				FatherName:       &fname,
-				FatherPID:        &fid,
-				MotherName:       &mname,
-				MotherPID:        &mid,
-				AdminDivCode:     &code,
-				AdminDivID:       add.ID,
-				Religion:         &religion,
+				Name:               &name,
+				Birthday:           &tmp,
+				PID:                &pid,
+				Gender:             &gender,
+				Nationality:        utils.StrPtr("Việt Nam"),
+				CurrentPlace:       place,
+				ResidencePlace:     place,
+				Hometown:           place,
+				JobName:            &job,
+				EducationalLevel:   &edu,
+				FatherName:         &fname,
+				FatherPID:          &fid,
+				MotherName:         &mname,
+				MotherPID:          &mid,
+				AdminDivCode:       &code,
+				AdminDivID:         add.ID,
+				Religion:           &religion,
+				CurrentPlaceCode:   &code,
+				ResidencePlaceCode: &code,
+				HometownCode:       &code,
 			})
 		}
 
+	}
+}
+
+func TestGenPID(t *testing.T) {
+
+	a := GetRandomPID()
+	if len(a) != 12 {
+		t.Error(a)
 	}
 }

@@ -28,5 +28,6 @@ func (s *StatisticController) HandleGetCitizen(g *gin.Context) {
 		lib.BadRequest(g, err)
 		return
 	}
-	lib.Success(g, res)
+	res2 := s.Service.HandleData(res)
+	lib.Success(g, res2)
 }

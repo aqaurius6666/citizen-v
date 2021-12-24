@@ -140,6 +140,18 @@ service Api {
     
 }
 
+enum STATISTIC_TYPE {
+    RELIGION = 0;
+    GENDER = 1;
+    AGE = 2;
+    EDUCATIONAL_LEVEL = 3;
+    CURRENT_PLACE_CODE = 4;
+    RESIDENCE_PLACE_CODE = 5;
+    HOMETOWN_CODE = 6;
+    JOB_NAME = 7;
+}
+
+
 message Record {
     string adminDivCode = 1;
     string gender = 2;
@@ -244,8 +256,10 @@ message GetStatisticsCitizensRequest {
     string _callerId = 1;
     string adminDivCode = 2;
     repeated string adminDivCodes = 3;
+    STATISTIC_TYPE type = 4;
 
 }
+
 
 message GetStatisticsCitizensResponse {
     bool success = 1;
@@ -253,6 +267,7 @@ message GetStatisticsCitizensResponse {
     Data data = 3;
     message Data {
         repeated Record results = 1;
+        string scopeCode = 2;
     }
 }
 
@@ -282,6 +297,7 @@ message GetAuthResponse {
     Data data = 3;
     message Data {
         User user = 1;
+        Campaign campaign = 2;
     }
 }
 

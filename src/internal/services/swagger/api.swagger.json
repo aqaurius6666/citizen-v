@@ -756,6 +756,23 @@
               "type": "string"
             },
             "collectionFormat": "multi"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "RELIGION",
+              "GENDER",
+              "AGE",
+              "EDUCATIONAL_LEVEL",
+              "CURRENT_PLACE_CODE",
+              "RESIDENCE_PLACE_CODE",
+              "HOMETOWN_CODE",
+              "JOB_NAME"
+            ],
+            "default": "RELIGION"
           }
         ],
         "tags": [
@@ -1235,6 +1252,9 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/citizenvUser"
+        },
+        "campaign": {
+          "$ref": "#/definitions/citizenvCampaign"
         }
       }
     },
@@ -1336,6 +1356,9 @@
           "items": {
             "$ref": "#/definitions/citizenvRecord"
           }
+        },
+        "scopeCode": {
+          "type": "string"
         }
       }
     },
@@ -1799,6 +1822,20 @@
           "type": "string"
         }
       }
+    },
+    "citizenvSTATISTIC_TYPE": {
+      "type": "string",
+      "enum": [
+        "RELIGION",
+        "GENDER",
+        "AGE",
+        "EDUCATIONAL_LEVEL",
+        "CURRENT_PLACE_CODE",
+        "RESIDENCE_PLACE_CODE",
+        "HOMETOWN_CODE",
+        "JOB_NAME"
+      ],
+      "default": "RELIGION"
     },
     "citizenvUser": {
       "type": "object",

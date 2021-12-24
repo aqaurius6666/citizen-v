@@ -9,6 +9,7 @@ import (
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/admindiv"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
@@ -69,6 +70,9 @@ func GetAdminDivFullName(id uuid.UUID, repo db.ServerRepo) (*string, error) {
 func GetAdminDivFullNameCode(code string, repo db.ServerRepo) (*string, error) {
 	var name string
 	count := 0
+	if len(code) == 0 {
+		return &name, nil
+	}
 	add, err := repo.SelectAdminDiv(&admindiv.Search{
 		DefaultSearchModel: database.DefaultSearchModel{
 			Fields: []string{"id"},
@@ -188,6 +192,18 @@ func ConvertRecords(s []*citizen.Citizen) []*pb.Record {
 		ret = append(ret, ConvertOneRecord(k))
 	}
 	return ret
+}
+
+func ConvertCampaign(s *campaign.Campaign) *pb.Campaign {
+	if s == nil {
+		return nil
+	}
+	return &pb.Campaign{
+		IsDone:    utils.BoolVal(s.IsDone),
+		Name:      utils.StrVal(s.Name),
+		StartTime: utils.Int64Val(s.StartTime),
+		EndTime:   utils.Int64Val(s.EndTime),
+	}
 }
 
 func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {

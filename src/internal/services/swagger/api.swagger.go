@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Fri, 24 Dec 2021 12:36:47 +07"
+    "version": "Fri, 24 Dec 2021 20:05:08 +07"
   },
   "tags": [
     {
@@ -759,6 +759,23 @@ var API_JSON = `{
               "type": "string"
             },
             "collectionFormat": "multi"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "RELIGION",
+              "GENDER",
+              "AGE",
+              "EDUCATIONAL_LEVEL",
+              "CURRENT_PLACE_CODE",
+              "RESIDENCE_PLACE_CODE",
+              "HOMETOWN_CODE",
+              "JOB_NAME"
+            ],
+            "default": "RELIGION"
           }
         ],
         "tags": [
@@ -1238,6 +1255,9 @@ var API_JSON = `{
       "properties": {
         "user": {
           "$ref": "#/definitions/citizenvUser"
+        },
+        "campaign": {
+          "$ref": "#/definitions/citizenvCampaign"
         }
       }
     },
@@ -1339,6 +1359,9 @@ var API_JSON = `{
           "items": {
             "$ref": "#/definitions/citizenvRecord"
           }
+        },
+        "scopeCode": {
+          "type": "string"
         }
       }
     },
@@ -1802,6 +1825,20 @@ var API_JSON = `{
           "type": "string"
         }
       }
+    },
+    "citizenvSTATISTIC_TYPE": {
+      "type": "string",
+      "enum": [
+        "RELIGION",
+        "GENDER",
+        "AGE",
+        "EDUCATIONAL_LEVEL",
+        "CURRENT_PLACE_CODE",
+        "RESIDENCE_PLACE_CODE",
+        "HOMETOWN_CODE",
+        "JOB_NAME"
+      ],
+      "default": "RELIGION"
     },
     "citizenvUser": {
       "type": "object",

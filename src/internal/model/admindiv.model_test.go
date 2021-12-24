@@ -60,6 +60,11 @@ func TestIsChild(t *testing.T) {
 			"c": []string{"01"},
 			"e": true,
 		},
+		{
+			"a": "01",
+			"c": []string{"010101"},
+			"e": true,
+		},
 	}
 
 	for _, s := range testcase {

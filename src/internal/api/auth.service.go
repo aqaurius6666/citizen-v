@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/role"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
@@ -65,6 +66,7 @@ func (s *AuthService) Register(req *pb.PostRegisterRequest) (*pb.PostRegisterRes
 func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, error) {
 	var err error
 	var u *user.User
+	var camp *campaign.Campaign
 	if f, ok := validate.RequiredFields(req, "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
@@ -75,8 +77,15 @@ func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, er
 	}); err != nil {
 		return nil, err
 	}
+
+	if u.AdminDivID != uuid.Nil {
+		camp, err = s.Model.GetValidCampaign(u.AdminDiv.Code)
+	}
+
 	return &pb.GetAuthResponse_Data{
-		User: lib.ConvertOneUser(u, s.Repo),
+
+		User:     lib.ConvertOneUser(u, s.Repo),
+		Campaign: lib.ConvertCampaign(camp),
 	}, nil
 }
 

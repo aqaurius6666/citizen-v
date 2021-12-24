@@ -16,8 +16,9 @@ type Campaign interface {
 }
 
 func (s *ServerModel) GetValidCampaign(code *string) (*campaign.Campaign, error) {
-
-	camp, err := s.Repo.SelectCampaign(&campaign.Search{
+	var err error
+	camp := &campaign.Campaign{}
+	camp, err = s.Repo.SelectCampaign(&campaign.Search{
 		Campaign: campaign.Campaign{
 			Code:      code,
 			EndTime:   utils.Int64Ptr(time.Now().UnixMilli()),

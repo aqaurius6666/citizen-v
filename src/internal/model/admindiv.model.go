@@ -103,6 +103,9 @@ func (s *ServerModel) IsChild(code string, codes []string) bool {
 	if len(codes) == 0 {
 		return false
 	}
+	if len(code) == 0 {
+		return true
+	}
 	l := len(code)
 	for _, c := range codes {
 		if len(c) < l {
