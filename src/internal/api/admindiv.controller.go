@@ -63,8 +63,9 @@ func (s *AdminDivController) HandlePost(g *gin.Context) {
 func (s *AdminDivController) HandleGetOptions(g *gin.Context) {
 	var err error
 	req := &pb.GetAdminDivOptionsRequest{
-		SuperiorId: g.Query("superiorId"),
-		XCallerId:  g.GetString("uid"),
+		SuperiorId:   g.Query("superiorId"),
+		XCallerId:    g.GetString("uid"),
+		SuperiorCode: g.Query("superiorCode"),
 	}
 	res, err := s.Service.GetOptions(req)
 	if err != nil {
@@ -84,6 +85,20 @@ func (s *AdminDivController) HandlePutOne(g *gin.Context) {
 	}
 	req.Id = g.Param("id")
 	res, err := s.Service.UpdateOne(&req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
+func (s *AdminDivController) HandleGetName(g *gin.Context) {
+	req := pb.GetAdminDivNameRequest{
+		XCallerId:    g.GetString("uid"),
+		AdminDivId:   g.Query("adminDivId"),
+		AdminDivCode: g.Query("adminDivCode"),
+	}
+	res, err := s.Service.GetName(&req)
 	if err != nil {
 		lib.BadRequest(g, err)
 		return

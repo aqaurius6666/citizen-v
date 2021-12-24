@@ -52,6 +52,7 @@ func (s *ApiServer) RegisterEndpoint() {
 	admindiv.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.AdminDiv.HandlePost)
 	admindiv.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.AdminDiv.HandlePutOne)
 	admindiv.GET("/options", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetOptions)
+	admindiv.GET("/name", s.AuthMiddleware.CheckAuth, s.AdminDiv.HandleGetName)
 
 	citizen := api.Group("/citizens")
 	citizen.GET("", s.AuthMiddleware.CheckAuth, s.Citizen.HandleGet)

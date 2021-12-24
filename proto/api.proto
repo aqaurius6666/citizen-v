@@ -131,6 +131,12 @@ service Api {
             get: "/api/statistics/citizens"
         };
     }
+
+    rpc GetAdminDivName(GetAdminDivNameRequest) returns (GetAdminDivNameResponse) {
+        option (google.api.http) = {
+            get: "/api/administrative-divisions/name"
+        };
+    }
     
 }
 
@@ -200,6 +206,23 @@ message Citizen {
     string currentPlaceCode = 20;
     string hometownCode = 21;
 }
+
+message GetAdminDivNameRequest {
+    string _callerId = 1;
+    string adminDivId = 2;
+    string adminDivCode = 3;
+}
+
+message GetAdminDivNameResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        string name = 1;
+        string fullName = 2;
+    }
+}
+
 
 message PostCampaignRequest {
     string _callerId = 1;
@@ -281,6 +304,7 @@ message GetOneAdminDivResponse {
 message GetAdminDivOptionsRequest {
     string superiorId = 1;
     string _callerId = 2;
+    string superiorCode = 3;
 }
 
 message GetAdminDivOptionsResponse {

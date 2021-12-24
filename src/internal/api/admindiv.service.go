@@ -91,6 +91,41 @@ func (s *AdminDivService) CreateAdminDiv(req *pb.PostAdminDivRequest) (*pb.PostA
 		},
 	}, nil
 }
+func (s *AdminDivService) GetName(req *pb.GetAdminDivNameRequest) (*pb.GetAdminDivNameResponse_Data, error) {
+	var err error
+	var add *admindiv.AdminDiv
+	if req.AdminDivCode != "" {
+		add, err = s.Model.GetAdminDivByCode(req.AdminDivCode)
+		if err != nil {
+			return nil, xerrors.Errorf("%w", err)
+		}
+
+	}
+	if req.AdminDivId != "" {
+		tmp, err := uuid.Parse(req.AdminDivId)
+		if err != nil {
+			return nil, e.ErrIdInvalid
+		}
+		if tmp != uuid.Nil {
+			add, err = s.Model.GetAdminDivById(tmp)
+			if err != nil {
+				return nil, xerrors.Errorf("%w", err)
+			}
+		}
+	}
+	if add == nil {
+		return nil, e.ErrBodyInvalid
+	}
+	fullname, err := lib.GetAdminDivFullName(add.ID, s.Repo)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+
+	return &pb.GetAdminDivNameResponse_Data{
+		Name:     *add.Name,
+		FullName: *fullname,
+	}, nil
+}
 
 func (s *AdminDivService) GetOptions(req *pb.GetAdminDivOptionsRequest) (*pb.GetAdminDivOptionsResponse_Data, error) {
 	var err error
@@ -106,7 +141,15 @@ func (s *AdminDivService) GetOptions(req *pb.GetAdminDivOptionsRequest) (*pb.Get
 			search.SuperiorID = uid
 			search.Type = nil
 		}
+	} else {
+		// Handle with superiorCode
+
+		if req.SuperiorCode != "" {
+			search.SuperiorCode = &req.SuperiorCode
+			search.Type = nil
+		}
 	}
+
 	add, err := s.Repo.ListAdminDiv(&search)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)

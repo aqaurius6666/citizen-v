@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Thu, 23 Dec 2021 13:39:40 +07"
+    "version": "Fri, 24 Dec 2021 12:36:47 +07"
   },
   "tags": [
     {
@@ -121,6 +121,48 @@ var API_JSON = `{
         ]
       }
     },
+    "/api/administrative-divisions/name": {
+      "get": {
+        "operationId": "Api_GetAdminDivName",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetAdminDivNameResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/administrative-divisions/options": {
       "get": {
         "operationId": "Api_GetAdminDivOptions",
@@ -147,6 +189,12 @@ var API_JSON = `{
           },
           {
             "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "superiorCode",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1088,6 +1136,32 @@ var API_JSON = `{
     },
     "citizenvDeleteCitizenResponseData": {
       "type": "object"
+    },
+    "citizenvGetAdminDivNameResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetAdminDivNameResponseData"
+        }
+      }
+    },
+    "citizenvGetAdminDivNameResponseData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        }
+      }
     },
     "citizenvGetAdminDivOptionsResponse": {
       "type": "object",

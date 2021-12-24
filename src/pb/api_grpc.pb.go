@@ -43,6 +43,7 @@ type ApiClient interface {
 	GetUserOne(ctx context.Context, in *GetUserOneRequest, opts ...grpc.CallOption) (*GetUserOneResponse, error)
 	PostCampaign(ctx context.Context, in *PostCampaignRequest, opts ...grpc.CallOption) (*PostCampaignResponse, error)
 	GetStatisticsCitizens(ctx context.Context, in *GetStatisticsCitizensRequest, opts ...grpc.CallOption) (*GetStatisticsCitizensResponse, error)
+	GetAdminDivName(ctx context.Context, in *GetAdminDivNameRequest, opts ...grpc.CallOption) (*GetAdminDivNameResponse, error)
 }
 
 type apiClient struct {
@@ -242,6 +243,15 @@ func (c *apiClient) GetStatisticsCitizens(ctx context.Context, in *GetStatistics
 	return out, nil
 }
 
+func (c *apiClient) GetAdminDivName(ctx context.Context, in *GetAdminDivNameRequest, opts ...grpc.CallOption) (*GetAdminDivNameResponse, error) {
+	out := new(GetAdminDivNameResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetAdminDivName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -267,6 +277,7 @@ type ApiServer interface {
 	GetUserOne(context.Context, *GetUserOneRequest) (*GetUserOneResponse, error)
 	PostCampaign(context.Context, *PostCampaignRequest) (*PostCampaignResponse, error)
 	GetStatisticsCitizens(context.Context, *GetStatisticsCitizensRequest) (*GetStatisticsCitizensResponse, error)
+	GetAdminDivName(context.Context, *GetAdminDivNameRequest) (*GetAdminDivNameResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -336,6 +347,9 @@ func (UnimplementedApiServer) PostCampaign(context.Context, *PostCampaignRequest
 }
 func (UnimplementedApiServer) GetStatisticsCitizens(context.Context, *GetStatisticsCitizensRequest) (*GetStatisticsCitizensResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatisticsCitizens not implemented")
+}
+func (UnimplementedApiServer) GetAdminDivName(context.Context, *GetAdminDivNameRequest) (*GetAdminDivNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdminDivName not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -728,6 +742,24 @@ func _Api_GetStatisticsCitizens_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetAdminDivName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdminDivNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetAdminDivName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetAdminDivName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetAdminDivName(ctx, req.(*GetAdminDivNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -818,6 +850,10 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetStatisticsCitizens",
 			Handler:    _Api_GetStatisticsCitizens_Handler,
+		},
+		{
+			MethodName: "GetAdminDivName",
+			Handler:    _Api_GetAdminDivName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

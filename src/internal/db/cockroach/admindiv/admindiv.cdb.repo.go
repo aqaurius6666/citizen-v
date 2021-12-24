@@ -41,6 +41,12 @@ func applySearch(db *gorm.DB, search *admindiv.Search) *gorm.DB {
 			SuperiorID: search.SuperiorID,
 		})
 	}
+	if search.SuperiorCode != nil {
+		db = db.Where(clause.Like{
+			Column: "code",
+			Value:  *search.SuperiorCode + "__",
+		})
+	}
 
 	orderBy := "name"
 	isDesc := true

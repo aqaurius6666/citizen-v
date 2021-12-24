@@ -18,4 +18,5 @@ type AdminDiv struct {
 type Search struct {
 	database.DefaultSearchModel
 	AdminDiv
+	SuperiorCode *string
 }
