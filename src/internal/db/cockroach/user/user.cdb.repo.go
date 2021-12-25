@@ -6,6 +6,7 @@ import (
 	"github.com/aqaurius6666/go-utils/database/cockroach"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -36,6 +37,12 @@ func applySearch(db *gorm.DB, search *user.Search) *gorm.DB {
 			HashPassword: search.HashPassword,
 		})
 
+	}
+	if search.SuperiorCode != nil {
+		db = db.Where(clause.And(clause.Like{
+			Column: "admin_div_code",
+			Value:  *search.SuperiorCode + "__",
+		}))
 	}
 
 	return db

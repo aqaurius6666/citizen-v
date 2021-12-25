@@ -18,4 +18,5 @@ type Campaign struct {
 type Search struct {
 	database.DefaultSearchModel
 	Campaign
+	SuperiorCode *string
 }

@@ -16,12 +16,38 @@ type User interface {
 	IsRoleActive(userId uuid.UUID) (bool, error)
 	GetRoleId(addid uuid.UUID) (uuid.UUID, error)
 	GetUserById(uid uuid.UUID) (*user.User, error)
+	ListUsers(search *user.Search) ([]*user.User, error)
+	CheckPermissionCode(c1 string, c2 string) bool
+}
+
+func (s *ServerModel) ListUsers(search *user.Search) ([]*user.User, error) {
+	usrs, err := s.Repo.ListUser(search)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	for _, u := range usrs {
+		tmp, err := s.IsRoleActive(u.ID)
+		if err != nil {
+			return nil, xerrors.Errorf("%w", err)
+		}
+		u.IsActive = &tmp
+	}
+	return usrs, nil
 }
 
 func (s *ServerModel) GetUserById(uid uuid.UUID) (*user.User, error) {
-	return s.Repo.SelectUser(&user.Search{
+	usr, err := s.Repo.SelectUser(&user.Search{
 		User: user.User{BaseModel: database.BaseModel{ID: uid}},
 	})
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	isActive, err := s.IsRoleActive(usr.ID)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	usr.IsActive = &isActive
+	return usr, nil
 }
 
 func (u *ServerModel) GetRoleId(addid uuid.UUID) (uuid.UUID, error) {
@@ -66,29 +92,27 @@ func (u *ServerModel) HasPermission(uid uuid.UUID, addid uuid.UUID) (bool, error
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	if *usr.Role.Name == role.ROLE_A1 {
-		return true, nil
-	}
 	add, err := u.GetAdminDivById(addid)
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	valid := false
-	tmpAdd := add
-	for {
-		if usr.AdminDivID == tmpAdd.ID {
-			valid = true
-			break
-		}
-		if tmpAdd.SuperiorID == uuid.Nil {
-			break
-		}
-		if tmpAdd, err = u.GetAdminDivById(tmpAdd.SuperiorID); err != nil {
-			return false, xerrors.Errorf("%w", err)
-		}
-	}
 
-	return valid, nil
+	return u.CheckPermissionCode(*usr.AdminDivCode, *add.Code), nil
+}
+
+func (s *ServerModel) CheckPermissionCode(c1, c2 string) bool {
+	if c1 == "" {
+		return true
+	}
+	l1 := len(c1)
+	l2 := len(c2)
+	if l2 < l1 {
+		return false
+	}
+	if c2[0:l1] == c1 {
+		return true
+	}
+	return false
 }
 
 func (u *ServerModel) HasPermissionByCode(uid uuid.UUID, addCode string) (bool, error) {
@@ -99,29 +123,13 @@ func (u *ServerModel) HasPermissionByCode(uid uuid.UUID, addCode string) (bool, 
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	if *usr.Role.Name == role.ROLE_A1 {
-		return true, nil
-	}
-	add, err := u.GetAdminDivByCode(addCode)
+
+	_, err = u.GetAdminDivByCode(addCode)
 	if err != nil {
 		return false, xerrors.Errorf("%w", err)
 	}
-	valid := false
-	tmpAdd := add
-	for {
-		if usr.AdminDivID == tmpAdd.ID {
-			valid = true
-			break
-		}
-		if tmpAdd.SuperiorID == uuid.Nil {
-			break
-		}
-		if tmpAdd, err = u.GetAdminDivById(tmpAdd.SuperiorID); err != nil {
-			return false, xerrors.Errorf("%w", err)
-		}
-	}
 
-	return valid, nil
+	return u.CheckPermissionCode(*usr.AdminDivCode, addCode), nil
 }
 
 func (u *ServerModel) IsRoleActive(userId uuid.UUID) (bool, error) {

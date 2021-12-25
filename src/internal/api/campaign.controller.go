@@ -26,3 +26,32 @@ func (s *CampaignController) HandlePost(g *gin.Context) {
 	}
 	lib.Success(g, res)
 }
+
+func (s *CampaignController) HandleGet(g *gin.Context) {
+	req := &pb.GetCampaignsRequest{
+		XCallerId: g.GetString("uid"),
+		StartTime: g.Query("startTime"),
+		EndTime:   g.Query("endTime"),
+		Limit:     g.Query("limit"),
+		Offset:    g.Query("offset"),
+	}
+	res, err := s.Service.List(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}
+
+func (s *CampaignController) HandlePostClose(g *gin.Context) {
+	req := &pb.PostCampaignDoneRequest{
+		XCallerId: g.GetString("uid"),
+		Id:        g.Param("id"),
+	}
+	res, err := s.Service.Close(req)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	lib.Success(g, res)
+}

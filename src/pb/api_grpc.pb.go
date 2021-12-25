@@ -44,6 +44,8 @@ type ApiClient interface {
 	PostCampaign(ctx context.Context, in *PostCampaignRequest, opts ...grpc.CallOption) (*PostCampaignResponse, error)
 	GetStatisticsCitizens(ctx context.Context, in *GetStatisticsCitizensRequest, opts ...grpc.CallOption) (*GetStatisticsCitizensResponse, error)
 	GetAdminDivName(ctx context.Context, in *GetAdminDivNameRequest, opts ...grpc.CallOption) (*GetAdminDivNameResponse, error)
+	GetCampaigns(ctx context.Context, in *GetCampaignsRequest, opts ...grpc.CallOption) (*GetCampaignsResponse, error)
+	PostCampaignDone(ctx context.Context, in *PostCampaignDoneRequest, opts ...grpc.CallOption) (*PostCampaignDoneResponse, error)
 }
 
 type apiClient struct {
@@ -252,6 +254,24 @@ func (c *apiClient) GetAdminDivName(ctx context.Context, in *GetAdminDivNameRequ
 	return out, nil
 }
 
+func (c *apiClient) GetCampaigns(ctx context.Context, in *GetCampaignsRequest, opts ...grpc.CallOption) (*GetCampaignsResponse, error) {
+	out := new(GetCampaignsResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/GetCampaigns", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiClient) PostCampaignDone(ctx context.Context, in *PostCampaignDoneRequest, opts ...grpc.CallOption) (*PostCampaignDoneResponse, error) {
+	out := new(PostCampaignDoneResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostCampaignDone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -278,6 +298,8 @@ type ApiServer interface {
 	PostCampaign(context.Context, *PostCampaignRequest) (*PostCampaignResponse, error)
 	GetStatisticsCitizens(context.Context, *GetStatisticsCitizensRequest) (*GetStatisticsCitizensResponse, error)
 	GetAdminDivName(context.Context, *GetAdminDivNameRequest) (*GetAdminDivNameResponse, error)
+	GetCampaigns(context.Context, *GetCampaignsRequest) (*GetCampaignsResponse, error)
+	PostCampaignDone(context.Context, *PostCampaignDoneRequest) (*PostCampaignDoneResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -350,6 +372,12 @@ func (UnimplementedApiServer) GetStatisticsCitizens(context.Context, *GetStatist
 }
 func (UnimplementedApiServer) GetAdminDivName(context.Context, *GetAdminDivNameRequest) (*GetAdminDivNameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAdminDivName not implemented")
+}
+func (UnimplementedApiServer) GetCampaigns(context.Context, *GetCampaignsRequest) (*GetCampaignsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCampaigns not implemented")
+}
+func (UnimplementedApiServer) PostCampaignDone(context.Context, *PostCampaignDoneRequest) (*PostCampaignDoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostCampaignDone not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -760,6 +788,42 @@ func _Api_GetAdminDivName_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_GetCampaigns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCampaignsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).GetCampaigns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/GetCampaigns",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).GetCampaigns(ctx, req.(*GetCampaignsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Api_PostCampaignDone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostCampaignDoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostCampaignDone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostCampaignDone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostCampaignDone(ctx, req.(*PostCampaignDoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -854,6 +918,14 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAdminDivName",
 			Handler:    _Api_GetAdminDivName_Handler,
+		},
+		{
+			MethodName: "GetCampaigns",
+			Handler:    _Api_GetCampaigns_Handler,
+		},
+		{
+			MethodName: "PostCampaignDone",
+			Handler:    _Api_PostCampaignDone_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -62,6 +62,7 @@ func (s *UserController) HandleGet(g *gin.Context) {
 		Id:         g.Query("id"),
 		Limit:      g.Query("limit"),
 		Offset:     g.Query("offset"),
+		XCallerId:  g.GetString("uid"),
 	}
 	res, err := s.Service.ListUsers(req)
 	if err != nil {

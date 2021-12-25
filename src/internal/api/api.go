@@ -69,7 +69,9 @@ func (s *ApiServer) RegisterEndpoint() {
 	user.POST("/:id/unban", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.User.HandlePostUnban)
 
 	campaign := api.Group("/campaigns")
+	campaign.GET("", s.AuthMiddleware.CheckAuth, s.Campaign.HandleGet)
 	campaign.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.Campaign.HandlePost)
+	campaign.POST("/:id/close", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_A1, role.ROLE_A2, role.ROLE_A3, role.ROLE_B1), s.Campaign.HandlePostClose)
 
 	statistic := api.Group("/statistics")
 	statistic.GET("/citizens", s.AuthMiddleware.CheckAuth, s.Statistic.HandleGetCitizen)

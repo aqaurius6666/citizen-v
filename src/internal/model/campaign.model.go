@@ -40,7 +40,7 @@ func (s *ServerModel) NewCampaign(camp *campaign.Campaign) (*campaign.Campaign, 
 	if err == nil || existed != nil {
 		return nil, e.ErrAdminDivCampaignExisted
 	}
-	name := fmt.Sprintf("Campaign %s", time.Unix(*camp.StartTime, 0).Format(time.RFC1123))
+	name := fmt.Sprintf("Campaign %s", time.UnixMilli(*camp.StartTime).Format(time.RFC1123))
 	camp.Name = &name
 	camp, err = s.Repo.InsertCampaign(camp)
 	if err != nil {

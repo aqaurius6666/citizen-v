@@ -5,7 +5,7 @@ var API_JSON = `{
   "swagger": "2.0",
   "info": {
     "title": "api.proto",
-    "version": "Fri, 24 Dec 2021 20:05:08 +07"
+    "version": "Sat, 25 Dec 2021 13:34:04 +07"
   },
   "tags": [
     {
@@ -414,6 +414,64 @@ var API_JSON = `{
       }
     },
     "/api/campaigns": {
+      "get": {
+        "operationId": "Api_GetCampaigns",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvGetCampaignsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "CallerId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "adminDivCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      },
       "post": {
         "operationId": "Api_PostCampaign",
         "responses": {
@@ -437,6 +495,50 @@ var API_JSON = `{
             "required": true,
             "schema": {
               "$ref": "#/definitions/citizenvPostCampaignRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
+    "/api/campaigns/{id}/done": {
+      "post": {
+        "operationId": "Api_PostCampaignDone",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCampaignDoneResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "message"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "CallerId": {
+                  "type": "string"
+                }
+              }
             }
           }
         ],
@@ -699,16 +801,13 @@ var API_JSON = `{
                 "educationalLevel": {
                   "type": "string"
                 },
-                "adminDivCode": {
+                "currentPlaceCode": {
                   "type": "string"
                 },
                 "residencePlaceCode": {
                   "type": "string"
                 },
                 "hometownCode": {
-                  "type": "string"
-                },
-                "currentPlaceCode": {
                   "type": "string"
                 }
               }
@@ -759,23 +858,6 @@ var API_JSON = `{
               "type": "string"
             },
             "collectionFormat": "multi"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "RELIGION",
-              "GENDER",
-              "AGE",
-              "EDUCATIONAL_LEVEL",
-              "CURRENT_PLACE_CODE",
-              "RESIDENCE_PLACE_CODE",
-              "HOMETOWN_CODE",
-              "JOB_NAME"
-            ],
-            "default": "RELIGION"
           }
         ],
         "tags": [
@@ -839,6 +921,12 @@ var API_JSON = `{
           },
           {
             "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CallerId",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1261,6 +1349,35 @@ var API_JSON = `{
         }
       }
     },
+    "citizenvGetCampaignsResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvGetCampaignsResponseData"
+        }
+      }
+    },
+    "citizenvGetCampaignsResponseData": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/citizenvCampaign"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/citizenvPagination"
+        }
+      }
+    },
     "citizenvGetCitizenResponse": {
       "type": "object",
       "properties": {
@@ -1498,6 +1615,24 @@ var API_JSON = `{
       }
     },
     "citizenvPostAuthPasswordResponseData": {
+      "type": "object"
+    },
+    "citizenvPostCampaignDoneResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostCampaignDoneResponseData"
+        }
+      }
+    },
+    "citizenvPostCampaignDoneResponseData": {
       "type": "object"
     },
     "citizenvPostCampaignRequest": {
@@ -1825,20 +1960,6 @@ var API_JSON = `{
           "type": "string"
         }
       }
-    },
-    "citizenvSTATISTIC_TYPE": {
-      "type": "string",
-      "enum": [
-        "RELIGION",
-        "GENDER",
-        "AGE",
-        "EDUCATIONAL_LEVEL",
-        "CURRENT_PLACE_CODE",
-        "RESIDENCE_PLACE_CODE",
-        "HOMETOWN_CODE",
-        "JOB_NAME"
-      ],
-      "default": "RELIGION"
     },
     "citizenvUser": {
       "type": "object",

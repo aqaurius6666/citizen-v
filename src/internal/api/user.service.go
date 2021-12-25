@@ -59,7 +59,13 @@ func (s *UserService) ListUsers(req *pb.GetUsersRequest) (*pb.GetUsersResponse_D
 	var total *int64
 	limit = 10
 	skip = 0
-
+	if f, ok := validate.RequiredFields(req, "XCallerId"); !ok {
+		return nil, e.ErrMissingField(f)
+	}
+	usr, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
 	if req.AdminDivId != "" {
 		uid, err := uuid.Parse(req.AdminDivId)
 		if err != nil {
@@ -98,11 +104,12 @@ func (s *UserService) ListUsers(req *pb.GetUsersRequest) (*pb.GetUsersResponse_D
 	if req.Username != "" {
 		search.Username = &req.Username
 	}
+	search.SuperiorCode = usr.AdminDivCode
 
 	if total, err = s.Repo.CountUser(&search); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	users, err := s.Repo.ListUser(&search)
+	users, err := s.Model.ListUsers(&search)
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
@@ -119,15 +126,10 @@ func (s *UserService) Get(req *pb.GetUserOneRequest) (*pb.GetUserOneResponse_Dat
 	if err != nil {
 		return nil, e.ErrIdInvalid
 	}
-	usr, err := s.Repo.SelectUser(&user.Search{
-		User: user.User{BaseModel: database.BaseModel{
-			ID: uid,
-		}},
-	})
+	usr, err := s.Model.GetUserById(uid)
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.GetUserOneResponse_Data{
 		User: lib.ConvertOneUser(usr, s.Repo),
 	}, nil
@@ -184,6 +186,7 @@ func (s *UserService) Issue(req *pb.PostUserIssueRequest) (*pb.PostUserIssueResp
 		HashPassword: lib.MyHashPassword(pass),
 		AdminDivID:   add.ID,
 		RoleID:       r.ID,
+		AdminDivCode: add.Code,
 	}
 	usr, err = s.Repo.InsertUser(&tmp)
 	if err != nil {

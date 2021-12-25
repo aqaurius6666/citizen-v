@@ -6,8 +6,8 @@ var (
 	U10     = uuid.MustParse("b3a8e813-df81-46e6-9037-b4cf39db1a73")
 	U0110   = uuid.MustParse("23645fca-30b7-4b41-8cda-03a914fb6198")
 	U011001 = uuid.MustParse("8993850e-9445-4aec-946c-fdb63698739d")
-	U01     = uuid.MustParse("44ea3e96-9283-4a0d-98c5-850615e70425")
-	U03     = uuid.MustParse("15829907-83c2-4b9a-84aa-97e278ae753c")
+	U01     = uuid.MustParse("65066f74-4a1a-4d6b-bfa1-1bee6f494060")
+	U03     = uuid.MustParse("622924ba-ec91-405f-aa61-851a295bb678")
 	U0301   = uuid.MustParse("128999d9-f46c-41f1-b65c-fcbbcd563d4c")
 
 	A10     = uuid.MustParse("d4c3a365-c073-42af-ba0a-598b90256647")

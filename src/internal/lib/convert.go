@@ -203,7 +203,19 @@ func ConvertCampaign(s *campaign.Campaign) *pb.Campaign {
 		Name:      utils.StrVal(s.Name),
 		StartTime: utils.Int64Val(s.StartTime),
 		EndTime:   utils.Int64Val(s.EndTime),
+		Id:        s.ID.String(),
 	}
+}
+
+func ConvertCampigns(camps []*campaign.Campaign) []*pb.Campaign {
+	if camps == nil {
+		return nil
+	}
+	ret := make([]*pb.Campaign, 0)
+	for _, c := range camps {
+		ret = append(ret, ConvertCampaign(c))
+	}
+	return ret
 }
 
 func ConvertOneUser(s *user.User, repo db.ServerRepo) *pb.User {

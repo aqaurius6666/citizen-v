@@ -17,9 +17,11 @@ type User struct {
 	AdminDivID         uuid.UUID          `gorm:"column:admin_div_id;uuid" `
 	AdminDiv           *admindiv.AdminDiv `gorm:"foreignKey:AdminDivID"`
 	IsActive           *bool              `gorm:"column:is_active;default:true"`
+	AdminDivCode       *string            `gorm:"column:admin_div_code"`
 }
 
 type Search struct {
 	database.DefaultSearchModel
 	User
+	SuperiorCode *string
 }

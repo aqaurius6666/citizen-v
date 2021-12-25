@@ -48,25 +48,21 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 		"Id", "Name",
 		"Birthday", "Gender",
 		"Nationality", "FatherName", "FatherPid",
-		"MotherName", "MotherPid", "CurrentPlace",
-		"JobName", "Pid", "CallerId", "ResidencePlace",
-		"Hometown", "Religion", "EducationalLevel",
-		"AdminDivCode",
+		"MotherName", "MotherPid", "CurrentPlaceCode",
+		"JobName", "Pid", "CallerId", "ResidencePlaceCode",
+		"HometownCode", "Religion", "EducationalLevel",
 	); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	if sid, err = uuid.Parse(req.Id); err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
-		AdminDiv: admindiv.AdminDiv{
-			Code: utils.StrPtr(req.AdminDivCode),
-		},
+
+	ctz, err := s.Repo.SelectCitizen(&citizen.Search{
+		Citizen: citizen.Citizen{BaseModel: database.BaseModel{ID: sid}},
 	})
-	if err != nil || add == nil {
-		return nil, e.ErrBodyInvalid
-	}
-	if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), add.ID); err != nil || !ok {
+
+	if ok, err := s.Model.HasPermissionByCode(uuid.MustParse(req.XCallerId), *ctz.AdminDivCode); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
 	search.ID = sid
@@ -81,10 +77,8 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 		MotherName:         &req.MotherName,
 		MotherPID:          &req.MotherPid,
 		JobName:            &req.JobName,
-		AdminDivID:         add.ID,
 		Religion:           &req.Religion,
 		EducationalLevel:   &req.EducationalLevel,
-		AdminDivCode:       &req.AdminDivCode,
 		CurrentPlaceCode:   &req.CurrentPlaceCode,
 		ResidencePlaceCode: &req.ResidencePlaceCode,
 		HometownCode:       &req.HometownCode,
@@ -136,9 +130,6 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 	})
 	if err != nil || add == nil {
 		return nil, e.ErrBodyInvalid
-	}
-	if ok, err := s.Model.HasPermission(uuid.MustParse(req.XCallerId), add.ID); err != nil || !ok {
-		return nil, e.ErrAuthNoPermission
 	}
 	tmpCitizen := citizen.Citizen{
 		Name:               &req.Name,

@@ -138,19 +138,19 @@ service Api {
         };
     }
     
-}
+    rpc GetCampaigns(GetCampaignsRequest) returns (GetCampaignsResponse) {
+        option (google.api.http) = {
+            get: "/api/campaigns"
+        };
+    }
 
-enum STATISTIC_TYPE {
-    RELIGION = 0;
-    GENDER = 1;
-    AGE = 2;
-    EDUCATIONAL_LEVEL = 3;
-    CURRENT_PLACE_CODE = 4;
-    RESIDENCE_PLACE_CODE = 5;
-    HOMETOWN_CODE = 6;
-    JOB_NAME = 7;
+    rpc PostCampaignDone(PostCampaignDoneRequest) returns (PostCampaignDoneResponse) {
+        option (google.api.http) = {
+            post: "/api/campaigns/{id=message}/done"
+            body: "*"
+        };
+    }
 }
-
 
 message Record {
     string adminDivCode = 1;
@@ -219,6 +219,40 @@ message Citizen {
     string hometownCode = 21;
 }
 
+
+message PostCampaignDoneRequest {
+    string _callerId = 1;
+    string id = 2;
+}
+
+message PostCampaignDoneResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+    }
+}
+
+message GetCampaignsRequest {
+    string _callerId = 1;
+    string startTime = 2;
+    string endTime = 3;
+    string limit = 4;
+    string offset = 5;
+    string adminDivCode = 6;
+}
+
+message GetCampaignsResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+        repeated Campaign results = 1;
+        Pagination pagination = 2;
+    }
+}
+
+
 message GetAdminDivNameRequest {
     string _callerId = 1;
     string adminDivId = 2;
@@ -256,7 +290,6 @@ message GetStatisticsCitizensRequest {
     string _callerId = 1;
     string adminDivCode = 2;
     repeated string adminDivCodes = 3;
-    STATISTIC_TYPE type = 4;
 
 }
 
@@ -421,10 +454,9 @@ message PutOneCitizenRequest {
     string _callerId = 13;
     string religion = 14;
     string educationalLevel = 15;
-    string adminDivCode = 16;
+    string currentPlaceCode = 16;
     string residencePlaceCode = 17;
-    string hometownCode = 19;
-    string currentPlaceCode = 20;
+    string hometownCode = 18;
 
 }
 
@@ -487,6 +519,7 @@ message GetUsersRequest {
     string username = 5;
     string limit = 6;
     string offset = 7;
+    string _callerId = 8;
 }
 
 message GetUsersResponse {

@@ -33,6 +33,12 @@ func applySearch(db *gorm.DB, search *campaign.Search) *gorm.DB {
 			Code: search.Code,
 		})
 	}
+	if search.SuperiorCode != nil {
+		db = db.Where(clause.Like{
+			Column: "code",
+			Value:  *search.SuperiorCode + "__",
+		})
+	}
 	if search.EndTime != nil {
 		db = db.Where(`"campaigns"."end_time" > ?`, *search.EndTime)
 	} else {
@@ -80,7 +86,7 @@ func (u *CampaignCDBRepo) InsertCampaign(value *campaign.Campaign) (*campaign.Ca
 
 func (u *CampaignCDBRepo) ListCampaign(search *campaign.Search) ([]*campaign.Campaign, error) {
 	r := make([]*campaign.Campaign, 0)
-	if err := applySearch(u.Db, search).Offset(search.Skip).Limit(search.Limit).Find(&r).Error; err != nil {
+	if err := applySearch(u.Db, search).Debug().Offset(search.Skip).Limit(search.Limit).Find(&r).Error; err != nil {
 		return nil, err
 	}
 	return r, nil

@@ -70,11 +70,7 @@ func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, er
 	if f, ok := validate.RequiredFields(req, "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
-	if u, err = s.Repo.SelectUser(&user.Search{
-		User: user.User{
-			BaseModel: database.BaseModel{ID: uuid.MustParse(req.XCallerId)},
-		},
-	}); err != nil {
+	if u, err = s.Model.GetUserById(uuid.MustParse(req.XCallerId)); err != nil {
 		return nil, err
 	}
 
@@ -83,7 +79,6 @@ func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, er
 	}
 
 	return &pb.GetAuthResponse_Data{
-
 		User:     lib.ConvertOneUser(u, s.Repo),
 		Campaign: lib.ConvertCampaign(camp),
 	}, nil

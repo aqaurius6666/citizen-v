@@ -25,7 +25,51 @@ func SetupModel() Server {
 	}
 	return model
 }
+func TestCheckPermissionCode(t *testing.T) {
+	model := SetupModel()
+	if !assert.NotNil(t, model) {
+		return
+	}
 
+	testcase := []map[string]interface{}{
+		{
+			"c1": "",
+			"c2": "01",
+			"e":  true,
+		},
+		{
+			"c1": "",
+			"c2": "0101",
+			"e":  true,
+		},
+		{
+			"c1": "01",
+			"c2": "0105",
+			"e":  true,
+		},
+		{
+			"c1": "03",
+			"c2": "02",
+			"e":  false,
+		},
+		{
+			"c1": "03",
+			"c2": "",
+			"e":  false,
+		},
+		{
+			"c1": "0101",
+			"c2": "01",
+			"e":  false,
+		},
+	}
+	for _, s := range testcase {
+		res := model.CheckPermissionCode(s["c1"].(string), s["c2"].(string))
+		if !assert.Equal(t, s["e"], res, "case (%s, %s)", s["c1"], s["c2"]) {
+			return
+		}
+	}
+}
 func TestGetRoleId(t *testing.T) {
 	model := SetupModel()
 	if !assert.NotNil(t, model) {
