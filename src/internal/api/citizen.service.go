@@ -61,7 +61,9 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 	ctz, err := s.Repo.SelectCitizen(&citizen.Search{
 		Citizen: citizen.Citizen{BaseModel: database.BaseModel{ID: sid}},
 	})
-
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
 	if ok, err := s.Model.HasPermissionByCode(uuid.MustParse(req.XCallerId), *ctz.AdminDivCode); err != nil || !ok {
 		return nil, e.ErrAuthNoPermission
 	}
@@ -121,15 +123,15 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 		return nil, e.ErrMissingField(f)
 	}
 	caller, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
-	add, err := s.Repo.SelectAdminDiv(&admindiv.Search{
-		AdminDiv: admindiv.AdminDiv{
-			BaseModel: database.BaseModel{
-				ID: caller.AdminDivID,
-			},
-		},
-	})
-	if err != nil || add == nil {
-		return nil, e.ErrBodyInvalid
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	add, err := s.Model.GetAdminDivByCode(req.ResidencePlaceCode)
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+	if ok, err := s.Model.HasPermissionByCode(caller.ID, *add.Code); !ok || err != nil {
+		return nil, e.ErrAuthNoPermission
 	}
 	tmpCitizen := citizen.Citizen{
 		Name:               &req.Name,
