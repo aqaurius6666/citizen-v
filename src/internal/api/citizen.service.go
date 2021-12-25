@@ -26,7 +26,7 @@ func (s *CitizenService) Delete(req *pb.DeleteCitizenRequest) (*pb.DeleteCitizen
 	var err error
 	var sid uuid.UUID
 	var search citizen.Search
-	if f, ok := validate.RequiredFields(req, "Id", "CallerId"); !ok {
+	if f, ok := validate.RequiredFields(req, "Id", "XCallerId"); !ok {
 		return nil, e.ErrMissingField(f)
 	}
 	if sid, err = uuid.Parse(req.Id); err != nil {
@@ -49,7 +49,7 @@ func (s *CitizenService) UpdateOne(req *pb.PutOneCitizenRequest) (*pb.PutOneCiti
 		"Birthday", "Gender",
 		"Nationality", "FatherName", "FatherPid",
 		"MotherName", "MotherPid", "CurrentPlaceCode",
-		"JobName", "Pid", "CallerId", "ResidencePlaceCode",
+		"JobName", "Pid", "XCallerId", "ResidencePlaceCode",
 		"HometownCode", "Religion", "EducationalLevel",
 	); !ok {
 		return nil, e.ErrMissingField(f)
