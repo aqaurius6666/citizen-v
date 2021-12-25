@@ -1,6 +1,3 @@
-package campaign
-
-var SQL = `
 insert into public.campaigns (id, updated_at, created_at, deleted_at, name, is_done, code, record_number, start_time, end_time, percent)
 values  ('01bf7694-7012-447b-808e-49c4ab76f077', 1640420484474, 1640420484474, 0, 'sample', false, '08020103', 1, 1640420013699, 1940420013699, null),
         ('022bdb96-93a8-4f21-bfab-ad19cd7df472', 1640420483827, 1640420483827, 0, 'sample', false, '07030102', 1, 1640420013699, 1940420013699, null),
@@ -354,4 +351,3 @@ values  ('01bf7694-7012-447b-808e-49c4ab76f077', 1640420484474, 1640420484474, 0
         ('ff7e3b24-6ffd-41e8-8cb0-0faf42e02990', 1640420479301, 1640420479301, 0, 'sample', true, '03020201', 2, 1640420013699, 1940420013699, null),
         ('ff95e2da-86e3-4975-b287-f872e09d2d6c', 1640420485354, 1640420485354, 0, 'sample', false, '090202', 0, 1640420013699, 1940420013699, null),
         ('ffd69c91-e8e5-4300-b4a7-5c2b06fd57ba', 1640420483027, 1640420483027, 0, 'sample', true, '07010201', 0, 1640420013699, 1940420013699, null);
-`

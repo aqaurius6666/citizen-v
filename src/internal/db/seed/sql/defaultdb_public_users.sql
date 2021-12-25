@@ -1,6 +1,3 @@
-package user
-
-var SQL = `
 insert into public.users (id, updated_at, created_at, deleted_at, username, hash_password, use_default_password, role_id, admin_div_id, is_active, admin_div_code)
 values  ('003bb1b0-c30a-4708-8f4f-84aa8cc94838', 1640420840659, 1640420840659, 0, 'citizen08030203', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, 'f508a982-2016-45e5-a429-ba1bd229dca4', 'fde7dbfc-7e61-45a3-80c1-37d18cf3598e', true, '08030203'),
         ('00de0949-e4b3-49f9-a2c4-074f68ea9b4f', 1640420834710, 1640420834710, 0, 'citizen03010202', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, 'f508a982-2016-45e5-a429-ba1bd229dca4', 'a3536003-5517-4f88-a49b-a8d9434de5d5', true, '03010202'),
@@ -355,4 +352,3 @@ values  ('003bb1b0-c30a-4708-8f4f-84aa8cc94838', 1640420840659, 1640420840659, 0
         ('fc9b8d80-839b-4ca7-bcc2-7f513d90f501', 1640420834353, 1640420834353, 0, 'citizen02030102', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, 'f508a982-2016-45e5-a429-ba1bd229dca4', '2d335aea-33ab-41a7-a683-fd81e653686e', true, '02030102'),
         ('fdc9db8d-4de7-4e55-b434-b8f17d7b7ced', 1640420837599, 1640420837599, 0, 'citizen06010101', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, 'f508a982-2016-45e5-a429-ba1bd229dca4', 'dff9bf28-8b8c-4781-9950-31922e2a1221', true, '06010101'),
         ('ff96ea72-1acc-46b5-96df-04a927119daf', 1640420832884, 1640420832884, 0, 'citizen01020103', 'Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU=', false, 'f508a982-2016-45e5-a429-ba1bd229dca4', '966f27cd-ae6c-4932-ba74-bc46d2464d37', true, '01020103');
-`

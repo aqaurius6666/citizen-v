@@ -98,24 +98,21 @@ func (s *StatisticService) HandleData(res *pb.GetStatisticsCitizensResponse_Data
 }
 
 func handleMap(mp map[string]int, value string) {
-	mp["total"]++
 	mp[value]++
 }
 
 func handlePlace(mp map[string]int, value string, scope string) {
 	code := value[0 : len(scope)+2]
 	mp[code]++
-	mp["total"]++
 }
 
 func handleAge(mp map[string]int, value int) {
-	mp["total"]++
 	if value <= 6 {
 		mp["0-6"]++
 		return
 	}
 	if value <= 17 {
-		mp["6-17"]++
+		mp["7-17"]++
 		return
 	}
 	if value <= 40 {

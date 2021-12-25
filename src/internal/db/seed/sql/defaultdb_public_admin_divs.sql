@@ -1,6 +1,3 @@
-package admindiv
-
-var SQL = `
 insert into public.admin_divs (id, updated_at, created_at, deleted_at, name, code, type, superior_id)
 values  ('005b3e09-bba5-45b7-8c85-c6ae50a5aa5c', 1640420441561, 1640420441561, 0, 'Thị trấn Tam Đường', '080201', 'TOWN', '8fedee9c-6a09-4d51-8e3a-fce2ed086956'),
         ('00ee5f4a-009e-43a9-a7cf-b4c971576236', 1640420438889, 1640420438889, 0, 'Tỉnh Điện Biên', '07', 'CITY', '00000000-0000-0000-0000-000000000000'),
@@ -353,4 +350,3 @@ values  ('005b3e09-bba5-45b7-8c85-c6ae50a5aa5c', 1640420441561, 1640420441561, 0
         ('ffc13a1b-6a3b-4896-ad7d-049470550995', 1640420445500, 1640420445500, 0, 'Bản 841', '10020101', 'BLOCK', 'c0c70cf9-239a-4beb-91ab-854df6171eb6'),
         ('ffd7b0cb-5006-446f-a381-0304f0e8da6b', 1640420440971, 1640420440971, 0, 'Phường Quyết Thắng', '080101', 'TOWN', '1326b998-09e4-4ee3-8984-81ea88e5d573'),
         ('ffeba4ff-d7f1-453b-a67a-28f9f6dcbf1e', 1640420432553, 1640420432553, 0, 'Thôn 1665', '03030203', 'BLOCK', '1ea5a9f6-5f85-4fec-bdc4-962e087dfe8e');
-`

@@ -12,6 +12,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/db/campaign"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
 	"github.com/aqaurius6666/citizen-v/src/internal/db/cockroach"
+	"github.com/aqaurius6666/citizen-v/src/internal/db/user"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/go-utils/database"
 	"github.com/aqaurius6666/go-utils/utils"
@@ -83,6 +84,33 @@ func TestSeedCampaign(t *testing.T) {
 
 func GetRandomPID() string {
 	return fmt.Sprintf("001200%06d", rand.Int()%999999)
+}
+
+func TestSeedUser(t *testing.T) {
+	logger := logrus.New()
+	repo, err := cockroach.InitServerCDBRepo(context.Background(), logger, cockroach.ServerCDBOptions{
+		Cfg: &gorm.Config{},
+		Dsn: "postgresql://root:root@cdb:26257/defaultdb?sslmode=disable",
+	})
+	if err != nil {
+		logger.Error(err)
+	}
+
+	data := lib.ReadCSV("admindivs.csv")
+	for _, e := range data {
+		id := e[0]
+		code := e[2]
+		username := fmt.Sprintf("citizen%s", code)
+		repo.InsertUser(&user.User{
+			Username:           &username,
+			UseDefaultPassword: utils.BoolPtr(false),
+			RoleID:             uuid.Nil,
+			AdminDivID:         uuid.MustParse(id),
+			IsActive:           utils.BoolPtr(true),
+			AdminDivCode:       &code,
+			HashPassword:       utils.StrPtr("Ep1wn1V67h4ytvjI6ZCf7wcIrEf8rjfAmKAGdcfCfSU="),
+		})
+	}
 }
 
 func TestSeedCitizens(t *testing.T) {
