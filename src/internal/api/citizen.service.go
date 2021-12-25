@@ -138,7 +138,7 @@ func (s *CitizenService) CreateCitizen(req *pb.PostCitizenRequest) (*pb.PostCiti
 		Gender:             &req.Gender,
 		Nationality:        &req.Nationality,
 		FatherName:         &req.FatherName,
-		FatherPID:          &req.Pid,
+		FatherPID:          &req.FatherPid,
 		MotherName:         &req.MotherName,
 		AdminDivID:         add.ID,
 		MotherPID:          &req.MotherPid,
