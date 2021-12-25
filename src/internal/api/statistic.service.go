@@ -102,6 +102,9 @@ func handleMap(mp map[string]int, value string) {
 }
 
 func handlePlace(mp map[string]int, value string, scope string) {
+	if len(scope)+2 > len(value) {
+		return
+	}
 	code := value[0 : len(scope)+2]
 	mp[code]++
 }
