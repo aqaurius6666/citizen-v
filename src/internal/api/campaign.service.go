@@ -44,7 +44,7 @@ func (s *CampaignService) Close(req *pb.PostCampaignDoneRequest) (*pb.PostCampai
 	if err != nil {
 		return nil, xerrors.Errorf("%w", err)
 	}
-	if ok := s.Model.IsChild(*usr.AdminDivCode, []string{*camp.Code}); !ok {
+	if usr.AdminDivCode != camp.Code {
 		return nil, e.ErrAuthNoPermission
 	}
 	err = s.Repo.UpdateCampaign(&search, &campaign.Campaign{

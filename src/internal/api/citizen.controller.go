@@ -26,6 +26,9 @@ func (s *CitizenController) HandlePostExport(g *gin.Context) {
 	now := time.Now()
 	filename := fmt.Sprintf("%d_%d_%d.xlsx", now.Day(), now.Month(), now.Year())
 	g.Header("filename", filename)
+
+	// buf := new(bytes.Buffer)
+	// buf.Write([]byte("string"))
 	g.DataFromReader(200, contentLength, "application/octet-stream", reader, map[string]string{
 		"Content-Disposition": "attachment; filename= " + filename,
 	})

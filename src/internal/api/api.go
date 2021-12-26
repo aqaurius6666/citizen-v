@@ -29,7 +29,7 @@ func (s *ApiServer) RegisterEndpoint() {
 	s.G.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "PUT", "POST", "DELETE"},
-		AllowHeaders: []string{"Authorization", "Content-Type", "User-Agent", "Refer"},
+		AllowHeaders: []string{"Authorization", "Content-Type", "User-Agent", "Refer", "responseType"},
 	}))
 	s.G.Use(gin.Recovery())
 	s.G.Use(s.LoggerMiddleware.Logger())
