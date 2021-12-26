@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 	"time"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db/citizen"
@@ -19,30 +20,57 @@ type ExporterV2 struct {
 
 func (s *ExporterV2) ExportCitizen(ctz []*citizen.Citizen) (io.Reader, int64, error) {
 	buf := new(bytes.Buffer)
+	s.Header(buf)
 	for i, c := range ctz {
 		s.handleRow(buf, i, c)
 	}
 	return buf, int64(buf.Len()), nil
 }
 
+func (s *ExporterV2) Header(writer io.Writer) error {
+	row := make([]string, 0)
+	row = append(row, "STT")
+	row = append(row, "Họ Tên")
+	row = append(row, "CMND/CCCD")
+	row = append(row, "Giới Tính")
+	row = append(row, "Nghề Nghiệp")
+	row = append(row, "Quốc tịch")
+	row = append(row, "Tôn Giáo")
+	row = append(row, "Ngày Sinh")
+	row = append(row, "Trình Độ Văn Hóa")
+	row = append(row, "Quê Quán")
+	row = append(row, "Nơi Ở Thường Trú")
+	row = append(row, "Họ Tên Bố")
+	row = append(row, "CMND/CCCD Bố")
+	row = append(row, "Họ Tên Mẹ")
+	row = append(row, "CMND/CCCD Mẹ")
+
+	ret := strings.Join(row, ";") + "\n"
+	writer.Write([]byte(ret))
+	return nil
+}
+
 func (s *ExporterV2) handleRow(writer io.Writer, i int, c *citizen.Citizen) error {
 	birthday := time.UnixMilli(utils.Int64Val(c.Birthday))
-	fmt.Println(birthday)
-	// f.SetCellInt("Sheet1", fmt.Sprintf("A%d", i), i)
-	// f.SetCellStr("Sheet1", fmt.Sprintf("B%d", i), utils.StrVal(c.Name))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("C%d", i), utils.StrVal(c.PID))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("D%d", i), utils.StrVal(c.Gender))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("E%d", i), utils.StrVal(c.JobName))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("F%d", i), utils.StrVal(c.Nationality))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("G%d", i), utils.StrVal(c.Religion))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("H%d", i), fmt.Sprintf("%d/%d/%d", birthday.Day(), birthday.Month(), birthday.Year()))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("J%d", i), utils.StrVal(c.EducationalLevel))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("K%d", i), utils.StrVal(c.Hometown))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("L%d", i), utils.StrVal(c.ResidencePlace))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("M%d", i), utils.StrVal(c.CurrentPlace))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("N%d", i), utils.StrVal(c.FatherName))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("O%d", i), utils.StrVal(c.FatherPID))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("P%d", i), utils.StrVal(c.MotherName))
-	// f.SetCellStr("Sheet1", fmt.Sprintf("Q%d", i), utils.StrVal(c.MotherPID))
+	row := make([]string, 0)
+	row = append(row, fmt.Sprint(i))
+	row = append(row, utils.StrVal(c.Name))
+	row = append(row, utils.StrVal(c.PID))
+	row = append(row, utils.StrVal(c.Gender))
+	row = append(row, utils.StrVal(c.JobName))
+	row = append(row, utils.StrVal(c.Nationality))
+	row = append(row, utils.StrVal(c.Religion))
+	row = append(row, fmt.Sprintf("%d/%d/%d", birthday.Day(), birthday.Month(), birthday.Year()))
+	row = append(row, utils.StrVal(c.EducationalLevel))
+	row = append(row, utils.StrVal(c.Hometown))
+	row = append(row, utils.StrVal(c.ResidencePlace))
+	row = append(row, utils.StrVal(c.FatherName))
+	row = append(row, utils.StrVal(c.FatherPID))
+	row = append(row, utils.StrVal(c.MotherName))
+	row = append(row, utils.StrVal(c.MotherPID))
+
+	ret := strings.Join(row, ";") + "\n"
+
+	writer.Write([]byte(ret))
 	return nil
 }

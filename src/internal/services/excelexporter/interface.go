@@ -11,5 +11,5 @@ type Exporter interface {
 }
 
 func NewExporter() Exporter {
-	return &ExporterV1{}
+	return &ExporterV2{}
 }

@@ -24,7 +24,7 @@ func (s *CitizenController) HandlePostExport(g *gin.Context) {
 		return
 	}
 	now := time.Now()
-	filename := fmt.Sprintf("%d_%d_%d.xlsx", now.Day(), now.Month(), now.Year())
+	filename := fmt.Sprintf("%d_%d_%d.csv", now.Day(), now.Month(), now.Year())
 	g.Header("filename", filename)
 
 	// buf := new(bytes.Buffer)
