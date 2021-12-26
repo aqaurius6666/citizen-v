@@ -7,7 +7,7 @@ import (
 )
 
 type Exporter interface {
-	ExportCitizen([]*citizen.Citizen, io.Writer) error
+	ExportCitizen([]*citizen.Citizen) (io.Reader, int64, error)
 }
 
 func NewExporter() Exporter {

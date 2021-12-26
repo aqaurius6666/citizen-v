@@ -662,6 +662,38 @@
         ]
       }
     },
+    "/api/citizens/export": {
+      "post": {
+        "operationId": "Api_PostCitizensExport",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCitizensExportResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/citizenvPostCitizensExportRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Api"
+        ]
+      }
+    },
     "/api/citizens/{id}": {
       "get": {
         "operationId": "Api_GetOneCitizen",
@@ -1762,6 +1794,32 @@
           "$ref": "#/definitions/citizenvCitizen"
         }
       }
+    },
+    "citizenvPostCitizensExportRequest": {
+      "type": "object",
+      "properties": {
+        "CallerId": {
+          "type": "string"
+        }
+      }
+    },
+    "citizenvPostCitizensExportResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "$ref": "#/definitions/citizenvPostCitizensExportResponseData"
+        }
+      }
+    },
+    "citizenvPostCitizensExportResponseData": {
+      "type": "object"
     },
     "citizenvPostLoginRequest": {
       "type": "object",

@@ -1,6 +1,9 @@
 package api
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/gin-gonic/gin"
@@ -12,14 +15,19 @@ type CitizenController struct {
 
 func (s *CitizenController) HandlePostExport(g *gin.Context) {
 	var err error
-	err = s.Service.Export(g.Writer)
+	req := &pb.PostCitizensExportRequest{
+		XCallerId: g.GetString("uid"),
+	}
+	reader, contentLength, err := s.Service.Export(req)
 	if err != nil {
 		lib.BadRequest(g, err)
 		return
 	}
-	g.Header("Content-Type", "application/octet-stream")
-	g.Header("Content-Disposition", "attachment; filename="+"Workbook.xlsx")
-	g.Header("Content-Transfer-Encoding", "binary")
+	now := time.Now()
+	g.DataFromReader(200, contentLength, "application/octet-stream", reader, map[string]string{
+		"Content-Disposition": "attachment; filename= " + fmt.Sprintf("%d_%d_%d.xlsx", now.Day(), now.Month(), now.Year()),
+	})
+
 }
 
 func (s *CitizenController) HandleDeleteById(g *gin.Context) {

@@ -46,6 +46,7 @@ type ApiClient interface {
 	GetAdminDivName(ctx context.Context, in *GetAdminDivNameRequest, opts ...grpc.CallOption) (*GetAdminDivNameResponse, error)
 	GetCampaigns(ctx context.Context, in *GetCampaignsRequest, opts ...grpc.CallOption) (*GetCampaignsResponse, error)
 	PostCampaignDone(ctx context.Context, in *PostCampaignDoneRequest, opts ...grpc.CallOption) (*PostCampaignDoneResponse, error)
+	PostCitizensExport(ctx context.Context, in *PostCitizensExportRequest, opts ...grpc.CallOption) (*PostCitizensExportResponse, error)
 }
 
 type apiClient struct {
@@ -272,6 +273,15 @@ func (c *apiClient) PostCampaignDone(ctx context.Context, in *PostCampaignDoneRe
 	return out, nil
 }
 
+func (c *apiClient) PostCitizensExport(ctx context.Context, in *PostCitizensExportRequest, opts ...grpc.CallOption) (*PostCitizensExportResponse, error) {
+	out := new(PostCitizensExportResponse)
+	err := c.cc.Invoke(ctx, "/citizenv.Api/PostCitizensExport", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServer is the server API for Api service.
 // All implementations must embed UnimplementedApiServer
 // for forward compatibility
@@ -300,6 +310,7 @@ type ApiServer interface {
 	GetAdminDivName(context.Context, *GetAdminDivNameRequest) (*GetAdminDivNameResponse, error)
 	GetCampaigns(context.Context, *GetCampaignsRequest) (*GetCampaignsResponse, error)
 	PostCampaignDone(context.Context, *PostCampaignDoneRequest) (*PostCampaignDoneResponse, error)
+	PostCitizensExport(context.Context, *PostCitizensExportRequest) (*PostCitizensExportResponse, error)
 	mustEmbedUnimplementedApiServer()
 }
 
@@ -378,6 +389,9 @@ func (UnimplementedApiServer) GetCampaigns(context.Context, *GetCampaignsRequest
 }
 func (UnimplementedApiServer) PostCampaignDone(context.Context, *PostCampaignDoneRequest) (*PostCampaignDoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostCampaignDone not implemented")
+}
+func (UnimplementedApiServer) PostCitizensExport(context.Context, *PostCitizensExportRequest) (*PostCitizensExportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostCitizensExport not implemented")
 }
 func (UnimplementedApiServer) mustEmbedUnimplementedApiServer() {}
 
@@ -824,6 +838,24 @@ func _Api_PostCampaignDone_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Api_PostCitizensExport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostCitizensExportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServer).PostCitizensExport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/citizenv.Api/PostCitizensExport",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServer).PostCitizensExport(ctx, req.(*PostCitizensExportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Api_ServiceDesc is the grpc.ServiceDesc for Api service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -926,6 +958,10 @@ var Api_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostCampaignDone",
 			Handler:    _Api_PostCampaignDone_Handler,
+		},
+		{
+			MethodName: "PostCitizensExport",
+			Handler:    _Api_PostCitizensExport_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

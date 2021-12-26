@@ -25,8 +25,22 @@ type CitizenService struct {
 	Exporter excelexporter.Exporter
 }
 
-func (s *CitizenService) Export(writer io.Writer) error {
-	return s.Exporter.ExportCitizen(nil, writer)
+func (s *CitizenService) Export(req *pb.PostCitizensExportRequest) (io.Reader, int64, error) {
+	add, err := s.Model.GetUserById(uuid.MustParse(req.XCallerId))
+	if err != nil {
+		return nil, 0, err
+	}
+
+	ctz, err := s.Repo.ListCitizen(&citizen.Search{
+		Citizen: citizen.Citizen{
+			AdminDivCode: add.AdminDivCode,
+		},
+	})
+	if err != nil {
+		return nil, 0, xerrors.Errorf("%w", err)
+	}
+
+	return s.Exporter.ExportCitizen(ctz)
 }
 
 func (s *CitizenService) Delete(req *pb.DeleteCitizenRequest) (*pb.DeleteCitizenResponse_Data, error) {

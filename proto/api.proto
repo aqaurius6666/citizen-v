@@ -150,6 +150,14 @@ service Api {
             body: "*"
         };
     }
+    
+    rpc PostCitizensExport(PostCitizensExportRequest) returns (PostCitizensExportResponse) {
+        option (google.api.http) = {
+            post: "/api/citizens/export"
+            body: "*"
+        };
+    }
+
 }
 
 message Record {
@@ -219,6 +227,19 @@ message Citizen {
     string residencePlaceCode = 19;
     string currentPlaceCode = 20;
     string hometownCode = 21;
+}
+
+
+message PostCitizensExportRequest {
+    string _callerId = 1;
+}
+
+message PostCitizensExportResponse {
+    bool success = 1;
+    int32 status = 2;
+    Data data = 3;
+    message Data {
+    }
 }
 
 
