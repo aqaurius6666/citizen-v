@@ -10,6 +10,7 @@ import (
 	"context"
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
 	"github.com/aqaurius6666/citizen-v/src/internal/model"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/excelexporter"
 	"github.com/aqaurius6666/citizen-v/src/internal/services/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -52,9 +53,11 @@ func InitApiServer(ctx context.Context, logger *logrus.Logger, opts ApiServerOpt
 	adminDivController := &AdminDivController{
 		Service: adminDivService,
 	}
+	exporter := opts.Exporter
 	citizenService := &CitizenService{
-		Repo:  serverRepo,
-		Model: server,
+		Repo:     serverRepo,
+		Model:    server,
+		Exporter: exporter,
 	}
 	citizenController := &CitizenController{
 		Service: citizenService,
@@ -104,4 +107,5 @@ type ApiServerOptions struct {
 	MainRepo db.ServerRepo
 	Sec      jwt.SecretKey
 	Model    model.Server
+	Exporter excelexporter.Exporter
 }

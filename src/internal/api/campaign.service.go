@@ -116,7 +116,7 @@ func (s *CampaignService) List(req *pb.GetCampaignsRequest) (*pb.GetCampaignsRes
 	}
 
 	return &pb.GetCampaignsResponse_Data{
-		Results:    lib.ConvertCampigns(camps),
+		Results:    lib.ConvertCampigns(camps, s.Repo),
 		Pagination: lib.ConvertPagination(skip, limit, *total),
 	}, nil
 }

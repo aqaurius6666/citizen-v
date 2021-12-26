@@ -80,7 +80,7 @@ func (s *AuthService) Auth(req *pb.GetAuthRequest) (*pb.GetAuthResponse_Data, er
 
 	return &pb.GetAuthResponse_Data{
 		User:     lib.ConvertOneUser(u, s.Repo),
-		Campaign: lib.ConvertCampaign(camp),
+		Campaign: lib.ConvertCampaign(camp, s.Repo),
 	}, nil
 }
 

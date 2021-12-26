@@ -60,6 +60,7 @@ func (s *ApiServer) RegisterEndpoint() {
 	citizen.POST("", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1, role.ROLE_B2), s.Citizen.HandlePost)
 	citizen.PUT("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1), s.Citizen.HandlePutOne)
 	citizen.DELETE("/:id", s.AuthMiddleware.CheckAuth, s.RoleMiddleware.OnlyActive(), s.RoleMiddleware.OnlyRole(role.ROLE_B1), s.Citizen.HandleDeleteById)
+	citizen.GET("/export", s.Citizen.HandlePostExport)
 
 	user := api.Group("/users")
 	user.GET("", s.AuthMiddleware.CheckAuth, s.User.HandleGet)

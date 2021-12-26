@@ -10,6 +10,18 @@ type CitizenController struct {
 	Service *CitizenService
 }
 
+func (s *CitizenController) HandlePostExport(g *gin.Context) {
+	var err error
+	err = s.Service.Export(g.Writer)
+	if err != nil {
+		lib.BadRequest(g, err)
+		return
+	}
+	g.Header("Content-Type", "application/octet-stream")
+	g.Header("Content-Disposition", "attachment; filename="+"Workbook.xlsx")
+	g.Header("Content-Transfer-Encoding", "binary")
+}
+
 func (s *CitizenController) HandleDeleteById(g *gin.Context) {
 	var err error
 	req := &pb.DeleteCitizenRequest{

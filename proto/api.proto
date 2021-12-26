@@ -194,6 +194,8 @@ message Campaign {
     string id = 5;
     int64 startTime = 6;
     int64 endTime = 7;
+    string adminDivCode = 8;
+    string adminDivName = 9;
 }
 message Citizen {
     string id = 1;

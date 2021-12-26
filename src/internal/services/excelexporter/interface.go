@@ -9,3 +9,7 @@ import (
 type Exporter interface {
 	ExportCitizen([]*citizen.Citizen, io.Writer) error
 }
+
+func NewExporter() Exporter {
+	return &ExporterV1{}
+}

@@ -194,26 +194,37 @@ func ConvertRecords(s []*citizen.Citizen) []*pb.Record {
 	return ret
 }
 
-func ConvertCampaign(s *campaign.Campaign) *pb.Campaign {
+func ConvertCampaign(s *campaign.Campaign, repo db.ServerRepo) *pb.Campaign {
 	if s == nil {
 		return nil
 	}
+	add, err := repo.SelectAdminDiv(&admindiv.Search{
+		AdminDiv: admindiv.AdminDiv{
+			Code: s.Code,
+		},
+	})
+	if err != nil {
+		fmt.Println("err ", err)
+	}
 	return &pb.Campaign{
-		IsDone:    utils.BoolVal(s.IsDone),
-		Name:      utils.StrVal(s.Name),
-		StartTime: utils.Int64Val(s.StartTime),
-		EndTime:   utils.Int64Val(s.EndTime),
-		Id:        s.ID.String(),
+		IsDone:       utils.BoolVal(s.IsDone),
+		Name:         utils.StrVal(s.Name),
+		StartTime:    utils.Int64Val(s.StartTime),
+		EndTime:      utils.Int64Val(s.EndTime),
+		Id:           s.ID.String(),
+		AdminDivCode: utils.StrVal(s.Code),
+		AdminDivName: utils.StrVal(add.Name),
+		Record:       int32(utils.IntVal(s.RecordNumber)),
 	}
 }
 
-func ConvertCampigns(camps []*campaign.Campaign) []*pb.Campaign {
+func ConvertCampigns(camps []*campaign.Campaign, repo db.ServerRepo) []*pb.Campaign {
 	if camps == nil {
 		return nil
 	}
 	ret := make([]*pb.Campaign, 0)
 	for _, c := range camps {
-		ret = append(ret, ConvertCampaign(c))
+		ret = append(ret, ConvertCampaign(c, repo))
 	}
 	return ret
 }

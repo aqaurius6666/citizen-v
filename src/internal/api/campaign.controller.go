@@ -29,11 +29,12 @@ func (s *CampaignController) HandlePost(g *gin.Context) {
 
 func (s *CampaignController) HandleGet(g *gin.Context) {
 	req := &pb.GetCampaignsRequest{
-		XCallerId: g.GetString("uid"),
-		StartTime: g.Query("startTime"),
-		EndTime:   g.Query("endTime"),
-		Limit:     g.Query("limit"),
-		Offset:    g.Query("offset"),
+		XCallerId:    g.GetString("uid"),
+		StartTime:    g.Query("startTime"),
+		EndTime:      g.Query("endTime"),
+		Limit:        g.Query("limit"),
+		Offset:       g.Query("offset"),
+		AdminDivCode: g.Query("adminDivCode"),
 	}
 	res, err := s.Service.List(req)
 	if err != nil {

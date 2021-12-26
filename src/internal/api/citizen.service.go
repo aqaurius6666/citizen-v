@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io"
 	"strconv"
 
 	"github.com/aqaurius6666/citizen-v/src/internal/db"
@@ -9,6 +10,7 @@ import (
 	"github.com/aqaurius6666/citizen-v/src/internal/lib"
 	"github.com/aqaurius6666/citizen-v/src/internal/lib/validate"
 	"github.com/aqaurius6666/citizen-v/src/internal/model"
+	"github.com/aqaurius6666/citizen-v/src/internal/services/excelexporter"
 	"github.com/aqaurius6666/citizen-v/src/internal/var/e"
 	"github.com/aqaurius6666/citizen-v/src/pb"
 	"github.com/aqaurius6666/go-utils/database"
@@ -18,8 +20,13 @@ import (
 )
 
 type CitizenService struct {
-	Repo  db.ServerRepo
-	Model model.Server
+	Repo     db.ServerRepo
+	Model    model.Server
+	Exporter excelexporter.Exporter
+}
+
+func (s *CitizenService) Export(writer io.Writer) error {
+	return s.Exporter.ExportCitizen(nil, writer)
 }
 
 func (s *CitizenService) Delete(req *pb.DeleteCitizenRequest) (*pb.DeleteCitizenResponse_Data, error) {
